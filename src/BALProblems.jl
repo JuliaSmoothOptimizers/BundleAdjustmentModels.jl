@@ -1,4 +1,6 @@
-module BALProblems
+#module BALProblems
+
+using Pkg.Artifacts
 
 """
      fetch_bal(group::AbstractString, name::AbstractString)
@@ -12,4 +14,4 @@ function fetch_bal(group::AbstractString, name::AbstractString)
   return joinpath(loc, name)
 end
 
-end
+#end

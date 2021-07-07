@@ -1,4 +1,6 @@
 
+using ArtifactUtils
+
 dubrovnik_prob = ["dubrovnik/problem-16-22106-pre.txt.bz2", 
                   "dubrovnik/problem-88-64298-pre.txt.bz2", 
                   "dubrovnik/problem-135-90642-pre.txt.bz2", 
@@ -83,7 +85,7 @@ total_prob = [dubrovnik_prob, trafalgar_prob, ladybug_prob, venice_prob]
 
 const artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
                
-const bal_url = "https://grail.cs.washington.edu/projects/bal/data/"
+const bal_url = "https://grail.cs.washington.edu/projects/bal/data"
 
 fails = String[]
 
@@ -93,15 +95,15 @@ for problem_categ ∈ total_prob
         println(problem)
         println(url)
         try
-        add_artifact!(
-            artifacts_toml,
-            problem,
-            url,
-            lazy = true,
-            force = true,
-        )
+            add_artifact!(
+                artifacts_toml,
+                problem,
+                url,
+                lazy = true,
+                force = true,
+            )
         catch
-        push!(fails, problem)
+            push!(fails, problem)
         end
     end
 end
