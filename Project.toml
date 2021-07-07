@@ -1,3 +1,4 @@
 [deps]
+ArtifactHelpers = "e0475575-a628-4ffc-9325-343306da1553"
 ArtifactUtils = "8b73e784-e7d8-4ea5-973d-377fed4e3bce"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
