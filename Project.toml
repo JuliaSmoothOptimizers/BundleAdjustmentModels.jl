@@ -1,4 +1,8 @@
 [deps]
-ArtifactHelpers = "e0475575-a628-4ffc-9325-343306da1553"
-ArtifactUtils = "8b73e784-e7d8-4ea5-973d-377fed4e3bce"
+CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
+FastClosures = "9aa1b823-49e4-5ca5-8b0f-3971ec8bab6a"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
+SolverCore = "ff4d7338-4cf1-434d-91df-b86cb86fb843"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

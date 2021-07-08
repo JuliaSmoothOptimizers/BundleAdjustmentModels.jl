@@ -95,7 +95,7 @@ for problem_categ ∈ total_prob
         println(problem)
         println(url)
         try
-            problem_hash = artifact_hash("$problem", artifact_toml)
+            problem_hash = artifact_hash("$category/$problem", artifact_toml)
             # If the name was not bound, or the hash it was bound to does not exist, create it!
             if problem_hash === nothing || !artifact_exists(problem_hash)
                 # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
@@ -107,7 +107,7 @@ for problem_categ ∈ total_prob
                 # Now bind that hash within our `Artifacts.toml`.  `force = true` means that if it already exists,
                 # just overwrite with the new content-hash.  Unless the source files change, we do not expect
                 # the content hash to change, so this should not cause unnecessary version control churn.
-                bind_artifact!(artifact_toml, "$problem", problem_hash)
+                bind_artifact!(artifact_toml, "$category/$problem", problem_hash)
             end
         catch
             push!(fails, problem)
