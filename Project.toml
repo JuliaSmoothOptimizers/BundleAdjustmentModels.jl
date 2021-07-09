@@ -1,6 +1,6 @@
-name = "BALProblems"
+name = "BALNLSProblems"
 uuid = "876335a7-67ca-453c-867d-0738d06760fa"
-authors = ["AntoninKns <antonin.kenens@etu.enseeiht.fr>"]
+authors = ["AntoninKns <antonin.kenens@polymtl.ca>"]
 version = "0.1.0"
 
 [deps]
@@ -11,3 +11,10 @@ NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
 SolverCore = "ff4d7338-4cf1-434d-91df-b86cb86fb843"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+
+CodecBzip2 = "0.7.2"
+FastClosures = "0.3.2"
+NLPModels = "0.17.0"
+SolverCore = "0.2.1"

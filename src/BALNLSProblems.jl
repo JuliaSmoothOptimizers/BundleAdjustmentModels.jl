@@ -1,6 +1,6 @@
-module BALProblems
+module BALNLSProblems
 
-include("../dep_might_be_del/BALNLSModels.jl")
+include("BALNLSModels.jl")
 using Pkg.Artifacts
 
 dubrovnik_prob = ["problem-16-22106-pre.txt.bz2", 
@@ -84,7 +84,7 @@ venice_prob = ["problem-52-64053-pre.txt.bz2",
 
 """
 fetch_bal_name(name::AbstractString, group::AbstractString)
-Download the problem with name `name` from the group `group`.
+Get the problem with name `name` from the group `group`.
 Return the path where the problem is stored.
 """
 function fetch_bal_name(name::AbstractString, group::AbstractString)
@@ -110,7 +110,7 @@ end
 
 """
 fetch_bal_group(group::AbstractString)
-Download all the problems with the group name `group`.
+Get all the problems with the group name `group`.
 Return an array of the paths where the problems are stored.
 """
 function fetch_bal_group(group::AbstractString)
@@ -137,7 +137,11 @@ function fetch_bal_group(group::AbstractString)
   return problem_paths
 end
 
-
+"""
+generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
+Get the path of the problem name `name` from the group `group` with the precision `T`.
+Return a NLSModel generated from this problem data using NLPModels
+"""
 function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
   real_name = ""
   try

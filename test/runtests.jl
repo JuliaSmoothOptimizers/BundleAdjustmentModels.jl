@@ -1,5 +1,4 @@
-#using BALProblems
-include("../src/BALProblems.jl")
+include("../src/BALNLSProblems.jl")
 using Test
 
 function test_fetch_bal_name()
