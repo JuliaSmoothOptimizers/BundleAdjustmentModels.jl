@@ -1,3 +1,8 @@
+name = "BALProblems"
+uuid = "876335a7-67ca-453c-867d-0738d06760fa"
+authors = ["AntoninKns <antonin.kenens@etu.enseeiht.fr>"]
+version = "0.1.0"
+
 [deps]
 CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
 FastClosures = "9aa1b823-49e4-5ca5-8b0f-3971ec8bab6a"

@@ -1,3 +1,5 @@
+module BALProblems
+
 include("../dep_might_be_del/BALNLSModels.jl")
 using Pkg.Artifacts
 
@@ -155,4 +157,6 @@ function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=
   filedir = fetch_bal_name(name, group)
   filename = joinpath(filedir, real_name)
   return BALNLSModel(filename, T)
+end
+
 end
