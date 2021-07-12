@@ -1,3 +1,3 @@
-using BALNLSProblems, Test
+using BALNLSProblems, Test, NLPModels
 
 include("testBALNLSFunctions.jl")

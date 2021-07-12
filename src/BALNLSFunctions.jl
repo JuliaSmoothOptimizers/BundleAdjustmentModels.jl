@@ -156,5 +156,5 @@ function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=
   end
   filedir = fetch_bal_name(name, group)
   filename = joinpath(filedir, real_name)
-  return BALNLSModel(filename, T)
+  return BALNLSModel(filename, T=T)
 end

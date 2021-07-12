@@ -54,9 +54,9 @@ function reconsname(filename :: AbstractString)
     return string("..", filename[1:end-8], ".txt.bz2")
 end
 
-function BALNLSModel(filename::AbstractString, T::Type=Float64)
+function BALNLSModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
 
-    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T)
+    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T=T)
 
     S = typeof(x0)
   
@@ -65,7 +65,9 @@ function BALNLSModel(filename::AbstractString, T::Type=Float64)
     # number of residuals: two residuals per 2d point
     nequ = 2 * nobs
 
-    @info "BALNLPModel $filename" nvar nequ
+    if verbose == true
+        @info "BALNLPModel $filename" nvar nequ
+    end
   
     meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
     nls_meta = NLSMeta{T, S}(nequ, nvar, x0=x0, nnzj=2*nobs*12)
