@@ -1,5 +1,4 @@
 # Extracting the datasets given at https://grail.cs.washington.edu/projects/bal/
-using CodecBzip2
 
 """
 Read the .txt.bzip2 file in Data/filename and extract the data,

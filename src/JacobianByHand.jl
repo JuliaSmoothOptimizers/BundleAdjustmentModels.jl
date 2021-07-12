@@ -1,6 +1,3 @@
-using LinearAlgebra
-using SparseArrays
-
 """
 First step in camera projection
 """

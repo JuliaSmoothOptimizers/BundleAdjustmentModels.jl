@@ -1,4 +1,4 @@
-using Pkg.Artifacts
+export fetch_bal_name, fetch_bal_group, generate_NLSModel
 
 dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
                   "problem-88-64298-pre.txt.bz2",
@@ -16,7 +16,6 @@ dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
                   "problem-287-182023-pre.txt.bz2",
                   "problem-308-195089-pre.txt.bz2",
                   "problem-356-226730-pre.txt.bz2"]
-
 
 trafalgar_prob = ["problem-21-11315-pre.txt.bz2",
                   "problem-39-18060-pre.txt.bz2",
@@ -79,39 +78,83 @@ venice_prob = ["problem-52-64053-pre.txt.bz2",
                "problem-1408-912229-pre.txt.bz2",
                "problem-1778-993923-pre.txt.bz2"]
 
-total_prob = [[dubrovnik_prob, "dubrovnik"], [trafalgar_prob, "trafalgar"], [ladybug_prob, "ladybug"], [venice_prob, "venice"]]
-
-
-const artifact_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
-               
-const bal_url = "https://grail.cs.washington.edu/projects/bal/data"
-
-fails = String[]
-
-for problem_categ ∈ total_prob
-    for problem ∈ problem_categ[1]
-        category = problem_categ[2]
-        url = "$bal_url/$category/$problem"
-        println(problem)
-        println(url)
-        try
-            problem_hash = artifact_hash("$category/$problem", artifact_toml)
-            # If the name was not bound, or the hash it was bound to does not exist, create it!
-            if problem_hash === nothing || !artifact_exists(problem_hash)
-                # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
-                problem_hash = create_artifact() do artifact_dir
-                    # We create the artifact by simply downloading a few files into the new artifact directory
-                    download("$url", joinpath(artifact_dir, "$problem"))
-                end
-
-                # Now bind that hash within our `Artifacts.toml`.  `force = true` means that if it already exists,
-                # just overwrite with the new content-hash.  Unless the source files change, we do not expect
-                # the content hash to change, so this should not cause unnecessary version control churn.
-                bind_artifact!(artifact_toml, "$category/$problem", problem_hash)
-            end
-        catch
-            push!(fails, problem)
-        end
+"""
+fetch_bal_name(name::AbstractString, group::AbstractString)
+Get the problem with name `name` from the group `group`.
+Return the path where the problem is stored.
+"""
+function fetch_bal_name(name::AbstractString, group::AbstractString)
+  real_name = ""
+  try
+    if name[end-2:end] == "bz2"
+      real_name = name
+    elseif name[end-2:end] == "txt"
+      real_name = name*".bz2"
+    elseif name[end-2:end] == "pre"
+      real_name = name*".txt.bz2"
+    else
+      real_name = name*"-pre.txt.bz2"
     end
+  catch err
+    @warn "You probably made a mistake in the problem name"
+    throw(err)
+  end
+  final_name = "$group/$real_name"
+  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
+  return loc
 end
-length(fails) > 0 && @warn "the following matrices could not be downloaded" fails
+
+"""
+fetch_bal_group(group::AbstractString)
+Get all the problems with the group name `group`.
+Return an array of the paths where the problems are stored.
+"""
+function fetch_bal_group(group::AbstractString)
+  real_group = ""
+  try
+    if group == "dubrovnik"
+      real_group = dubrovnik_prob
+    elseif group == "trafalgar"
+      real_group = trafalgar_prob
+    elseif group == "ladybug"
+      real_group = ladybug_prob
+    elseif group == "venice"
+      real_group = venice_prob
+    end
+  catch err
+    @warn "You probably made a mistake in the group name"
+    throw(err)
+  end
+  problem_paths = String[]
+  for problem ∈ real_group
+    problem_path = fetch_bal_name(problem, group)
+    push!(problem_paths, problem_path)
+  end
+  return problem_paths
+end
+
+"""
+generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
+Get the path of the problem name `name` from the group `group` with the precision `T`.
+Return a NLSModel generated from this problem data using NLPModels
+"""
+function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
+  real_name = ""
+  try
+    if name[end-2:end] == "bz2"
+      real_name = name
+    elseif name[end-2:end] == "txt"
+      real_name = name*".bz2"
+    elseif name[end-2:end] == "pre"
+      real_name = name*".txt.bz2"
+    else
+      real_name = name*"-pre.txt.bz2"
+    end
+  catch err
+    @warn "You probably made a mistake in the problem name"
+    throw(err)
+  end
+  filedir = fetch_bal_name(name, group)
+  filename = joinpath(filedir, real_name)
+  return BALNLSModel(filename, T)
+end

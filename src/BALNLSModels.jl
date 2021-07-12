@@ -1,12 +1,4 @@
-using NLPModels
-using LinearAlgebra
-using .Threads
 import NLPModels: increment!
-using SolverCore
-using FastClosures
-
-include("ReadFiles.jl")
-include("JacobianByHand.jl")
 
 """
 Represent a bundle adjustement problem in the form
