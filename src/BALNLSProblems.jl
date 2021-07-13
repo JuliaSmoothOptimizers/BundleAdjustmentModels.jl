@@ -1,6 +1,6 @@
 module BALNLSProblems
 
-using Pkg.Artifacts, NLPModels, LinearAlgebra, .Threads, SolverCore, FastClosures, SparseArrays, CodecBzip2
+using Pkg.Artifacts, Pkg.PlatformEngines, NLPModels, LinearAlgebra, .Threads, SolverCore, FastClosures, SparseArrays, CodecBzip2, SHA
 
 include("BALNLSModels.jl")
 include("ReadFiles.jl")

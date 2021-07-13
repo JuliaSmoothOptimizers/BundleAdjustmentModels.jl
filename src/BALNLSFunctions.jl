@@ -1,3 +1,5 @@
+import Base.SHA1, Pkg.PlatformEngines.download_verify
+
 export fetch_bal_name, fetch_bal_group, generate_NLSModel
 
 dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
@@ -100,7 +102,7 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
     throw(err)
   end
   final_name = "$group/$real_name"
-  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"), quiet_download=true)
+  loc = cust_ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
   return loc
 end
 
@@ -157,4 +159,177 @@ function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=
   filedir = fetch_bal_name(name, group)
   filename = joinpath(filedir, real_name)
   return BALNLSModel(filename, T=T)
+end
+
+const DEFAULT_IO = Ref{Union{IO,Nothing}}(nothing)
+stderr_f() = something(DEFAULT_IO[], stderr)
+can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true")
+
+function cust_ensure_artifact_installed(name::String, 
+                                        artifacts_toml::String, 
+                                        pkg_uuid::Union{Base.UUID,Nothing}=nothing,
+                                        verbose::Bool = false,
+                                        quiet_download::Bool = false,
+                                        io::IO=stderr_f())
+
+  meta = artifact_meta(name, artifacts_toml; pkg_uuid=pkg_uuid)
+
+  if meta === nothing
+      error("Cannot locate artifact '$(name)' in '$(artifacts_toml)'")
+  end
+
+  hash = SHA1(meta["git-tree-sha1"])
+
+  if !artifact_exists(hash)
+    for entry in meta["download"]
+      url = entry["url"]
+      tarball_hash = entry["sha256"]
+      download_success = cust_download_artifact(hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
+      download_success && return artifact_path(hash)
+      error("Unable to automatically install '$(name)' from '$(artifacts_toml)'")
+    end
+  else
+    return artifact_path(hash)
+  end
+end
+
+function cust_download_artifact(
+  tree_hash::SHA1,
+  tarball_url::String,
+  tarball_hash::Union{String, Nothing} = nothing;
+  verbose::Bool = false,
+  quiet_download::Bool = false,
+  io::IO=stderr_f(),
+)
+  if artifact_exists(tree_hash)
+      return true
+  end
+
+  if Sys.iswindows()
+      # The destination directory we're hoping to fill:
+      dest_dir = artifact_path(tree_hash; honor_overrides=false)
+      mkpath(dest_dir)
+
+      # On Windows, we have some issues around stat() and chmod() that make properly
+      # determining the git tree hash problematic; for this reason, we use the "unsafe"
+      # artifact unpacking method, which does not properly verify unpacked git tree
+      # hash.  This will be fixed in a future Julia release which will properly interrogate
+      # the filesystem ACLs for executable permissions, which git tree hashes care about.
+      try
+          cust_download_verify(tarball_url, tarball_hash, dest_dir, quiet_download=true)
+      catch err
+          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
+          # Clean that destination directory out if something went wrong
+          rm(dest_dir; force=true, recursive=true)
+
+          if isa(err, InterruptException)
+              rethrow(err)
+          end
+          return false
+      end
+  else
+      # We download by using `create_artifact()`.  We do this because the download may
+      # be corrupted or even malicious; we don't want to clobber someone else's artifact
+      # by trusting the tree hash that has been given to us; we will instead download it
+      # to a temporary directory, calculate the true tree hash, then move it to the proper
+      # location only after knowing what it is, and if something goes wrong in the process,
+      # everything should be cleaned up.  Luckily, that is precisely what our
+      # `create_artifact()` wrapper does, so we use that here.
+      calc_hash = try
+          create_artifact() do dir
+              cust_download_verify(tarball_url, tarball_hash, dir)
+          end
+      catch err
+          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
+          if isa(err, InterruptException)
+              rethrow(err)
+          end
+          # If something went wrong during download, return false
+          return false
+      end
+
+      # Did we get what we expected?  If not, freak out.
+      if calc_hash.bytes != tree_hash.bytes
+          msg  = "Tree Hash Mismatch!\n"
+          msg *= "  Expected git-tree-sha1:   $(bytes2hex(tree_hash.bytes))\n"
+          msg *= "  Calculated git-tree-sha1: $(bytes2hex(calc_hash.bytes))"
+          # Since tree hash calculation is still broken on some systems, e.g. Pkg.jl#1860,
+          # and Pkg.jl#2317 so we allow setting JULIA_PKG_IGNORE_HASHES=1 to ignore the
+          # error and move the artifact to the expected location and return true
+          ignore_hash = get(ENV, "JULIA_PKG_IGNORE_HASHES", nothing) == "1"
+          if ignore_hash
+              msg *= "\n\$JULIA_PKG_IGNORE_HASHES is set to 1: ignoring error and moving artifact to the expected location"
+          end
+          @error(msg)
+          if ignore_hash
+              # Move it to the location we expected
+              src = artifact_path(calc_hash; honor_overrides=false)
+              dst = artifact_path(tree_hash; honor_overrides=false)
+              mv(src, dst; force=true)
+              return true
+          end
+          return false
+      end
+  end
+
+  return true
+end
+
+function cust_download_verify(
+  url::AbstractString,
+  hash::Union{AbstractString, Nothing},
+  dest::AbstractString;
+  verbose::Bool = false,
+  force::Bool = false,
+  quiet_download::Bool = false,
+)
+  # Whether the file existed in the first place
+  file_existed = false
+
+  if isfile(dest)
+      file_existed = true
+      if verbose
+          @info("Destination file $(dest) already exists, verifying...")
+      end
+
+      # verify download, if it passes, return happy.  If it fails, (and
+      # `force` is `true`, re-download!)
+      if hash !== nothing && verify(dest, hash; verbose=verbose)
+          return true
+      elseif !force
+          error("Verification failed, not overwriting $(dest)")
+      end
+  end
+
+  # Make sure the containing folder exists
+  mkpath(dirname(dest))
+
+  # Download the file, optionally continuing
+  Base.download(url, dest)
+  if hash !== nothing && !verify(dest, hash; verbose=verbose)
+      # If the file already existed, it's possible the initially downloaded chunk
+      # was bad.  If verification fails after downloading, auto-delete the file
+      # and start over from scratch.
+      if file_existed
+          if verbose
+              @info("Continued download didn't work, restarting from scratch")
+          end
+          Base.rm(dest; force=true)
+
+          # Download and verify from scratch
+          Base.download(url, dest)
+          if hash !== nothing && !verify(dest, hash; verbose=verbose)
+              error("Verification failed")
+          end
+      else
+          # If it didn't verify properly and we didn't resume, something is
+          # very wrong and we must complain mightily.
+          error("Verification failed")
+      end
+  end
+
+  # If the file previously existed, this means we removed it (due to `force`)
+  # and redownloaded, so return `false`.  If it didn't exist, then this means
+  # that we successfully downloaded it, so return `true`.
+  return !file_existed
 end
