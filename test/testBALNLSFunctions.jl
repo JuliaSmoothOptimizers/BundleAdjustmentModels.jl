@@ -10,8 +10,9 @@ function testBALNLSFunctions()
         end
     end
 
+    # Change this test to very_small group
     @testset "test fetch_bal_group" begin
-        groups = ["dubrovnik", "trafalgar", "ladybug", "venice"]
+        groups = ["trafalgar"]
         for group ∈ groups
             group_paths = fetch_bal_group(group)
             for path ∈ group_paths

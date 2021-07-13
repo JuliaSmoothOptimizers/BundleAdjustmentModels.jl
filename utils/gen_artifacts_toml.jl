@@ -1,4 +1,11 @@
+# Part of the code directly copied from Pkg doc : https://pkgdocs.julialang.org/v1/artifacts/
+# sha256 sum and other code copied from https://github.com/simeonschaub/ArtifactUtils.jl/blob/main/src/ArtifactUtils.jl
+# Don't forget to mention in the license with license for BAL problems
+
 using Pkg.Artifacts
+using Pkg.PlatformEngines
+using SHA
+import Base.SHA1
 
 dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
                   "problem-88-64298-pre.txt.bz2",
@@ -81,12 +88,20 @@ venice_prob = ["problem-52-64053-pre.txt.bz2",
 
 total_prob = [[dubrovnik_prob, "dubrovnik"], [trafalgar_prob, "trafalgar"], [ladybug_prob, "ladybug"], [venice_prob, "venice"]]
 
-
 const artifact_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
                
 const bal_url = "https://grail.cs.washington.edu/projects/bal/data"
 
 fails = String[]
+
+function sha256sum(path)
+    return open(path, "r") do io
+        return bytes2hex(sha256(io))
+    end
+end
+
+lazybool = true
+forcebool = true
 
 for problem_categ ∈ total_prob
     for problem ∈ problem_categ[1]
@@ -94,24 +109,33 @@ for problem_categ ∈ total_prob
         url = "$bal_url/$category/$problem"
         println(problem)
         println(url)
-        try
+        #try
             problem_hash = artifact_hash("$category/$problem", artifact_toml)
             # If the name was not bound, or the hash it was bound to does not exist, create it!
             if problem_hash === nothing || !artifact_exists(problem_hash)
                 # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
                 problem_hash = create_artifact() do artifact_dir
                     # We create the artifact by simply downloading a few files into the new artifact directory
-                    download("$url", joinpath(artifact_dir, "$problem"))
+                    download("$url", joinpath(artifact_dir, "$problem"))    
                 end
+
+                path_artifact = artifact_path(problem_hash) 
+                sha256 = sha256sum("$path_artifact/$problem")
+                remove_artifact(problem_hash)
 
                 # Now bind that hash within our `Artifacts.toml`.  `force = true` means that if it already exists,
                 # just overwrite with the new content-hash.  Unless the source files change, we do not expect
                 # the content hash to change, so this should not cause unnecessary version control churn.
-                bind_artifact!(artifact_toml, "$category/$problem", problem_hash)
+                bind_artifact!(artifact_toml, 
+                               "$category/$problem", 
+                               problem_hash, 
+                               download_info = [(url, sha256)],
+                               lazy = lazybool,
+                               force = forcebool)
             end
-        catch
+        #= catch
             push!(fails, problem)
-        end
+        end =#
     end
 end
 length(fails) > 0 && @warn "the following matrices could not be downloaded" fails

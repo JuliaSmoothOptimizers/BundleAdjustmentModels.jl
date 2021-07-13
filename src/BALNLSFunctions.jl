@@ -96,11 +96,11 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
       real_name = name*"-pre.txt.bz2"
     end
   catch err
-    @warn "You probably made a mistake in the problem name"
+    @warn "The name and group were not recognized"
     throw(err)
   end
   final_name = "$group/$real_name"
-  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
+  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"), verbose=true)
   return loc
 end
 
@@ -122,7 +122,7 @@ function fetch_bal_group(group::AbstractString)
       real_group = venice_prob
     end
   catch err
-    @warn "You probably made a mistake in the group name"
+    @warn "The group was not recognized"
     throw(err)
   end
   problem_paths = String[]
@@ -151,7 +151,7 @@ function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=
       real_name = name*"-pre.txt.bz2"
     end
   catch err
-    @warn "You probably made a mistake in the problem name"
+    @warn "The name and group were not recognized"
     throw(err)
   end
   filedir = fetch_bal_name(name, group)

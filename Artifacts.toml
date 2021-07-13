@@ -1,221 +1,591 @@
 ["dubrovnik/problem-135-90642-pre.txt.bz2"]
 git-tree-sha1 = "81de4d356e5e664e87f3e06d5558a77b1feb1c93"
+lazy = true
+
+    [["dubrovnik/problem-135-90642-pre.txt.bz2".download]]
+    sha256 = "010434b003c5355d1184887e32d504f2a8c558cb8454ced8d918b8b2c1dfd8df"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-135-90642-pre.txt.bz2"
 
 ["dubrovnik/problem-142-93602-pre.txt.bz2"]
 git-tree-sha1 = "115764dd673db3028cc5ce198e2629b4a3286c2b"
+lazy = true
+
+    [["dubrovnik/problem-142-93602-pre.txt.bz2".download]]
+    sha256 = "4d06f15adf3a08933008a0ceb977e85af2d8ba9a16c268b9c2a8a736376fb990"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-142-93602-pre.txt.bz2"
 
 ["dubrovnik/problem-150-95821-pre.txt.bz2"]
 git-tree-sha1 = "c455401d05aa50261446e6073b1633631c604778"
+lazy = true
+
+    [["dubrovnik/problem-150-95821-pre.txt.bz2".download]]
+    sha256 = "6b5029fe412def51f503b28901b57934ad856b51c10fc71e52a6e889c1fa628d"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-150-95821-pre.txt.bz2"
 
 ["dubrovnik/problem-16-22106-pre.txt.bz2"]
 git-tree-sha1 = "bafd5accdad3c17dd4d9794a64e33d6294095a49"
+lazy = true
+
+    [["dubrovnik/problem-16-22106-pre.txt.bz2".download]]
+    sha256 = "0d695947deb3fc3026e5434a904151b18fe8e60c0176e430dcb5e7a3da039ca5"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-16-22106-pre.txt.bz2"
 
 ["dubrovnik/problem-161-103832-pre.txt.bz2"]
 git-tree-sha1 = "05010b04528c716465f0b54c2e55bb3cddc0b67f"
+lazy = true
+
+    [["dubrovnik/problem-161-103832-pre.txt.bz2".download]]
+    sha256 = "060b21cdd51434c1a515d13238eb03acbc8706f2821f3d43e92989a5719aedbc"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-161-103832-pre.txt.bz2"
 
 ["dubrovnik/problem-173-111908-pre.txt.bz2"]
 git-tree-sha1 = "7f25b55a3bee80e5f89d0fbf4600f022fbf3ffca"
+lazy = true
+
+    [["dubrovnik/problem-173-111908-pre.txt.bz2".download]]
+    sha256 = "116eda2831e5b27716027c35e3aebb3de2830850189a2775fad4f4cdff6be298"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-173-111908-pre.txt.bz2"
 
 ["dubrovnik/problem-182-116770-pre.txt.bz2"]
 git-tree-sha1 = "758a2c8024689aa5970ba546ba495d3a6ca3112a"
+lazy = true
+
+    [["dubrovnik/problem-182-116770-pre.txt.bz2".download]]
+    sha256 = "e7a170df761b28b484ac6f0c1e9c07187a212943d7ab378887432e74a4e08e17"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-182-116770-pre.txt.bz2"
 
 ["dubrovnik/problem-202-132796-pre.txt.bz2"]
 git-tree-sha1 = "8f3dae9b9d4f6aa9ef1db299349f2d388979be88"
+lazy = true
+
+    [["dubrovnik/problem-202-132796-pre.txt.bz2".download]]
+    sha256 = "4e2f8f74718021b39e8249f04e7bcb695267b8a353f2a49175e2df94f9267a36"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-202-132796-pre.txt.bz2"
 
 ["dubrovnik/problem-237-154414-pre.txt.bz2"]
 git-tree-sha1 = "70933968f7ab2a80d6d7629d783225b3b9c19b15"
+lazy = true
+
+    [["dubrovnik/problem-237-154414-pre.txt.bz2".download]]
+    sha256 = "817f324be685d2a61bfdc33cc99e67ca1de2941be8dce013040b38795199a2cf"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-237-154414-pre.txt.bz2"
 
 ["dubrovnik/problem-253-163691-pre.txt.bz2"]
 git-tree-sha1 = "4119859019222757091fb182c127862779353292"
+lazy = true
+
+    [["dubrovnik/problem-253-163691-pre.txt.bz2".download]]
+    sha256 = "9cb658e3149c9eed4f5d99181a13477029a71e9e8400364d0c83f286835d709c"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-253-163691-pre.txt.bz2"
 
 ["dubrovnik/problem-262-169354-pre.txt.bz2"]
 git-tree-sha1 = "a3fa081f75ced0c28e6baeee3b6bad34772dab37"
+lazy = true
+
+    [["dubrovnik/problem-262-169354-pre.txt.bz2".download]]
+    sha256 = "84b0c8061a744ade39e8c2753bc26141686e3362a274d0a0826ab38a9bbd5bf9"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-262-169354-pre.txt.bz2"
 
 ["dubrovnik/problem-273-176305-pre.txt.bz2"]
 git-tree-sha1 = "c423a9802c8ec684767c0209ad0b08b3592797d6"
+lazy = true
+
+    [["dubrovnik/problem-273-176305-pre.txt.bz2".download]]
+    sha256 = "5b355eb9680d820c1d85a0eb4bed655814de3c5dab7d3fd14dd0044fc0d7887e"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-273-176305-pre.txt.bz2"
 
 ["dubrovnik/problem-287-182023-pre.txt.bz2"]
 git-tree-sha1 = "4f5d70294de8c6697ddf682096c55682f7cdebb4"
+lazy = true
+
+    [["dubrovnik/problem-287-182023-pre.txt.bz2".download]]
+    sha256 = "2974f60f632551deb9e51fd53284571bc5abf52b5df8d715d327a505653856b9"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-287-182023-pre.txt.bz2"
 
 ["dubrovnik/problem-308-195089-pre.txt.bz2"]
 git-tree-sha1 = "fd6a82118ea7e8ed231fc484273becf3fb097788"
+lazy = true
+
+    [["dubrovnik/problem-308-195089-pre.txt.bz2".download]]
+    sha256 = "409a1a17a86dd486212a4ba270038eabe62a98399dff6d9c0cd6c6c703b79e1d"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-308-195089-pre.txt.bz2"
 
 ["dubrovnik/problem-356-226730-pre.txt.bz2"]
 git-tree-sha1 = "e5ff6210f10f633531314bcf00001776adabe725"
+lazy = true
+
+    [["dubrovnik/problem-356-226730-pre.txt.bz2".download]]
+    sha256 = "d6e2e04864c88f1af2c12e91af4ee8cddab6e2a72d6b1bd5fa3c8883c971e365"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-356-226730-pre.txt.bz2"
 
 ["dubrovnik/problem-88-64298-pre.txt.bz2"]
 git-tree-sha1 = "3f42bef7b8ff9b4f5df21ecb4cf8bcc65827eb38"
+lazy = true
+
+    [["dubrovnik/problem-88-64298-pre.txt.bz2".download]]
+    sha256 = "0932671dd91eb8a36a24ad3c13495e7131e198cdcc30b0c606ab44458a72846b"
+    url = "https://grail.cs.washington.edu/projects/bal/data/dubrovnik/problem-88-64298-pre.txt.bz2"
 
 ["ladybug/problem-1031-110968-pre.txt.bz2"]
 git-tree-sha1 = "e3cddf6f44c30007df01ca55f661ca9375424670"
+lazy = true
+
+    [["ladybug/problem-1031-110968-pre.txt.bz2".download]]
+    sha256 = "3a3fbed7026284aa7b670d223807870c24aacd4946ccc60bf8abbe86de79e116"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1031-110968-pre.txt.bz2"
 
 ["ladybug/problem-1064-113655-pre.txt.bz2"]
 git-tree-sha1 = "57399e61350632516e5e770cfa4f813f1ff7ea65"
+lazy = true
+
+    [["ladybug/problem-1064-113655-pre.txt.bz2".download]]
+    sha256 = "618dd7a3af97b49b20976f502deff19eed9f64a0730989b49798ee69082fd24b"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1064-113655-pre.txt.bz2"
 
 ["ladybug/problem-1118-118384-pre.txt.bz2"]
 git-tree-sha1 = "1270d5019c1c29492aaf9f7ea5470c3e3af4b471"
+lazy = true
+
+    [["ladybug/problem-1118-118384-pre.txt.bz2".download]]
+    sha256 = "e05f866597c5ab837cda7d3221f9fa27d67ef20607d1ebf9696a2b311bd8b6a0"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1118-118384-pre.txt.bz2"
 
 ["ladybug/problem-1152-122269-pre.txt.bz2"]
 git-tree-sha1 = "157fe52c2fa7e9beb06422f3f360d244c59c924a"
+lazy = true
+
+    [["ladybug/problem-1152-122269-pre.txt.bz2".download]]
+    sha256 = "dcb9a1e70e2c28575403974fd85e8a4fc3e0388535a9b791a13639b575fb3623"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1152-122269-pre.txt.bz2"
 
 ["ladybug/problem-1197-126327-pre.txt.bz2"]
 git-tree-sha1 = "72cdf832cd3eedb4cc4c589127e7ab5b91a60f00"
+lazy = true
+
+    [["ladybug/problem-1197-126327-pre.txt.bz2".download]]
+    sha256 = "2453195a61a56311b79c22c483960905dc131ee4172f294187173fea224d5736"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1197-126327-pre.txt.bz2"
 
 ["ladybug/problem-1235-129634-pre.txt.bz2"]
 git-tree-sha1 = "1e01d6927d4d4e0acd3086d9c75d2ee783ab1220"
+lazy = true
+
+    [["ladybug/problem-1235-129634-pre.txt.bz2".download]]
+    sha256 = "10b8515082dc065266e7d0ddad2d070dcb55529fbc20ff78679d2b99f08bcb3b"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1235-129634-pre.txt.bz2"
 
 ["ladybug/problem-1266-132593-pre.txt.bz2"]
 git-tree-sha1 = "b92a8dfd520e7440769c4a72685e817632f9ea43"
+lazy = true
+
+    [["ladybug/problem-1266-132593-pre.txt.bz2".download]]
+    sha256 = "5c6bfa1cf103bfffad578ce746c4dc306df0359696748d5b94cfe46c16d36183"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1266-132593-pre.txt.bz2"
 
 ["ladybug/problem-1340-137079-pre.txt.bz2"]
 git-tree-sha1 = "366a8368c091027a23a190b1ed498158eef947a5"
+lazy = true
+
+    [["ladybug/problem-1340-137079-pre.txt.bz2".download]]
+    sha256 = "9521c5e29b96492a2ab84c777e4ed10b95655a88639fdb3716e8c546c1156f9c"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1340-137079-pre.txt.bz2"
 
 ["ladybug/problem-138-19878-pre.txt.bz2"]
 git-tree-sha1 = "5c5c938c998d6c083f549bc584cfeb07bd296d89"
+lazy = true
+
+    [["ladybug/problem-138-19878-pre.txt.bz2".download]]
+    sha256 = "0b7016e233ed8e0a4aa7dec79cca3d7dd6ffc40fd01846e1d0c9d2de1247a2b2"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-138-19878-pre.txt.bz2"
 
 ["ladybug/problem-1469-145199-pre.txt.bz2"]
 git-tree-sha1 = "ee08f4f6898cc26471d3a63502fe908cfa9a5dcc"
+lazy = true
+
+    [["ladybug/problem-1469-145199-pre.txt.bz2".download]]
+    sha256 = "11d4d93fd5d7d6575f2f2b38a46955d4692e10921ac10fadb92506030c21e567"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1469-145199-pre.txt.bz2"
 
 ["ladybug/problem-1514-147317-pre.txt.bz2"]
 git-tree-sha1 = "1a0ebf23b35d784ad3d39f4987bc7d785f5976b6"
+lazy = true
+
+    [["ladybug/problem-1514-147317-pre.txt.bz2".download]]
+    sha256 = "1b08f5a1a112f697a9f3480a6887db77b0095540b2c9c613d90ea40b9dcfd86d"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1514-147317-pre.txt.bz2"
 
 ["ladybug/problem-1587-150845-pre.txt.bz2"]
 git-tree-sha1 = "00be55410c27068ec73261e122a39258100a1a11"
+lazy = true
+
+    [["ladybug/problem-1587-150845-pre.txt.bz2".download]]
+    sha256 = "ca6a310fcd3c5649fd4b17a7f13356fc7a6f8033e3932e82f42432eb90d0f948"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1587-150845-pre.txt.bz2"
 
 ["ladybug/problem-1642-153820-pre.txt.bz2"]
 git-tree-sha1 = "0303e7ae8256c494c9da052d977277f21265899b"
+lazy = true
+
+    [["ladybug/problem-1642-153820-pre.txt.bz2".download]]
+    sha256 = "5e44fcf7e79862d53343cdaf80ee177c4b59d7193d1022f1b5934c28d34e9348"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1642-153820-pre.txt.bz2"
 
 ["ladybug/problem-1695-155710-pre.txt.bz2"]
 git-tree-sha1 = "389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84"
+lazy = true
+
+    [["ladybug/problem-1695-155710-pre.txt.bz2".download]]
+    sha256 = "c4f52c978513a0bccde40f5e607d5570e16608932ae4f2817ec7e82c0dd074ab"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-1695-155710-pre.txt.bz2"
 
 ["ladybug/problem-318-41628-pre.txt.bz2"]
 git-tree-sha1 = "e8ebdcec7cd5dc3ec4825dcb6642064e541fa625"
+lazy = true
+
+    [["ladybug/problem-318-41628-pre.txt.bz2".download]]
+    sha256 = "228ee2613466e25e81821ca424044065c030913a5e5eb2feeac2246f0890ef63"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-318-41628-pre.txt.bz2"
 
 ["ladybug/problem-372-47423-pre.txt.bz2"]
 git-tree-sha1 = "111ebd1dcdf5670eac8a12f4e2ce5a3b79b4f7f6"
+lazy = true
+
+    [["ladybug/problem-372-47423-pre.txt.bz2".download]]
+    sha256 = "071258cbfe6a882dc83204660682bbe9a8118f6ee2cc43c16813bf6fca75cdc2"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-372-47423-pre.txt.bz2"
 
 ["ladybug/problem-412-52215-pre.txt.bz2"]
 git-tree-sha1 = "3e8acd1ef4cb13d93a7140be1c3702b5eb165978"
+lazy = true
+
+    [["ladybug/problem-412-52215-pre.txt.bz2".download]]
+    sha256 = "cdab718d5a98738f6aa305b646645863ddc46360ef5fa128b2431d7f4777ee35"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-412-52215-pre.txt.bz2"
 
 ["ladybug/problem-460-56811-pre.txt.bz2"]
 git-tree-sha1 = "69595726ce3990604ef56b80c273fe7f95506f2e"
+lazy = true
+
+    [["ladybug/problem-460-56811-pre.txt.bz2".download]]
+    sha256 = "962e8b3980526100c383f5970e47f07a316024172148d62c42dcb925b60c1065"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-460-56811-pre.txt.bz2"
 
 ["ladybug/problem-49-7776-pre.txt.bz2"]
 git-tree-sha1 = "dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
+lazy = true
+
+    [["ladybug/problem-49-7776-pre.txt.bz2".download]]
+    sha256 = "1ccb15701a92a8ad909d30860a0108cd3f2d7916c1ecf2851e59a6198b9de6b0"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-49-7776-pre.txt.bz2"
 
 ["ladybug/problem-539-65220-pre.txt.bz2"]
 git-tree-sha1 = "1eab751f4850b1e22302a7f97894d4b769c7350e"
+lazy = true
+
+    [["ladybug/problem-539-65220-pre.txt.bz2".download]]
+    sha256 = "45064e69fa3bbe37badf0c7af1ae5f64b19e0e716b0e873c2ef67ca6bb1297a1"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-539-65220-pre.txt.bz2"
 
 ["ladybug/problem-598-69218-pre.txt.bz2"]
 git-tree-sha1 = "90ce1588d82c76a81c2b07d9e6abcc984e0e4586"
+lazy = true
+
+    [["ladybug/problem-598-69218-pre.txt.bz2".download]]
+    sha256 = "33f5129f8de00458fb539608960b4e5f8244020aa3163f2e9dc60973c07c4110"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-598-69218-pre.txt.bz2"
 
 ["ladybug/problem-646-73584-pre.txt.bz2"]
 git-tree-sha1 = "05e4248f24d897a97e9be1f386e18d1de7e511e5"
+lazy = true
+
+    [["ladybug/problem-646-73584-pre.txt.bz2".download]]
+    sha256 = "990233f390fc2de3ac1e637e84940cb0de86baaccdd732a2ae309d2527d28936"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-646-73584-pre.txt.bz2"
 
 ["ladybug/problem-707-78455-pre.txt.bz2"]
 git-tree-sha1 = "9609aa95bd2626c02e6fdc4182e642fdb3f5e7be"
+lazy = true
+
+    [["ladybug/problem-707-78455-pre.txt.bz2".download]]
+    sha256 = "5614d1e477bc7d0e954efe5e84cb84b81870cac4dca04efd0b21d0e5dc3d7f4f"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-707-78455-pre.txt.bz2"
 
 ["ladybug/problem-73-11032-pre.txt.bz2"]
 git-tree-sha1 = "3d0853a3ca8e585814697fea9cd4d6956692e103"
+lazy = true
+
+    [["ladybug/problem-73-11032-pre.txt.bz2".download]]
+    sha256 = "136d1b3814309cd1909dc5ab598fb5dcf83988ee47568c97a05804135721756c"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-73-11032-pre.txt.bz2"
 
 ["ladybug/problem-783-84444-pre.txt.bz2"]
 git-tree-sha1 = "8cd6fdd56c39180dce9c4ef3f5650cce9b1ca784"
+lazy = true
+
+    [["ladybug/problem-783-84444-pre.txt.bz2".download]]
+    sha256 = "93b24d5d5564a9d913e6bf826457026597cc7b121215e40cdd0715009b755145"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-783-84444-pre.txt.bz2"
 
 ["ladybug/problem-810-88814-pre.txt.bz2"]
 git-tree-sha1 = "b5319f9518899ac6fd30ba5ff9c2d6381f2203cf"
+lazy = true
+
+    [["ladybug/problem-810-88814-pre.txt.bz2".download]]
+    sha256 = "2200bdafd380a32c4037e41c20bcfc7400018553d18193818617670117e10f17"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-810-88814-pre.txt.bz2"
 
 ["ladybug/problem-856-93344-pre.txt.bz2"]
 git-tree-sha1 = "c7c6a4e9130e12eb458bd2826ee3c0de69e6d0a1"
+lazy = true
+
+    [["ladybug/problem-856-93344-pre.txt.bz2".download]]
+    sha256 = "a455ef5c248c23dfd6596a2ae26c456224cc03e921a178c741eb4859610bced2"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-856-93344-pre.txt.bz2"
 
 ["ladybug/problem-885-97473-pre.txt.bz2"]
 git-tree-sha1 = "53229252cdde853e72f5d920f101667e189dbad0"
+lazy = true
+
+    [["ladybug/problem-885-97473-pre.txt.bz2".download]]
+    sha256 = "c2ede5ef5604a91a1627c016191cdfd00beed6e45ae6ec5131fea98155f5b378"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-885-97473-pre.txt.bz2"
 
 ["ladybug/problem-931-102699-pre.txt.bz2"]
 git-tree-sha1 = "c95cdbabf3405b2d481230fd049b96974679e2d4"
+lazy = true
+
+    [["ladybug/problem-931-102699-pre.txt.bz2".download]]
+    sha256 = "7ed3916fbcf2ecef936415da48317142fc35fa3a351b7eab64cd386fe2f285db"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-931-102699-pre.txt.bz2"
 
 ["ladybug/problem-969-105826-pre.txt.bz2"]
 git-tree-sha1 = "1a8f98c19abe44571b213172e9465a13aab2275d"
+lazy = true
+
+    [["ladybug/problem-969-105826-pre.txt.bz2".download]]
+    sha256 = "717e82344b5dd9251e6e33adafb2fe5be372db7c4e19540a9676b02fb2b252b1"
+    url = "https://grail.cs.washington.edu/projects/bal/data/ladybug/problem-969-105826-pre.txt.bz2"
 
 ["trafalgar/problem-126-40037-pre.txt.bz2"]
 git-tree-sha1 = "9d1d5b3c72e64f5c4c98907580438c3a1bed0c7e"
+lazy = true
+
+    [["trafalgar/problem-126-40037-pre.txt.bz2".download]]
+    sha256 = "74f191aa27721e43d4d79f02906f225604efa19fedce42d2dfe111d39144978b"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-126-40037-pre.txt.bz2"
 
 ["trafalgar/problem-138-44033-pre.txt.bz2"]
 git-tree-sha1 = "3acad73b4b0b59c6453d965a9107271b0d567695"
+lazy = true
+
+    [["trafalgar/problem-138-44033-pre.txt.bz2".download]]
+    sha256 = "623bd65f9e741534829120abca4a8d39422281c2b1d16258322a7a79e6ea7764"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-138-44033-pre.txt.bz2"
 
 ["trafalgar/problem-161-48126-pre.txt.bz2"]
 git-tree-sha1 = "d7cc0bbf1bb6bd3a3331f220baf318c9350837f0"
+lazy = true
+
+    [["trafalgar/problem-161-48126-pre.txt.bz2".download]]
+    sha256 = "516d34d6a24c14e56eff7ce7902f2adb8d0367d1a8714a2f7975e03d48afa32e"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-161-48126-pre.txt.bz2"
 
 ["trafalgar/problem-170-49267-pre.txt.bz2"]
 git-tree-sha1 = "c2a7bcb75dfbf1730355f3b14d2a05fd5593a3c1"
+lazy = true
+
+    [["trafalgar/problem-170-49267-pre.txt.bz2".download]]
+    sha256 = "5ec749cbd48e23bc89e1023858222fed0f97ebd839b35681a3d7164ce050bca8"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-170-49267-pre.txt.bz2"
 
 ["trafalgar/problem-174-50489-pre.txt.bz2"]
 git-tree-sha1 = "09cb33420642f5079c4f3990801975b66303f528"
+lazy = true
+
+    [["trafalgar/problem-174-50489-pre.txt.bz2".download]]
+    sha256 = "5eda296cb9aa81b1b5692c0ce5df9ee3cef142ce869f45b2d20225f521503757"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-174-50489-pre.txt.bz2"
 
 ["trafalgar/problem-193-53101-pre.txt.bz2"]
 git-tree-sha1 = "dcbf893b88d7aa014209bac3a5e83a2f62a1ca40"
+lazy = true
+
+    [["trafalgar/problem-193-53101-pre.txt.bz2".download]]
+    sha256 = "6585085298a24c761360805e203c18f0b24943928f7734bf363f351fe700e3f2"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-193-53101-pre.txt.bz2"
 
 ["trafalgar/problem-201-54427-pre.txt.bz2"]
 git-tree-sha1 = "a580d82e8bd162a6eb3384d1959e035c781166fd"
+lazy = true
+
+    [["trafalgar/problem-201-54427-pre.txt.bz2".download]]
+    sha256 = "7635be4cd27770be9dfff5b4cf40db405cd29880c49c28711f1be248d55adbe4"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-201-54427-pre.txt.bz2"
 
 ["trafalgar/problem-206-54562-pre.txt.bz2"]
 git-tree-sha1 = "1fac6d804e6c98d0df33b28acc982c30e55836de"
+lazy = true
+
+    [["trafalgar/problem-206-54562-pre.txt.bz2".download]]
+    sha256 = "86718117c6bbbc85039430f116965e3bf647f057fd3a5508ecc8c3f9614ba150"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-206-54562-pre.txt.bz2"
 
 ["trafalgar/problem-21-11315-pre.txt.bz2"]
 git-tree-sha1 = "2af98b9359d4f7d517e4784b1cd64c750b4b876b"
+lazy = true
+
+    [["trafalgar/problem-21-11315-pre.txt.bz2".download]]
+    sha256 = "4a4ed35e334af9a60661bf83f1e86842e772f22a967113932456c5ebcf40e5e6"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-21-11315-pre.txt.bz2"
 
 ["trafalgar/problem-215-55910-pre.txt.bz2"]
 git-tree-sha1 = "81b358eff3217b2eddcae5bda69862bd5d333408"
+lazy = true
+
+    [["trafalgar/problem-215-55910-pre.txt.bz2".download]]
+    sha256 = "610e3cc1c955d862b570b4578dfa11cf009b6e0bb8c22a34121727db74111223"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-215-55910-pre.txt.bz2"
 
 ["trafalgar/problem-225-57665-pre.txt.bz2"]
 git-tree-sha1 = "8b2380d52960f45ad27b5f0f41ff388e79c1e0f8"
+lazy = true
+
+    [["trafalgar/problem-225-57665-pre.txt.bz2".download]]
+    sha256 = "465663708cbd1f1c1e8face9ac26e187ca8c0e1366eb9cb0657e87b444af3d1e"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-225-57665-pre.txt.bz2"
 
 ["trafalgar/problem-257-65132-pre.txt.bz2"]
 git-tree-sha1 = "e2f5109c72871cc83f5e32b14ae90bfdc599a29c"
+lazy = true
+
+    [["trafalgar/problem-257-65132-pre.txt.bz2".download]]
+    sha256 = "c265ccb6dcb668f7e6248b4359f9c3f1e9fd82087d768f30331474c4c5a55d21"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-257-65132-pre.txt.bz2"
 
 ["trafalgar/problem-39-18060-pre.txt.bz2"]
 git-tree-sha1 = "77d7d6954c9655d01ef61a46a8cadd377e5af82d"
+lazy = true
+
+    [["trafalgar/problem-39-18060-pre.txt.bz2".download]]
+    sha256 = "878b3aa55d85f1ed97d5e46ce89a26feed869cb7b951e3e6cd4703508e630bde"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-39-18060-pre.txt.bz2"
 
 ["trafalgar/problem-50-20431-pre.txt.bz2"]
 git-tree-sha1 = "4a0f3d0c4243f234659146f658a22a0a79e109a4"
+lazy = true
+
+    [["trafalgar/problem-50-20431-pre.txt.bz2".download]]
+    sha256 = "93612e50a76ca65ce84ee725590909fcd9ab01b88c0ab1f9b5215d4dc6d35e78"
+    url = "https://grail.cs.washington.edu/projects/bal/data/trafalgar/problem-50-20431-pre.txt.bz2"
 
 ["venice/problem-1102-780462-pre.txt.bz2"]
 git-tree-sha1 = "7faef0220ced708f59a332f73c972724a47b7192"
+lazy = true
+
+    [["venice/problem-1102-780462-pre.txt.bz2".download]]
+    sha256 = "125a36eecb94ecfa3081b9bd462c5eb6a9df59356f3e3d632fe735770dcd75d1"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1102-780462-pre.txt.bz2"
 
 ["venice/problem-1158-802917-pre.txt.bz2"]
 git-tree-sha1 = "c9d9cfdfe97d06932fa9529f353916614afc55fd"
+lazy = true
+
+    [["venice/problem-1158-802917-pre.txt.bz2".download]]
+    sha256 = "f13f98178e7dd281553603be6afb26fad5ebfb26f15ac8db6cb8e0bbd76b6146"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1158-802917-pre.txt.bz2"
 
 ["venice/problem-1184-816583-pre.txt.bz2"]
 git-tree-sha1 = "aeb2277394490d303ffaa1db7c2db70d8b1442ca"
+lazy = true
+
+    [["venice/problem-1184-816583-pre.txt.bz2".download]]
+    sha256 = "256d8a47a4c8983414ac2783580d6c2f1a076fdd01f3f13d5e76ec63298f5b9a"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1184-816583-pre.txt.bz2"
 
 ["venice/problem-1238-843534-pre.txt.bz2"]
 git-tree-sha1 = "98222b3268992d33c85844b427653b70eb98f55e"
+lazy = true
+
+    [["venice/problem-1238-843534-pre.txt.bz2".download]]
+    sha256 = "eae300a89ba8d87664af3c03ff29c9581e289230a8643f5cb0e90c661683584f"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1238-843534-pre.txt.bz2"
 
 ["venice/problem-1288-866452-pre.txt.bz2"]
 git-tree-sha1 = "0425a54973d1814a1eed8ea42ee3283abc2c21b4"
+lazy = true
+
+    [["venice/problem-1288-866452-pre.txt.bz2".download]]
+    sha256 = "513530dc1b23164e60a10692721db9ea83a44c45ec5dd22fdcdc58f9c0c4e2c2"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1288-866452-pre.txt.bz2"
 
 ["venice/problem-1350-894716-pre.txt.bz2"]
 git-tree-sha1 = "5b7e4bfea9d1941fcb25676b0592e34a4d4650ec"
+lazy = true
+
+    [["venice/problem-1350-894716-pre.txt.bz2".download]]
+    sha256 = "c0057bbff603719b2baacbf103dacb5c0415bd0e72464ea3ea927eae3b06f802"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1350-894716-pre.txt.bz2"
 
 ["venice/problem-1408-912229-pre.txt.bz2"]
 git-tree-sha1 = "63acde23fca2cda10d741b2fcf9dc41ef2e6a59f"
+lazy = true
+
+    [["venice/problem-1408-912229-pre.txt.bz2".download]]
+    sha256 = "022349f22648d6948d664e93c1e47dd3afa6352c67357304533b530a82fbdca1"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1408-912229-pre.txt.bz2"
 
 ["venice/problem-1778-993923-pre.txt.bz2"]
 git-tree-sha1 = "0a9dd556de081783ba71f41c1a35bbd19991de41"
+lazy = true
+
+    [["venice/problem-1778-993923-pre.txt.bz2".download]]
+    sha256 = "5a47b1f594e3e66f0ee56c66cd5d07fd15531861b9856bf2ab604b079dc3c914"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-1778-993923-pre.txt.bz2"
 
 ["venice/problem-245-198739-pre.txt.bz2"]
 git-tree-sha1 = "1a7abe1cceef8e15fc6947f76e052703451de45d"
+lazy = true
+
+    [["venice/problem-245-198739-pre.txt.bz2".download]]
+    sha256 = "4a6e53efc2fd8d4b9901003627aba3dcae83470a1692424f711fd7f6fa7a0308"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-245-198739-pre.txt.bz2"
 
 ["venice/problem-427-310384-pre.txt.bz2"]
 git-tree-sha1 = "b54ad6497ab7ec0b67c2d69d12a3dfc5f2610500"
+lazy = true
+
+    [["venice/problem-427-310384-pre.txt.bz2".download]]
+    sha256 = "a6aa017a5755c8ddea1bf67d9f73789cd3d83b198c655d0b06c1fe2c6c91c0e0"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-427-310384-pre.txt.bz2"
 
 ["venice/problem-52-64053-pre.txt.bz2"]
 git-tree-sha1 = "f9aa5924012af6edec9809fdba37a1a34da750b1"
+lazy = true
+
+    [["venice/problem-52-64053-pre.txt.bz2".download]]
+    sha256 = "f378c9774e92f02b6b97f1e790458ebefb444ea26def60580a7e38224c43a753"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-52-64053-pre.txt.bz2"
 
 ["venice/problem-744-543562-pre.txt.bz2"]
 git-tree-sha1 = "49573355706f857c8edf1729cb86ad9acae9356b"
+lazy = true
+
+    [["venice/problem-744-543562-pre.txt.bz2".download]]
+    sha256 = "e1576e5fa00d8770b1ec9b86b44841c20d997f8903e89158dcb2ee1f446cdb04"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-744-543562-pre.txt.bz2"
 
 ["venice/problem-89-110973-pre.txt.bz2"]
 git-tree-sha1 = "568c555f3f2b44b4a6a13a8d6e0fb6eb5f284220"
+lazy = true
+
+    [["venice/problem-89-110973-pre.txt.bz2".download]]
+    sha256 = "a565e3160c1334184eec8e135d2373c7e9f0fa7754cc6000a43aef12eac811e6"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-89-110973-pre.txt.bz2"
 
 ["venice/problem-951-708276-pre.txt.bz2"]
 git-tree-sha1 = "3ccf4e4f08da453dec278897fd5d26b4a402cc00"
+lazy = true
+
+    [["venice/problem-951-708276-pre.txt.bz2".download]]
+    sha256 = "1afb64d65cb376795db8c7e6a7427922621d462718e447ec8012b4bda9b1d29a"
+    url = "https://grail.cs.washington.edu/projects/bal/data/venice/problem-951-708276-pre.txt.bz2"
