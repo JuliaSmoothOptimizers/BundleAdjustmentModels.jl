@@ -120,7 +120,7 @@ for problem_categ ∈ total_prob
                 end
 
                 path_artifact = artifact_path(problem_hash) 
-                sha256 = sha256sum("$path_artifact/$problem")
+                hash_artifact = sha256sum("$path_artifact/$problem")
                 remove_artifact(problem_hash)
 
                 # Now bind that hash within our `Artifacts.toml`.  `force = true` means that if it already exists,
@@ -129,7 +129,7 @@ for problem_categ ∈ total_prob
                 bind_artifact!(artifact_toml, 
                                "$category/$problem", 
                                problem_hash, 
-                               download_info = [(url, sha256)],
+                               download_info = [(url, hash_artifact)],
                                lazy = lazybool,
                                force = forcebool)
             end

@@ -100,7 +100,7 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
     throw(err)
   end
   final_name = "$group/$real_name"
-  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"), verbose=true)
+  loc = ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"), quiet_download=true)
   return loc
 end
 
