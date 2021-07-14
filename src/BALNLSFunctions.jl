@@ -238,9 +238,21 @@ function cust_download_artifact(
       # location only after knowing what it is, and if something goes wrong in the process,
       # everything should be cleaned up.  Luckily, that is precisely what our
       # `create_artifact()` wrapper does, so we use that here.
+
+      # Removed the calc_hash because there is already a verification on the content of the
+      # file with download_verify in temp directory and calc_hash calculates the the hash of 
+      # the temp directory which seems to be random or at least not consistent enough the way
+      # I implemented it in the generation of the artifacts_toml. That being said, wrapping 
+      # in create_artifact() is still useful because if there is a hash missmatch the directory
+      # and files are deleted
       calc_hash = try
           create_artifact() do dir
-              cust_download_verify(real_name, tarball_url, tarball_hash, dir)
+              # In case we successfully download the file and the verification works
+              # we can move it to the safe location
+              download_verify(tarball_url, tarball_hash, joinpath(dir, "$real_name"))
+                  #= dest_dir = artifact_path(tree_hash; honor_overrides=false)
+                  mkpath(dest_dir)
+                  mv(joinpath(dir, "$real_name"), joinpath(dest_dir, "$real_name")) =#
           end
       catch err
           @debug "download_artifact error" tree_hash tarball_url tarball_hash err
@@ -251,8 +263,13 @@ function cust_download_artifact(
           return false
       end
 
+      # Removed calc_hash and the reasons mentioned earlier, so the next lines of code don't work
+      # There is a verification on the content of the file but just not on the destination
+      # which is tree_hash by default with this code, so we simply force the mv function 
+      # Another solution without moving artifacts twice might be slightly faster but less generic for now
+
       # Did we get what we expected?  If not, freak out.
-      if calc_hash.bytes != tree_hash.bytes
+      #= if calc_hash.bytes != tree_hash.bytes
           msg  = "Tree Hash Mismatch!\n"
           msg *= "  Expected git-tree-sha1:   $(bytes2hex(tree_hash.bytes))\n"
           msg *= "  Calculated git-tree-sha1: $(bytes2hex(calc_hash.bytes))"
@@ -272,7 +289,13 @@ function cust_download_artifact(
               return true
           end
           return false
-      end
+      end =#
+      # Move it to the location we expected
+      src = artifact_path(calc_hash; honor_overrides=false)
+      dst = artifact_path(tree_hash; honor_overrides=false)
+      mv(src, dst; force=true)
+      
+      return true
   end
 
   return true
