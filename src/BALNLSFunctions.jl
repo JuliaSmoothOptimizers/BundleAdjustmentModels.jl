@@ -102,7 +102,7 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
     throw(err)
   end
   final_name = "$group/$real_name"
-  loc = cust_ensure_artifact_installed(final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
+  loc = cust_ensure_artifact_installed(real_name, final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
   return loc
 end
 
@@ -165,7 +165,8 @@ const DEFAULT_IO = Ref{Union{IO,Nothing}}(nothing)
 stderr_f() = something(DEFAULT_IO[], stderr)
 can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true")
 
-function cust_ensure_artifact_installed(name::String, 
+function cust_ensure_artifact_installed(real_name::String,
+                                        name::String, 
                                         artifacts_toml::String, 
                                         pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                         verbose::Bool = false,
@@ -184,7 +185,7 @@ function cust_ensure_artifact_installed(name::String,
     for entry in meta["download"]
       url = entry["url"]
       tarball_hash = entry["sha256"]
-      download_success = cust_download_artifact(hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
+      download_success = cust_download_artifact(real_name, hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
       download_success && return artifact_path(hash)
       error("Unable to automatically install '$(name)' from '$(artifacts_toml)'")
     end
@@ -194,6 +195,7 @@ function cust_ensure_artifact_installed(name::String,
 end
 
 function cust_download_artifact(
+  real_name::String,
   tree_hash::SHA1,
   tarball_url::String,
   tarball_hash::Union{String, Nothing} = nothing;
@@ -216,7 +218,8 @@ function cust_download_artifact(
       # hash.  This will be fixed in a future Julia release which will properly interrogate
       # the filesystem ACLs for executable permissions, which git tree hashes care about.
       try
-          cust_download_verify(tarball_url, tarball_hash, dest_dir, quiet_download=true)
+          #cust_download_verify(real_name, tarball_url, tarball_hash, dest_dir, quiet_download=true)
+          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$real_name"))
       catch err
           @debug "download_artifact error" tree_hash tarball_url tarball_hash err
           # Clean that destination directory out if something went wrong
@@ -237,7 +240,7 @@ function cust_download_artifact(
       # `create_artifact()` wrapper does, so we use that here.
       calc_hash = try
           create_artifact() do dir
-              cust_download_verify(tarball_url, tarball_hash, dir)
+              cust_download_verify(real_name, tarball_url, tarball_hash, dir)
           end
       catch err
           @debug "download_artifact error" tree_hash tarball_url tarball_hash err
@@ -276,6 +279,7 @@ function cust_download_artifact(
 end
 
 function cust_download_verify(
+  real_name::String,
   url::AbstractString,
   hash::Union{AbstractString, Nothing},
   dest::AbstractString;
@@ -305,7 +309,7 @@ function cust_download_verify(
   mkpath(dirname(dest))
 
   # Download the file, optionally continuing
-  Base.download(url, dest)
+  download(url, joinpath(dest, "$real_name"))
   if hash !== nothing && !verify(dest, hash; verbose=verbose)
       # If the file already existed, it's possible the initially downloaded chunk
       # was bad.  If verification fails after downloading, auto-delete the file
@@ -314,10 +318,10 @@ function cust_download_verify(
           if verbose
               @info("Continued download didn't work, restarting from scratch")
           end
-          Base.rm(dest; force=true)
+          Base.rm(joinpath(dest, "$real_name"); force=true)
 
           # Download and verify from scratch
-          Base.download(url, dest)
+          download(url, joinpath(dest, "$real_name"))
           if hash !== nothing && !verify(dest, hash; verbose=verbose)
               error("Verification failed")
           end

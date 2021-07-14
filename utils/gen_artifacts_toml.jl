@@ -116,6 +116,7 @@ for problem_categ ∈ total_prob
                 # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
                 problem_hash = create_artifact() do artifact_dir
                     # We create the artifact by simply downloading a few files into the new artifact directory
+                    println(joinpath(artifact_dir, "$problem"))
                     download("$url", joinpath(artifact_dir, "$problem"))    
                 end
 
