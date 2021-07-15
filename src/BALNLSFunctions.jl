@@ -40,14 +40,8 @@ end
 
 """ Create name from filename """
 function name(filename :: AbstractString)
-    return splitext(filename)
+    return splitext(filename)[1]
 end
-
-# If tests work without this function delete it
-#= """ recsontruct filename from feas res name"""
-function reconsname(filename :: AbstractString)
-    return string("..", filename[1:end-8], ".txt.bz2")
-end =#
 
 """
     BALNLSModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)

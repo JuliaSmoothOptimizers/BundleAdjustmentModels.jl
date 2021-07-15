@@ -1,6 +1,6 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
-export fetch_bal_name, fetch_bal_group, generate_NLSModel
+export fetch_bal_name, fetch_bal_group, BALNLSModel
 
 """
     analyze_name_and_group(name::AbstractString, group::AbstractString)
@@ -94,7 +94,9 @@ Return a NLSModel generated from this problem data using NLPModels
 """
 function BALNLSModel(name::AbstractString, group::AbstractString; T::Type=Float64)
 
-  filedir = fetch_bal_name(name, group)
+  real_name, group = analyze_name_and_group(name, group)
+
+  filedir = fetch_bal_name(real_name, group)
   filename = joinpath(filedir, real_name)
 
   return BALNLSModel(filename, T=T)
