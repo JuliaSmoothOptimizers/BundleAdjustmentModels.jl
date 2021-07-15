@@ -1,362 +1,234 @@
-import Base.SHA1, Pkg.PlatformEngines.download_verify
+# Manual jacobian function is not proven
 
-export fetch_bal_name, fetch_bal_group, generate_NLSModel
-
-dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
-                  "problem-88-64298-pre.txt.bz2",
-                  "problem-135-90642-pre.txt.bz2",
-                  "problem-142-93602-pre.txt.bz2",
-                  "problem-150-95821-pre.txt.bz2",
-                  "problem-161-103832-pre.txt.bz2",
-                  "problem-173-111908-pre.txt.bz2",
-                  "problem-182-116770-pre.txt.bz2",
-                  "problem-202-132796-pre.txt.bz2",
-                  "problem-237-154414-pre.txt.bz2",
-                  "problem-253-163691-pre.txt.bz2",
-                  "problem-262-169354-pre.txt.bz2",
-                  "problem-273-176305-pre.txt.bz2",
-                  "problem-287-182023-pre.txt.bz2",
-                  "problem-308-195089-pre.txt.bz2",
-                  "problem-356-226730-pre.txt.bz2"]
-
-trafalgar_prob = ["problem-21-11315-pre.txt.bz2",
-                  "problem-39-18060-pre.txt.bz2",
-                  "problem-50-20431-pre.txt.bz2",
-                  "problem-126-40037-pre.txt.bz2",
-                  "problem-138-44033-pre.txt.bz2",
-                  "problem-161-48126-pre.txt.bz2",
-                  "problem-170-49267-pre.txt.bz2",
-                  "problem-174-50489-pre.txt.bz2",
-                  "problem-193-53101-pre.txt.bz2",
-                  "problem-201-54427-pre.txt.bz2",
-                  "problem-206-54562-pre.txt.bz2",
-                  "problem-215-55910-pre.txt.bz2",
-                  "problem-225-57665-pre.txt.bz2",
-                  "problem-257-65132-pre.txt.bz2"]
-
-ladybug_prob = ["problem-49-7776-pre.txt.bz2",
-                "problem-73-11032-pre.txt.bz2",
-                "problem-138-19878-pre.txt.bz2",
-                "problem-318-41628-pre.txt.bz2",
-                "problem-372-47423-pre.txt.bz2",
-                "problem-412-52215-pre.txt.bz2",
-                "problem-460-56811-pre.txt.bz2",
-                "problem-539-65220-pre.txt.bz2",
-                "problem-598-69218-pre.txt.bz2",
-                "problem-646-73584-pre.txt.bz2",
-                "problem-707-78455-pre.txt.bz2",
-                "problem-783-84444-pre.txt.bz2",
-                "problem-810-88814-pre.txt.bz2",
-                "problem-856-93344-pre.txt.bz2",
-                "problem-885-97473-pre.txt.bz2",
-                "problem-931-102699-pre.txt.bz2",
-                "problem-969-105826-pre.txt.bz2",
-                "problem-1031-110968-pre.txt.bz2",
-                "problem-1064-113655-pre.txt.bz2",
-                "problem-1118-118384-pre.txt.bz2",
-                "problem-1152-122269-pre.txt.bz2",
-                "problem-1197-126327-pre.txt.bz2",
-                "problem-1235-129634-pre.txt.bz2",
-                "problem-1266-132593-pre.txt.bz2",
-                "problem-1340-137079-pre.txt.bz2",
-                "problem-1469-145199-pre.txt.bz2",
-                "problem-1514-147317-pre.txt.bz2",
-                "problem-1587-150845-pre.txt.bz2",
-                "problem-1642-153820-pre.txt.bz2",
-                "problem-1695-155710-pre.txt.bz2"]
-
-venice_prob = ["problem-52-64053-pre.txt.bz2",
-               "problem-89-110973-pre.txt.bz2",
-               "problem-245-198739-pre.txt.bz2",
-               "problem-427-310384-pre.txt.bz2",
-               "problem-744-543562-pre.txt.bz2",
-               "problem-951-708276-pre.txt.bz2",
-               "problem-1102-780462-pre.txt.bz2",
-               "problem-1158-802917-pre.txt.bz2",
-               "problem-1184-816583-pre.txt.bz2",
-               "problem-1238-843534-pre.txt.bz2",
-               "problem-1288-866452-pre.txt.bz2",
-               "problem-1350-894716-pre.txt.bz2",
-               "problem-1408-912229-pre.txt.bz2",
-               "problem-1778-993923-pre.txt.bz2"]
+import NLPModels: increment!
 
 """
-fetch_bal_name(name::AbstractString, group::AbstractString)
-Get the problem with name `name` from the group `group`.
-Return the path where the problem is stored.
+Represent a bundle adjustement problem in the form
+
+    minimize    0
+    subject to  F(x) = 0,
+
+where `F(x)` is the vector of residuals.
 """
-function fetch_bal_name(name::AbstractString, group::AbstractString)
-  real_name = ""
-  try
-    if name[end-2:end] == "bz2"
-      real_name = name
-    elseif name[end-2:end] == "txt"
-      real_name = name*".bz2"
-    elseif name[end-2:end] == "pre"
-      real_name = name*".txt.bz2"
-    else
-      real_name = name*"-pre.txt.bz2"
+mutable struct BALNLSModel{T,S} <: AbstractNLSModel{T,S}
+    # Meta and counters are required in every model
+    meta::NLPModelMeta{T, S}
+    # nls_meta
+    nls_meta::NLSMeta{T, S}
+    # Counters of NLPModel
+    counters :: NLSCounters
+    # For each observation k, cams_indices[k] gives the index of thecamera used for this observation
+    cams_indices :: Vector{Int}
+    # For each observation k, pnts_indices[k] gives the index of the 3D point observed in this observation
+    pnts_indices :: Vector{Int}
+    # Each line contains the 2D coordinates of the observed point
+    pt2d :: AbstractVector
+    # Number of observations
+    nobs :: Int
+    # Number of points
+    npnts :: Int
+    # Number of cameras
+    ncams :: Int
+
+    ##### Jacobians data #####
+    rows :: Vector{Int}
+    cols :: Vector{Int}
+    vals :: AbstractVector
+    Jv :: AbstractVector
+    Jtv :: AbstractVector
+end
+
+""" Create name from filename """
+function name(filename :: AbstractString)
+    return splitext(filename)
+end
+
+# If tests work without this function delete it
+#= """ recsontruct filename from feas res name"""
+function reconsname(filename :: AbstractString)
+    return string("..", filename[1:end-8], ".txt.bz2")
+end =#
+
+"""
+    BALNLSModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
+
+Constructor of BALNLSModel, creates an NLSModel from a BAL archive
+"""
+function BALNLSModel(filename::AbstractString; T::Type=Float64)
+
+    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T=T)
+
+    S = typeof(x0)
+  
+    # variables: 9 parameters per camera + 3 coords per 3d point
+    nvar = 9 * ncams + 3 * npnts
+    # number of residuals: two residuals per 2d point
+    nequ = 2 * nobs
+
+    @debug "BALNLPModel $filename" nvar nequ
+  
+    meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
+    nls_meta = NLSMeta{T, S}(nequ, nvar, x0=x0, nnzj=2*nobs*12)
+
+    rows = Vector{Int}(undef, nls_meta.nnzj)
+    cols = Vector{Int}(undef, nls_meta.nnzj)
+    vals = Vector{T}(undef, nls_meta.nnzj)
+    Jv = Vector{T}(undef, nls_meta.nequ)
+    Jtv = Vector{T}(undef, nls_meta.nvar)
+
+    return BALNLSModel(meta, nls_meta, NLSCounters(), cams_indices, pnts_indices, pt2d, nobs, npnts, ncams, rows, cols, vals, Jv, Jtv)
+end
+
+function NLPModels.residual!(nls :: BALNLSModel, x :: AbstractVector, cx :: AbstractVector)
+    increment!(nls, :neval_residual)
+    residuals!(nls.cams_indices, nls.pnts_indices, x, cx, nls.nobs, nls.npnts)
+    cx .-= nls.pt2d
+    # If a value is NaN, we put it to 0 not to take it into account
+    # @views map!(x -> isnan(x) ? 0 : x, cx, cx)
+    return cx
+end
+
+function residuals!(cam_indices :: Vector{Int}, pnt_indices :: Vector{Int}, xs :: AbstractVector, r :: AbstractVector, nobs :: Int, npts :: Int)
+    q, re = divrem(nobs, nthreads())
+    if re != 0
+        q += 1
     end
-  catch err
-    @warn "The name and group were not recognized"
-    throw(err)
-  end
-  final_name = "$group/$real_name"
-  loc = cust_ensure_artifact_installed(real_name, final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
-  return loc
-end
-
-"""
-fetch_bal_group(group::AbstractString)
-Get all the problems with the group name `group`.
-Return an array of the paths where the problems are stored.
-"""
-function fetch_bal_group(group::AbstractString)
-  real_group = ""
-  try
-    if group == "dubrovnik"
-      real_group = dubrovnik_prob
-    elseif group == "trafalgar"
-      real_group = trafalgar_prob
-    elseif group == "ladybug"
-      real_group = ladybug_prob
-    elseif group == "venice"
-      real_group = venice_prob
+  
+    @threads for t = 1 : nthreads()
+        @simd for k = 1 + (t - 1) * q : min(t * q, nobs)
+            cam_index = cam_indices[k]
+            pnt_index = pnt_indices[k]
+            @views x = xs[(pnt_index - 1) * 3 + 1 : (pnt_index - 1) * 3 + 3]
+            @views c = xs[3*npts + (cam_index - 1) * 9 + 1 : 3*npts + (cam_index - 1) * 9 + 9]
+            @views projection!(x, c, r[2 * k - 1 : 2 * k], k)
+        end
     end
-  catch err
-    @warn "The group was not recognized"
-    throw(err)
-  end
-  problem_paths = String[]
-  for problem ∈ real_group
-    problem_path = fetch_bal_name(problem, group)
-    push!(problem_paths, problem_path)
-  end
-  return problem_paths
+    return r
+end
+
+#function projection!(p3  :: AbstractVector, r  :: AbstractVector, t  :: AbstractVector, k1 :: AbstractFloat, k2 :: AbstractFloat, f :: AbstractFloat, r2 ::  AbstractVector, idx :: Int)
+function projection!(p3  :: AbstractVector, r  :: AbstractVector, t  :: AbstractVector, k1, k2, f, r2 ::  AbstractVector, idx :: Int)
+    # θ = norm(r)
+    θ = sqrt(r[1]^2 + r[2]^2 + r[3]^2)
+    # if θ < eps(eltype(p3))
+    #   P1 = p3 + cross(r, p3)
+    # else
+    k = r / θ
+    P1 = cos(θ) * p3 + sin(θ) * cross(k, p3) + (1 - cos(θ)) * dot(k, p3) * k + t
+    # end
+    # if P1[3] == 0
+    #   r2 .= NaN
+    # else
+    P2 = -P1[1:2] / P1[3]
+    r2 .= f * scaling_factor(P2, k1, k2) * P2
+    # end
+    return r2
+end
+
+projection!(x, c, r2, k) = projection!(x, c[1:3], c[4:6], c[7], c[8], c[9], r2, k)
+
+function scaling_factor(point :: AbstractVector, k1 :: AbstractFloat, k2 :: AbstractFloat)
+    sq_norm_point = dot(point, point)
+    return 1.0 + k1*sq_norm_point + k2*sq_norm_point^2
+end
+
+function NLPModels.jac_structure!(nls :: BALNLSModel, rows :: AbstractVector{<:Integer}, cols :: AbstractVector{<:Integer})
+    #println("jac_structure!")
+    increment!(nls, :neval_jac)
+    nobs = nls.nobs
+    npnts_3 = 3 * nls.npnts
+  
+    q, re = divrem(nobs, nthreads())
+    if re != 0
+        q += 1
+    end
+    @threads for t = 1 : nthreads()
+  
+        @simd for k = 1 + (t - 1) * q : min(t * q, nobs)
+            idx_obs = (k - 1) * 24
+            idx_cam = npnts_3 + 9* (nls.cams_indices[k] - 1)
+            idx_pnt = 3 * (nls.pnts_indices[k] - 1)
+    
+            # Only the two rows corresponding to the observation k are not empty
+            p = 2 * k
+            @views fill!(rows[idx_obs + 1 : idx_obs + 12], p - 1)
+            @views fill!(rows[idx_obs + 13 : idx_obs + 24], p)
+    
+            # 3 columns for the 3D point observed
+            @inbounds cols[idx_obs + 1 : idx_obs + 3] = idx_pnt + 1 : idx_pnt + 3
+            # 9 columns for the camera
+            @inbounds cols[idx_obs + 4 : idx_obs + 12] = idx_cam + 1 : idx_cam + 9
+            # 3 columns for the 3D point observed
+            @inbounds cols[idx_obs + 13 : idx_obs + 15] = idx_pnt + 1 : idx_pnt + 3
+            # 9 columns for the camera
+            @inbounds cols[idx_obs + 16 : idx_obs + 24] = idx_cam + 1 : idx_cam + 9
+        end  
+    end
+    return rows, cols
+end
+
+function NLPModels.jac_coord!(nls :: BALNLSModel, x :: AbstractVector, vals :: AbstractVector)
+    #println("jac_coord!")
+    increment!(nls, :neval_jac)
+    nobs = nls.nobs
+    npnts = nls.npnts
+    T = eltype(x)
+  
+    # jac_coord is optimal with 3 threads
+    nthreads_used = min(3, nthreads())
+  
+    q, re = divrem(nobs, nthreads_used)
+    if re != 0
+        q += 1
+    end
+  
+    @threads for t = 1 : nthreads_used
+        denseJ = Matrix{T}(undef, 2, 12)
+        JP1_mat = zeros(6, 12)
+        JP1_mat[1, 7], JP1_mat[2, 8], JP1_mat[3, 9], JP1_mat[4, 10], JP1_mat[5, 11], JP1_mat[6, 12] = 1, 1, 1, 1, 1, 1
+        JP2_mat = zeros(5, 6)
+        JP2_mat[3, 4], JP2_mat[4, 5], JP2_mat[5, 6] = 1, 1, 1
+        JP3_mat = Matrix{T}(undef, 2, 5)
+    
+        @simd for k = 1 + (t - 1) * q : min(t * q, nobs)
+            idx_cam = nls.cams_indices[k]
+            idx_pnt = nls.pnts_indices[k]
+            @views X = x[(idx_pnt - 1) * 3 + 1 : (idx_pnt - 1) * 3 + 3] # 3D point coordinates
+            @views C = x[3*npnts + (idx_cam - 1) * 9 + 1 : 3*npnts + (idx_cam - 1) * 9 + 9] # camera parameters
+            r = C[1:3]  # Rodrigues vector for the rotation
+            t = C[4:6]  # translation vector
+            k1, k2, f = C[7:9]  # focal length and radial distortion factors
+    
+            # denseJ = JP3∘P2∘P1 x JP2∘P1 x JP1
+            p1 = P1(r, t, X)
+            JP1!(JP1_mat, r, X)
+            JP2!(JP2_mat, p1)
+            JP3!(JP3_mat, P2(p1), f, k1, k2)
+            mul!(denseJ, JP3_mat * JP2_mat, JP1_mat)
+    
+            # Feel vals with the values of denseJ = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
+            # If a value is NaN, we put it to 0 not to take it into account
+            vals[(k-1)*24 + 1 : (k-1)*24 + 24] .= map(x -> isnan(x) ? 0 : x, denseJ'[:])
+        end
+    end 
+    return vals
+end
+
+function NLPModels.jac_op_residual(nls::BALNLSModel, x::AbstractVector)
+    jac_structure!(nls, nls.rows, nls.cols)
+    jac_coord!(nls, x, nls.vals)
+    Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
+    return Jx
 end
 
 """
-generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
-Get the path of the problem name `name` from the group `group` with the precision `T`.
-Return a NLSModel generated from this problem data using NLPModels
+    jac_op_residual_update(nls :: BALNLSModel, x :: AbstractVector)
+
+Update the jacobian operator of the residual wihtout jac_structure! instead
+of using jac_op_residual
 """
-function generate_NLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
-  real_name = ""
-  try
-    if name[end-2:end] == "bz2"
-      real_name = name
-    elseif name[end-2:end] == "txt"
-      real_name = name*".bz2"
-    elseif name[end-2:end] == "pre"
-      real_name = name*".txt.bz2"
-    else
-      real_name = name*"-pre.txt.bz2"
-    end
-  catch err
-    @warn "The name and group were not recognized"
-    throw(err)
-  end
-  filedir = fetch_bal_name(name, group)
-  filename = joinpath(filedir, real_name)
-  return BALNLSModel(filename, T=T)
-end
-
-const DEFAULT_IO = Ref{Union{IO,Nothing}}(nothing)
-stderr_f() = something(DEFAULT_IO[], stderr)
-can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true")
-
-function cust_ensure_artifact_installed(real_name::String,
-                                        name::String, 
-                                        artifacts_toml::String, 
-                                        pkg_uuid::Union{Base.UUID,Nothing}=nothing,
-                                        verbose::Bool = false,
-                                        quiet_download::Bool = false,
-                                        io::IO=stderr_f())
-
-  meta = artifact_meta(name, artifacts_toml; pkg_uuid=pkg_uuid)
-
-  if meta === nothing
-      error("Cannot locate artifact '$(name)' in '$(artifacts_toml)'")
-  end
-
-  hash = SHA1(meta["git-tree-sha1"])
-
-  if !artifact_exists(hash)
-    for entry in meta["download"]
-      url = entry["url"]
-      tarball_hash = entry["sha256"]
-      download_success = cust_download_artifact(real_name, hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
-      download_success && return artifact_path(hash)
-      error("Unable to automatically install '$(name)' from '$(artifacts_toml)'")
-    end
-  else
-    return artifact_path(hash)
-  end
-end
-
-function cust_download_artifact(
-  real_name::String,
-  tree_hash::SHA1,
-  tarball_url::String,
-  tarball_hash::Union{String, Nothing} = nothing;
-  verbose::Bool = false,
-  quiet_download::Bool = false,
-  io::IO=stderr_f(),
-)
-  if artifact_exists(tree_hash)
-      return true
-  end
-
-  if Sys.iswindows()
-      # The destination directory we're hoping to fill:
-      dest_dir = artifact_path(tree_hash; honor_overrides=false)
-      mkpath(dest_dir)
-
-      # On Windows, we have some issues around stat() and chmod() that make properly
-      # determining the git tree hash problematic; for this reason, we use the "unsafe"
-      # artifact unpacking method, which does not properly verify unpacked git tree
-      # hash.  This will be fixed in a future Julia release which will properly interrogate
-      # the filesystem ACLs for executable permissions, which git tree hashes care about.
-      try
-          #cust_download_verify(real_name, tarball_url, tarball_hash, dest_dir, quiet_download=true)
-          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$real_name"))
-      catch err
-          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
-          # Clean that destination directory out if something went wrong
-          rm(dest_dir; force=true, recursive=true)
-
-          if isa(err, InterruptException)
-              rethrow(err)
-          end
-          return false
-      end
-  else
-      # We download by using `create_artifact()`.  We do this because the download may
-      # be corrupted or even malicious; we don't want to clobber someone else's artifact
-      # by trusting the tree hash that has been given to us; we will instead download it
-      # to a temporary directory, calculate the true tree hash, then move it to the proper
-      # location only after knowing what it is, and if something goes wrong in the process,
-      # everything should be cleaned up.  Luckily, that is precisely what our
-      # `create_artifact()` wrapper does, so we use that here.
-
-      # Removed the calc_hash because there is already a verification on the content of the
-      # file with download_verify in temp directory and calc_hash calculates the the hash of 
-      # the temp directory which seems to be random or at least not consistent enough the way
-      # I implemented it in the generation of the artifacts_toml. That being said, wrapping 
-      # in create_artifact() is still useful because if there is a hash missmatch the directory
-      # and files are deleted
-      calc_hash = try
-          create_artifact() do dir
-              # In case we successfully download the file and the verification works
-              # we can move it to the safe location
-              download_verify(tarball_url, tarball_hash, joinpath(dir, "$real_name"))
-                  #= dest_dir = artifact_path(tree_hash; honor_overrides=false)
-                  mkpath(dest_dir)
-                  mv(joinpath(dir, "$real_name"), joinpath(dest_dir, "$real_name")) =#
-          end
-      catch err
-          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
-          if isa(err, InterruptException)
-              rethrow(err)
-          end
-          # If something went wrong during download, return false
-          return false
-      end
-
-      # Removed calc_hash and the reasons mentioned earlier, so the next lines of code don't work
-      # There is a verification on the content of the file but just not on the destination
-      # which is tree_hash by default with this code, so we simply force the mv function 
-      # Another solution without moving artifacts twice might be slightly faster but less generic for now
-
-      # Did we get what we expected?  If not, freak out.
-      #= if calc_hash.bytes != tree_hash.bytes
-          msg  = "Tree Hash Mismatch!\n"
-          msg *= "  Expected git-tree-sha1:   $(bytes2hex(tree_hash.bytes))\n"
-          msg *= "  Calculated git-tree-sha1: $(bytes2hex(calc_hash.bytes))"
-          # Since tree hash calculation is still broken on some systems, e.g. Pkg.jl#1860,
-          # and Pkg.jl#2317 so we allow setting JULIA_PKG_IGNORE_HASHES=1 to ignore the
-          # error and move the artifact to the expected location and return true
-          ignore_hash = get(ENV, "JULIA_PKG_IGNORE_HASHES", nothing) == "1"
-          if ignore_hash
-              msg *= "\n\$JULIA_PKG_IGNORE_HASHES is set to 1: ignoring error and moving artifact to the expected location"
-          end
-          @error(msg)
-          if ignore_hash
-              # Move it to the location we expected
-              src = artifact_path(calc_hash; honor_overrides=false)
-              dst = artifact_path(tree_hash; honor_overrides=false)
-              mv(src, dst; force=true)
-              return true
-          end
-          return false
-      end =#
-      # Move it to the location we expected
-      src = artifact_path(calc_hash; honor_overrides=false)
-      dst = artifact_path(tree_hash; honor_overrides=false)
-      mv(src, dst; force=true)
-      
-      return true
-  end
-
-  return true
-end
-
-function cust_download_verify(
-  real_name::String,
-  url::AbstractString,
-  hash::Union{AbstractString, Nothing},
-  dest::AbstractString;
-  verbose::Bool = false,
-  force::Bool = false,
-  quiet_download::Bool = false,
-)
-  # Whether the file existed in the first place
-  file_existed = false
-
-  if isfile(dest)
-      file_existed = true
-      if verbose
-          @info("Destination file $(dest) already exists, verifying...")
-      end
-
-      # verify download, if it passes, return happy.  If it fails, (and
-      # `force` is `true`, re-download!)
-      if hash !== nothing && verify(dest, hash; verbose=verbose)
-          return true
-      elseif !force
-          error("Verification failed, not overwriting $(dest)")
-      end
-  end
-
-  # Make sure the containing folder exists
-  mkpath(dirname(dest))
-
-  # Download the file, optionally continuing
-  download(url, joinpath(dest, "$real_name"))
-  if hash !== nothing && !verify(dest, hash; verbose=verbose)
-      # If the file already existed, it's possible the initially downloaded chunk
-      # was bad.  If verification fails after downloading, auto-delete the file
-      # and start over from scratch.
-      if file_existed
-          if verbose
-              @info("Continued download didn't work, restarting from scratch")
-          end
-          Base.rm(joinpath(dest, "$real_name"); force=true)
-
-          # Download and verify from scratch
-          download(url, joinpath(dest, "$real_name"))
-          if hash !== nothing && !verify(dest, hash; verbose=verbose)
-              error("Verification failed")
-          end
-      else
-          # If it didn't verify properly and we didn't resume, something is
-          # very wrong and we must complain mightily.
-          error("Verification failed")
-      end
-  end
-
-  # If the file previously existed, this means we removed it (due to `force`)
-  # and redownloaded, so return `false`.  If it didn't exist, then this means
-  # that we successfully downloaded it, so return `true`.
-  return !file_existed
+function jac_op_residual_update(nls :: BALNLSModel, x :: AbstractVector)
+    jac_coord!(nls, x, nls.vals)
+    Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
+    return Jx
 end

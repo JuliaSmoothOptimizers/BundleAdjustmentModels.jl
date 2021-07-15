@@ -1,5 +1,5 @@
-name = "BALNLSProblems"
-uuid = "876335a7-67ca-453c-867d-0738d06760fa"
+name = "BALNLSModels"
+uuid = "f5c5ffd7-ef9e-46ad-9b2e-92083a3cd0c6"
 authors = ["AntoninKns <antonin.kenens@polymtl.ca>"]
 version = "0.1.0"
 
