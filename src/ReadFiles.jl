@@ -5,18 +5,14 @@ Read the .txt.bzip2 file in Data/filename and extract the data,
 returns the matrices observed 2D points, cameras and points
 and the vectors of camera indices and points indices
 """
-function readfile(filename::String; T::Type=Float64, verbose::Bool=false)
+function readfile(filename::String; T::Type=Float64)
 
-    #filepath = joinpath(@__DIR__, "..", "Data", filename)
-    #println(filename)
     f = Bzip2DecompressorStream(open(filename))
 
     # We get the first line of the file
     ncams, npnts, nobs = map(x -> parse(Int, x), split(readline(f)))
 
-    if verbose == true
-        @info "$filename: reading" ncams npnts nobs
-    end
+    @debug "$filename: reading" ncams npnts nobs
 
     cam_indices = Vector{Int}(undef, nobs)
     pnt_indices = Vector{Int}(undef, nobs)

@@ -22,14 +22,13 @@ end
 lazybool = true
 forcebool = true
 
-for problem_categ ∈ total_prob
-    for problem ∈ problem_categ[1]
-        category = problem_categ[2]
-        url = "$bal_url/$category/$problem"
+for (problems, group) ∈ total_prob
+    for problem ∈ problems
+        url = "$bal_url/$group/$problem"
         println(problem)
         println(url)
         try
-            problem_hash = artifact_hash("$category/$problem", artifact_toml)
+            problem_hash = artifact_hash("$group/$problem", artifact_toml)
             # If the name was not bound, or the hash it was bound to does not exist, create it!
             if problem_hash === nothing || !artifact_exists(problem_hash)
                 # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
@@ -47,7 +46,7 @@ for problem_categ ∈ total_prob
                 # just overwrite with the new content-hash.  Unless the source files change, we do not expect
                 # the content hash to change, so this should not cause unnecessary version control churn.
                 bind_artifact!(artifact_toml,
-                               "$category/$problem",
+                               "$group/$problem",
                                problem_hash,
                                download_info = [(url, hash_artifact)],
                                lazy = lazybool,

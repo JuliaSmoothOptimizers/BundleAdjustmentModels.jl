@@ -1,8 +1,6 @@
 @testset "test fetch_bal_name" begin
     problems = [["dubrovnik","problem-16-22106-pre"], ["trafalgar","problem-21-11315-pre"], ["ladybug","problem-49-7776-pre"], ["venice","problem-52-64053-pre"]]
-    for problem ∈ problems
-        group = problem[1]
-        name = problem[2]
+    for (group, name) ∈ problems
         path = fetch_bal_name(name, group)
         @test isdir(path)
         @test isfile(joinpath(path, "$name.txt.bz2"))
