@@ -7,6 +7,8 @@ using Pkg.PlatformEngines
 using SHA
 import Base.SHA1
 
+include("../src/BALProblemsList.jl")
+
 const artifact_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
 const bal_url = "https://grail.cs.washington.edu/projects/bal/data"

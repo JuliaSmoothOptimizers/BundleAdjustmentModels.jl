@@ -1,6 +1,17 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
-export fetch_bal_name, fetch_bal_group, BALNLSModel
+export problems_df, fetch_bal_name, fetch_bal_group, BALNLSModel
+
+#Add function to delete artifacts
+
+"""
+    problems_df()
+    
+Give a list of the problems and their characteristics
+"""
+function problems_df()
+  return DataFrame(CSV.File(input))
+end
 
 """
     analyze_name_and_group(name::AbstractString, group::AbstractString)
@@ -36,13 +47,13 @@ If so, return an array with the corresponding problems
 function analyze_group(group::AbstractString)
 
   if group == "dubrovnik"
-    real_group = dubrovnik_prob
+    real_group = dubrovnik
   elseif group == "trafalgar"
-    real_group = trafalgar_prob
+    real_group = trafalgar
   elseif group == "ladybug"
-    real_group = ladybug_prob
+    real_group = ladybug
   elseif group == "venice"
-    real_group = venice_prob
+    real_group = venice
   else
     error("Cannot recognize $(group)")
   end
@@ -71,6 +82,7 @@ end
 
 Get all the problems with the group name `group`.
 Return an array of the paths where the problems are stored.
+Group possibilities are : trafalgar, venice, dubrovnik and ladybug
 """
 function fetch_bal_group(group::AbstractString)
 

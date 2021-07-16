@@ -4,7 +4,9 @@ authors = ["AntoninKns <antonin.kenens@polymtl.ca>"]
 version = "0.1.0"
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -12,4 +14,6 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 CodecBzip2 = "0.7.2"
+DataFrames = "1.2.0"
 NLPModels = "0.17.0"
+CSV = "0.8.5"

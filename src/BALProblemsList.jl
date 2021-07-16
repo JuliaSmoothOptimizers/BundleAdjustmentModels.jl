@@ -1,4 +1,4 @@
-dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
+const dubrovnik = ["problem-16-22106-pre.txt.bz2",
                   "problem-88-64298-pre.txt.bz2",
                   "problem-135-90642-pre.txt.bz2",
                   "problem-142-93602-pre.txt.bz2",
@@ -16,7 +16,7 @@ dubrovnik_prob = ["problem-16-22106-pre.txt.bz2",
                   "problem-356-226730-pre.txt.bz2"]
 
 
-trafalgar_prob = ["problem-21-11315-pre.txt.bz2",
+const trafalgar = ["problem-21-11315-pre.txt.bz2",
                   "problem-39-18060-pre.txt.bz2",
                   "problem-50-20431-pre.txt.bz2",
                   "problem-126-40037-pre.txt.bz2",
@@ -31,7 +31,7 @@ trafalgar_prob = ["problem-21-11315-pre.txt.bz2",
                   "problem-225-57665-pre.txt.bz2",
                   "problem-257-65132-pre.txt.bz2"]
 
-ladybug_prob = ["problem-49-7776-pre.txt.bz2",
+const ladybug = ["problem-49-7776-pre.txt.bz2",
                 "problem-73-11032-pre.txt.bz2",
                 "problem-138-19878-pre.txt.bz2",
                 "problem-318-41628-pre.txt.bz2",
@@ -62,7 +62,7 @@ ladybug_prob = ["problem-49-7776-pre.txt.bz2",
                 "problem-1642-153820-pre.txt.bz2",
                 "problem-1695-155710-pre.txt.bz2"]
 
-venice_prob = ["problem-52-64053-pre.txt.bz2",
+const venice = ["problem-52-64053-pre.txt.bz2",
                "problem-89-110973-pre.txt.bz2",
                "problem-245-198739-pre.txt.bz2",
                "problem-427-310384-pre.txt.bz2",
@@ -77,4 +77,4 @@ venice_prob = ["problem-52-64053-pre.txt.bz2",
                "problem-1408-912229-pre.txt.bz2",
                "problem-1778-993923-pre.txt.bz2"]
 
-total_prob = [[dubrovnik_prob, "dubrovnik"], [trafalgar_prob, "trafalgar"], [ladybug_prob, "ladybug"], [venice_prob, "venice"]]
+const total_prob = [[dubrovnik, "dubrovnik"], [trafalgar, "trafalgar"], [ladybug, "ladybug"], [venice, "venice"]]
