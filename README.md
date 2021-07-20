@@ -22,7 +22,7 @@ julia> df = problems_df()
                                                          72 rows omitted
 ```
 
-When you get this dataframe you can sort through it to get the problem that you want. For example, if you want to filter problems based on their size you can apply this filter:
+When you get this dataframe you can sort through it to get the problems that you want. For example, if you want to filter problems based on their size you can apply this filter:
 
 ```julia
 julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
@@ -101,14 +101,14 @@ Use  `delete_all_balartifacts!` to delete all artifacts:
 
 ```julia
 julia> delete_all_balartifacts!()
-[ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 has not been found
-[ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 has not been found
+[ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 was not found
  ⋮
 [ Info: The artifact ladybug/problem-138-19878-pre.txt.bz2 has been deleted
 [ Info: The artifact ladybug/problem-318-41628-pre.txt.bz2 has been deleted
  ⋮
-[ Info: The artifact venice/problem-1408-912229-pre.txt.bz2 has not been found
-[ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 has not been found
+[ Info: The artifact venice/problem-1408-912229-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 was not found
 ```
 
 Licensed under the MPL-2.0 [License](LICENSE.md) 
