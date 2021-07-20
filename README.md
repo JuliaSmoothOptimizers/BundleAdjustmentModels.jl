@@ -25,7 +25,7 @@ julia> df = problems_df()
 When you get this dataframe you can sort through it to get the problem that you want. For example, if you want the problem with the smallest jacobian, you can do this :
 
 ```julia
-sort!(df, [:nequ, :nvar])
+julia> sort!(df, [:nequ, :nvar])
 74×5 DataFrame
  Row │ name                     group      nequ      nvar     nnzj      
      │ String                   String     Int64     Int64    Int64     
