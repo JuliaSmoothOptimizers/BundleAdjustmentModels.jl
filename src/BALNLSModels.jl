@@ -1,6 +1,6 @@
 module BALNLSModels
 
-using Pkg.Artifacts, Pkg.PlatformEngines, NLPModels, .Threads, CodecBzip2, SHA, DataFrames, JLD2
+using Pkg.Artifacts, Pkg.PlatformEngines, NLPModels, .Threads, CodecBzip2, SHA, DataFrames, JLD2, LinearAlgebra
 
 include("BALProblemsList.jl")
 include("BALNLSFunctions.jl")
