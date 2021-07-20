@@ -1,16 +1,19 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
-export problems_df, fetch_bal_name, fetch_bal_group, BALNLSModel
-
-#Add function to delete artifacts
+export problems_df, fetch_bal_name, fetch_bal_group, BALNLSModel, delete_balartifact!, delete_all_balartifacts!
+  
+const balprobs_jld2 = joinpath(@__DIR__, "..", "src", "balprobs.jld2")
 
 """
     problems_df()
     
-Give a list of the problems and their characteristics
+Return a dataframe of the problems and their characteristics
 """
 function problems_df()
-  return DataFrame(CSV.File(input))
+  file = jldopen(balprobs_jld2, "r")
+  balprobs = file["df"]
+  close(file)
+  return balprobs
 end
 
 """
@@ -281,3 +284,48 @@ function cust_download_artifact(
 
   return true
 end
+
+"""
+    delete_balartifact!(name::AbstractString, group::AbstractString)
+
+Delete the artifact `name` from the artifact store
+"""
+function delete_balartifact!(name::AbstractString, group::AbstractString)
+
+  real_name, group = analyze_name_and_group(name, group)
+
+  artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
+
+  meta = artifact_meta("$(group)/$(real_name)", artifacts_toml)
+
+  if meta === nothing
+    error("Cannot locate artifact '$(real_name)' in '$(artifacts_toml)'")
+  end
+
+  hash = SHA1(meta["git-tree-sha1"])
+
+  if !artifact_exists(hash)
+    @info "The artifact $(group)/$(real_name) has not been found"
+  else
+    path = artifact_path(hash)
+    rm(path, recursive=true)
+    @info "The artifact $(group)/$(real_name) has been deleted"
+  end
+end
+
+"""
+    delete_all_balartifacts!()
+
+Delete all the BALNLSModels artifacts from the artifact store
+"""
+function delete_all_balartifacts!()
+
+  for probs_symbol ∈ total_prob
+    problems = eval(probs_symbol)
+    group = string(probs_symbol)
+    for problem ∈ problems
+      delete_balartifact!(problem, group)
+    end
+  end
+end
+

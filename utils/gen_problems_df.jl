@@ -1,13 +1,21 @@
 using Base: Float32
-using BALNLSModels, DataFrames, CSV
+using BALNLSModels, DataFrames, JLD2
 
-df = DataFrame(name = String[], group = String[], nequ = Int64[], nvar = Int64[])
-for (problems, group) ∈ total_prob
+include("../src/BALProblemsList.jl")
+
+df = DataFrame(name = String[], group = String[], nequ = Int64[], nvar = Int64[], nnzj = Int64[])
+for probs_symbol ∈ total_prob
+    problems = eval(probs_symbol)
+    group = string(probs_symbol)
     for name in problems
         model = BALNLSModel(name, group, T=Float32)
-        push!(df, (model.meta.name, group, model.nls_meta.nequ, model.meta.nvar))
+        push!(df, (model.meta.name, group, model.nls_meta.nequ, model.meta.nvar, model.nls_meta.nnzj))
     end
 end
 
-CSV.write(joinpath(@__DIR__, "..", "src", "problems_df.csv", df)
+balprobs_jld2 = joinpath(@__DIR__, "..", "src", "balprobs.jld2")
+
+jldopen(balprobs_jld2, "w") do file
+    file["df"] = df
+end
         

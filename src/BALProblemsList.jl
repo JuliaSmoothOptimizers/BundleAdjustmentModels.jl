@@ -77,4 +77,4 @@ const venice = ["problem-52-64053-pre.txt.bz2",
                "problem-1408-912229-pre.txt.bz2",
                "problem-1778-993923-pre.txt.bz2"]
 
-const total_prob = [[dubrovnik, "dubrovnik"], [trafalgar, "trafalgar"], [ladybug, "ladybug"], [venice, "venice"]]
+const total_prob = [:dubrovnik, :trafalgar, :ladybug, :venice]

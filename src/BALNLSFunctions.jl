@@ -40,7 +40,7 @@ end
 
 """ Create name from filename """
 function name(filename :: AbstractString)
-    return splitext(filename)[1]
+    return splitdir(splitext(splitext(filename)[1])[1])[2]
 end
 
 """

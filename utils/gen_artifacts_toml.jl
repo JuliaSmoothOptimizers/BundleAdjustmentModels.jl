@@ -24,7 +24,9 @@ end
 lazybool = true
 forcebool = true
 
-for (problems, group) ∈ total_prob
+for probs_symbol ∈ total_prob
+    problems = eval(probs_symbol)
+    group = string(probs_symbol)
     for problem ∈ problems
         url = "$bal_url/$group/$problem"
         println(problem)
