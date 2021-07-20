@@ -48,13 +48,13 @@ You can also get an array of the paths of an entire group of problems
 ```
 julia> path = fetch_bal_group("ladybug")
 30-element Vector{String}:
- "C:\\Users\\Antonin\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
- "C:\\Users\\Antonin\\.julia\\artifacts\\3d0853a3ca8e585814697fea9cd4d6956692e103"
- "C:\\Users\\Antonin\\.julia\\artifacts\\5c5c938c998d6c083f549bc584cfeb07bd296d89"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\3d0853a3ca8e585814697fea9cd4d6956692e103"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\5c5c938c998d6c083f549bc584cfeb07bd296d89"
  ⋮
- "C:\\Users\\Antonin\\.julia\\artifacts\\00be55410c27068ec73261e122a39258100a1a11"
- "C:\\Users\\Antonin\\.julia\\artifacts\\0303e7ae8256c494c9da052d977277f21265899b"
- "C:\\Users\\Antonin\\.julia\\artifacts\\389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\00be55410c27068ec73261e122a39258100a1a11"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\0303e7ae8256c494c9da052d977277f21265899b"
+ "C:\\Users\\xxxx\\.julia\\artifacts\\389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84"
 ```
 
 Or you can directly construct a non linear least squares model based on NLPModels :
