@@ -63,8 +63,8 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
 
   filename = get_filename(name, group)
 
-  group_and_file = "$(group)/$(filename)"
-  loc = bal_ensure_artifact_installed(filename, group_and_file, joinpath(@__DIR__, "..", "Artifacts.toml"))
+  artifact_name = "$(group)/$(filename)"
+  loc = bal_ensure_artifact_installed(filename, artifact_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
 
   return loc
 end
@@ -114,7 +114,7 @@ can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true"
 # Big parts of code copied from ensure_artifact_installed
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Artifacts.jl
 """
-    bal_ensure_artifact_installed(filename::String, group_and_file::String, artifacts_toml::String;
+    bal_ensure_artifact_installed(filename::String, artifact_name::String, artifacts_toml::String;
                                     platform::AbstractPlatform = HostPlatform(),
                                     pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                     verbose::Bool = false,
@@ -127,17 +127,17 @@ The modifications from the original functions are here to avoid unpacking the ar
 and avoid checking from official repository since these files are not official artifacts.
 """
 function bal_ensure_artifact_installed(filename::String,
-                                        group_and_file::String, 
+                                        artifact_name::String, 
                                         artifacts_toml::String, 
                                         pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                         verbose::Bool = false,
                                         quiet_download::Bool = false,
                                         io::IO=stderr_f())
 
-  meta = artifact_meta(group_and_file, artifacts_toml; pkg_uuid=pkg_uuid)
+  meta = artifact_meta(artifact_name, artifacts_toml; pkg_uuid=pkg_uuid)
 
   if meta === nothing
-      error("Cannot locate artifact '$(group_and_file)' in '$(artifacts_toml)'")
+      error("Cannot locate artifact '$(artifact_name)' in '$(artifacts_toml)'")
   end
 
   hash = SHA1(meta["git-tree-sha1"])
@@ -148,7 +148,7 @@ function bal_ensure_artifact_installed(filename::String,
       tarball_hash = entry["sha256"]
       download_success = bal_download_artifact(filename, hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
       download_success && return artifact_path(hash)
-      error("Unable to automatically install '$(group_and_file)' from '$(artifacts_toml)'")
+      error("Unable to automatically install '$(artifact_name)' from '$(artifacts_toml)'")
     end
   else
     return artifact_path(hash)
