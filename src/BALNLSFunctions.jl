@@ -1,4 +1,4 @@
-# Manual jacobian function is not proven
+# Manual jacobian functions are not proven
 
 import NLPModels: increment!
 
@@ -127,7 +127,6 @@ function scaling_factor(point :: AbstractVector, k1 :: AbstractFloat, k2 :: Abst
 end
 
 function NLPModels.jac_structure!(nls :: BALNLSModel, rows :: AbstractVector{<:Integer}, cols :: AbstractVector{<:Integer})
-    #println("jac_structure!")
     increment!(nls, :neval_jac)
     nobs = nls.nobs
     npnts_3 = 3 * nls.npnts
@@ -162,7 +161,6 @@ function NLPModels.jac_structure!(nls :: BALNLSModel, rows :: AbstractVector{<:I
 end
 
 function NLPModels.jac_coord!(nls :: BALNLSModel, x :: AbstractVector, vals :: AbstractVector)
-    #println("jac_coord!")
     increment!(nls, :neval_jac)
     nobs = nls.nobs
     npnts = nls.npnts

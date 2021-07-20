@@ -1,26 +1,26 @@
 @testset "test fetch_bal_name" begin
-    problems = [["dubrovnik","problem-16-22106-pre"], ["trafalgar","problem-21-11315-pre"], ["ladybug","problem-49-7776-pre"], ["venice","problem-52-64053-pre"]]
-    for (group, name) ∈ problems
+    df = problems_df()
+    for group ∈ bal_groups
+        sort!(df[ ( df.group .== string(group) ), :], [:nequ, :nvar])
+        name, group = get_first_name_and_group(df)
         path = fetch_bal_name(name, group)
         @test isdir(path)
         @test isfile(joinpath(path, "$name.txt.bz2"))
     end
 end
 
-# Change this test to very_small group
 @testset "test fetch_bal_group" begin
-    groups = ["trafalgar"]
-    for group ∈ groups
-        group_paths = fetch_bal_group(group)
-        for path ∈ group_paths
-            @test isdir(path)
-        end
+    group = "trafalgar"
+    group_paths = fetch_bal_group(group)
+    for path ∈ group_paths
+        @test isdir(path)
     end
 end
 
 @testset "test generate_NLSModel" begin
-    name = "problem-49-7776-pre.txt.bz2"
-    group = "ladybug"
+    df = problems_df()
+    sort!(df, [:nequ, :nvar])
+    name, group = get_first_name_and_group(df)
     model = BALNLSModel(name, group)
     meta_nls = nls_meta(model)
     @test meta_nls.nvar == 23769

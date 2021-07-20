@@ -1,8 +1,8 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
-export problems_df, fetch_bal_name, fetch_bal_group, BALNLSModel, delete_balartifact!, delete_all_balartifacts!
+export problems_df, get_first_name_and_group, fetch_bal_name, fetch_bal_group, BALNLSModel, delete_balartifact!, delete_all_balartifacts!
   
-const balprobs_jld2 = joinpath(@__DIR__, "..", "src", "balprobs.jld2")
+const balprobs_jld2 = joinpath(@__DIR__, "..", "src", "bal_probs_df.jld2")
 
 """
     problems_df()
@@ -17,51 +17,40 @@ function problems_df()
 end
 
 """
-    analyze_name_and_group(name::AbstractString, group::AbstractString)
+    get_first_name_and_group(dataframe::DataFrame)
+
+Return the name and the group of the first row in the DataFrame
+"""
+function get_first_name_and_group(dataframe::DataFrame)
+  name = dataframe[1, :name]
+  group = dataframe[1, :group]
+  return name, group
+end
+
+"""
+    get_filename(name::AbstractString, group::AbstractString)
 
 Analyze the `name` and `group` given to check if they match the names and groups known
+Return the corrected name if needed
 """
-function analyze_name_and_group(name::AbstractString, group::AbstractString)
+function get_filename(name::AbstractString, group::AbstractString)
   if name[end-2:end] == "bz2"
-    real_name = name
+    filename = name
   elseif name[end-2:end] == "txt"
-    real_name = name*".bz2"
+    filename = name*".bz2"
   elseif name[end-2:end] == "pre"
-    real_name = name*".txt.bz2"
+    filename = name*".txt.bz2"
   elseif oococcursin(r"^[0-9]{64}$"i, name[end-3:end])
-    real_name = name*"-pre.txt.bz2"
+    filename = name*"-pre.txt.bz2"
   else
     error("Cannot recognize $(name)")
   end
 
-  if !(group in ["trafalgar", "dubrovnik", "venice", "ladybug"])
+  if !(group in string.(bal_groups))
     error("Cannot recognize $(group)")
   end
 
-  return real_name, group
-end
-
-"""
-    analyze_group(group::AbstractString)
-
-Analyze the `group` given to check if it matches the groups known.
-If so, return an array with the corresponding problems
-"""
-function analyze_group(group::AbstractString)
-
-  if group == "dubrovnik"
-    real_group = dubrovnik
-  elseif group == "trafalgar"
-    real_group = trafalgar
-  elseif group == "ladybug"
-    real_group = ladybug
-  elseif group == "venice"
-    real_group = venice
-  else
-    error("Cannot recognize $(group)")
-  end
-
-  return real_group
+  return filename
 end
 
 """
@@ -72,10 +61,10 @@ Return the path where the problem is stored.
 """
 function fetch_bal_name(name::AbstractString, group::AbstractString)
 
-  real_name, group = analyze_name_and_group(name, group)
+  filename = get_filename(name, group)
 
-  final_name = "$group/$real_name"
-  loc = cust_ensure_artifact_installed(real_name, final_name, joinpath(@__DIR__, "..", "Artifacts.toml"))
+  group_and_file = "$(group)/$(filename)"
+  loc = bal_ensure_artifact_installed(filename, group_and_file, joinpath(@__DIR__, "..", "Artifacts.toml"))
 
   return loc
 end
@@ -89,10 +78,8 @@ Group possibilities are : trafalgar, venice, dubrovnik and ladybug
 """
 function fetch_bal_group(group::AbstractString)
 
-  real_group = analyze_group(group)
-
   problem_paths = String[]
-  for problem ∈ real_group
+  for problem ∈ eval(Symbol(group))
     problem_path = fetch_bal_name(problem, group)
     push!(problem_paths, problem_path)
   end
@@ -109,12 +96,12 @@ Return a NLSModel generated from this problem data using NLPModels
 """
 function BALNLSModel(name::AbstractString, group::AbstractString; T::Type=Float64)
 
-  real_name, group = analyze_name_and_group(name, group)
+  filename = get_filename(name, group)
 
-  filedir = fetch_bal_name(real_name, group)
-  filename = joinpath(filedir, real_name)
+  filedir = fetch_bal_name(filename, group)
+  path_and_filename = joinpath(filedir, filename)
 
-  return BALNLSModel(filename, T=T)
+  return BALNLSModel(path_and_filename, T=T)
 end
 
 
@@ -127,7 +114,7 @@ can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true"
 # Big parts of code copied from ensure_artifact_installed
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Artifacts.jl
 """
-    cust_ensure_artifact_installed(name::String, artifacts_toml::String;
+    bal_ensure_artifact_installed(filename::String, group_and_file::String, artifacts_toml::String;
                                     platform::AbstractPlatform = HostPlatform(),
                                     pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                     verbose::Bool = false,
@@ -139,18 +126,18 @@ Ensures an artifact is installed, downloading it via the download information st
 The modifications from the original functions are here to avoid unpacking the archive
 and avoid checking from official repository since these files are not official artifacts.
 """
-function cust_ensure_artifact_installed(real_name::String,
-                                        name::String, 
+function bal_ensure_artifact_installed(filename::String,
+                                        group_and_file::String, 
                                         artifacts_toml::String, 
                                         pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                         verbose::Bool = false,
                                         quiet_download::Bool = false,
                                         io::IO=stderr_f())
 
-  meta = artifact_meta(name, artifacts_toml; pkg_uuid=pkg_uuid)
+  meta = artifact_meta(group_and_file, artifacts_toml; pkg_uuid=pkg_uuid)
 
   if meta === nothing
-      error("Cannot locate artifact '$(name)' in '$(artifacts_toml)'")
+      error("Cannot locate artifact '$(group_and_file)' in '$(artifacts_toml)'")
   end
 
   hash = SHA1(meta["git-tree-sha1"])
@@ -159,9 +146,9 @@ function cust_ensure_artifact_installed(real_name::String,
     for entry in meta["download"]
       url = entry["url"]
       tarball_hash = entry["sha256"]
-      download_success = cust_download_artifact(real_name, hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
+      download_success = bal_download_artifact(filename, hash, url, tarball_hash; verbose=verbose, quiet_download=quiet_download, io=io)
       download_success && return artifact_path(hash)
-      error("Unable to automatically install '$(name)' from '$(artifacts_toml)'")
+      error("Unable to automatically install '$(group_and_file)' from '$(artifacts_toml)'")
     end
   else
     return artifact_path(hash)
@@ -171,15 +158,15 @@ end
 # Big parts of code copied from ensure_artifact_installed
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Artifacts.jl
 """
-    download_artifact(tree_hash::SHA1, tarball_url::String, tarball_hash::String;
+    bal_download_artifact(tree_hash::SHA1, tarball_url::String, tarball_hash::String;
                       verbose::Bool = false, io::IO=stderr)
 
 Download/install an artifact into the artifact store.  Returns `true` on success.
 The modifications from the original functions are here to avoid unpacking the archive
 and avoid checking from official repository since these files are not official artifacts.
 """
-function cust_download_artifact(
-  real_name::String,
+function bal_download_artifact(
+  filename::String,
   tree_hash::SHA1,
   tarball_url::String,
   tarball_hash::Union{String, Nothing} = nothing;
@@ -202,8 +189,7 @@ function cust_download_artifact(
       # hash.  This will be fixed in a future Julia release which will properly interrogate
       # the filesystem ACLs for executable permissions, which git tree hashes care about.
       try
-          #cust_download_verify(real_name, tarball_url, tarball_hash, dest_dir, quiet_download=true)
-          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$real_name"))
+          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$filename"))
       catch err
           @debug "download_artifact error" tree_hash tarball_url tarball_hash err
           # Clean that destination directory out if something went wrong
@@ -233,10 +219,11 @@ function cust_download_artifact(
           create_artifact() do dir
               # In case we successfully download the file and the verification works
               # we can move it to the safe location
-              download_verify(tarball_url, tarball_hash, joinpath(dir, "$real_name"))
+              download_verify(tarball_url, tarball_hash, joinpath(dir, "$filename"), 
+                              verbose=verbose, quiet_download=quiet_download)
                   #= dest_dir = artifact_path(tree_hash; honor_overrides=false)
                   mkpath(dest_dir)
-                  mv(joinpath(dir, "$real_name"), joinpath(dest_dir, "$real_name")) =#
+                  mv(joinpath(dir, "$filename"), joinpath(dest_dir, "$filename")) =#
           end
       catch err
           @debug "download_artifact error" tree_hash tarball_url tarball_hash err
@@ -292,24 +279,24 @@ Delete the artifact `name` from the artifact store
 """
 function delete_balartifact!(name::AbstractString, group::AbstractString)
 
-  real_name, group = analyze_name_and_group(name, group)
+  filename = get_filename(name, group)
 
   artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
-  meta = artifact_meta("$(group)/$(real_name)", artifacts_toml)
+  meta = artifact_meta("$(group)/$(filename)", artifacts_toml)
 
   if meta === nothing
-    error("Cannot locate artifact '$(real_name)' in '$(artifacts_toml)'")
+    error("Cannot locate artifact '$(filename)' in '$(artifacts_toml)'")
   end
 
   hash = SHA1(meta["git-tree-sha1"])
 
   if !artifact_exists(hash)
-    @info "The artifact $(group)/$(real_name) has not been found"
+    @info "The artifact $(group)/$(filename) was not found"
   else
     path = artifact_path(hash)
     rm(path, recursive=true)
-    @info "The artifact $(group)/$(real_name) has been deleted"
+    @info "The artifact $(group)/$(filename) has been deleted"
   end
 end
 
@@ -320,7 +307,7 @@ Delete all the BALNLSModels artifacts from the artifact store
 """
 function delete_all_balartifacts!()
 
-  for probs_symbol ∈ total_prob
+  for probs_symbol ∈ bal_groups
     problems = eval(probs_symbol)
     group = string(probs_symbol)
     for problem ∈ problems

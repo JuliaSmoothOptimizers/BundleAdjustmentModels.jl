@@ -1,6 +1,8 @@
 # Extracting the datasets given at https://grail.cs.washington.edu/projects/bal/
 
 """
+    readfile(filename::String; T::Type=Float64)
+
 Read the .txt.bzip2 file in Data/filename and extract the data,
 returns the matrices observed 2D points, cameras and points
 and the vectors of camera indices and points indices

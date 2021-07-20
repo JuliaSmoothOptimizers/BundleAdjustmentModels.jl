@@ -1,6 +1,5 @@
 # Part of the code directly copied from Pkg doc : https://pkgdocs.julialang.org/v1/artifacts/
 # sha256 sum and other code copied from https://github.com/simeonschaub/ArtifactUtils.jl/blob/main/src/ArtifactUtils.jl
-# Don't forget to mention in the license with license for BAL problems
 
 using Pkg.Artifacts
 using Pkg.PlatformEngines
@@ -24,7 +23,7 @@ end
 lazybool = true
 forcebool = true
 
-for probs_symbol ∈ total_prob
+for probs_symbol ∈ bal_groups
     problems = eval(probs_symbol)
     group = string(probs_symbol)
     for problem ∈ problems

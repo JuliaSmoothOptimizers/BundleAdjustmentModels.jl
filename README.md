@@ -1,6 +1,6 @@
 # BALNLSModels
 
-Julia repository of BAL problems
+Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
 
 ## Examples
 
@@ -8,7 +8,7 @@ Julia repository of BAL problems
 julia> using BALNLSModels
 ```
 
-if you don't know the problem names you can call problems_df() that will return a dataframe of all the problems, thair group and some other characteristics.
+`problems_df()` returns a DataFrame of all the problems, their group and other features.
 
 ```julia
 julia> df = problems_df()
@@ -22,24 +22,29 @@ julia> df = problems_df()
                                                          72 rows omitted
 ```
 
-When you get this dataframe you can sort through it to get the problem that you want. For example, if you want the problem with the smallest jacobian, you can do this :
+When you get this dataframe you can sort through it to get the problem that you want. For example, if you want to filter problems based on their size you can apply this filter:
 
 ```julia
-julia> sort!(df, [:nequ, :nvar])
-74×5 DataFrame
- Row │ name                     group      nequ      nvar     nnzj      
-     │ String                   String     Int64     Int64    Int64     
-─────┼──────────────────────────────────────────────────────────────────
-   1 │ problem-49-7776-pre      ladybug       63686    23769     764232
-  ⋮  │            ⋮                 ⋮         ⋮         ⋮         ⋮
-  74 │ problem-1778-993923-pre  venice     10003892  2997771  120046704
-                                                         72 rows omitted
+julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
+2×5 DataFrame
+ Row │ name                  group    nequ   nvar   nnzj    
+     │ String                String   Int64  Int64  Int64   
+─────┼──────────────────────────────────────────────────────
+   1 │ problem-49-7776-pre   ladybug  63686  23769   764232
+   2 │ problem-73-11032-pre  ladybug  92244  33753  1106928
 ```
 
-Now that you know the problem name, you can either get the path to the archive to do whatever you want with it afterwards. The artifact will automatically be downloaded if it has never been before :
+`get_first_name_and_group` returns a tuple of the name and group in the first row of the dataframe
 
 ```julia
-julia> path = fetch_bal_name("problem-49-7776-pre", "ladybug")
+julia> name, group = get_first_name_and_group(filter_df)
+("problem-49-7776-pre", "ladybug")
+```
+
+`fetch_bal_name` returns the path to the problem artifact. The artifact will download automatically:
+
+```julia
+julia> path = fetch_bal_name(name, group)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
@@ -57,7 +62,7 @@ julia> path = fetch_bal_group("ladybug")
  "C:\\Users\\xxxx\\.julia\\artifacts\\389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84"
 ```
 
-Or you can directly construct a non linear least squares model based on NLPModels :
+You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
 julia> model = BALNLSModel("problem-49-7776-pre", "ladybug")
@@ -85,14 +90,14 @@ BALNLSModel{Float64, Vector{Float64}}
   hprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0
  -->
 
-If you want to leave some space and properly delete and artifact before uninstalling the package you can use this function :
+Delete unneeded artifacts and free up disk space with `delete_balartifact!`:
 
 ```julia
 julia> delete_balartifact!("problem-49-7776-pre", "ladybug")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
-Or delete all the problems' artifacts :
+Use  `delete_all_balartifacts!` to delete all artifacts:
 
 ```julia
 julia> delete_all_balartifacts!()
@@ -105,3 +110,5 @@ julia> delete_all_balartifacts!()
 [ Info: The artifact venice/problem-1408-912229-pre.txt.bz2 has not been found
 [ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 has not been found
 ```
+
+Licensed under the MPL-2.0 [License](LICENSE.md) 
