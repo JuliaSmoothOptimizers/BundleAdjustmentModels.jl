@@ -48,7 +48,7 @@ julia> path = fetch_bal_name(name, group)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
-You can also get an array of the paths of an entire group of problems
+You can also get an array of the paths to an entire group of problems
 
 ```julia
 julia> path = fetch_bal_group("ladybug")
