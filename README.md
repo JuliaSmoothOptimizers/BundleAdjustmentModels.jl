@@ -10,7 +10,7 @@ julia> using BALNLSModels
 
 if you don't know the problem names you can call problems_df() that will return a dataframe of all the problems, thair group and some other characteristics.
 
-```
+```julia
 julia> df = problems_df()
 74×5 DataFrame
  Row │ name                     group      nequ      nvar     nnzj      
@@ -24,7 +24,7 @@ julia> df = problems_df()
 
 When you get this dataframe you can sort through it to get the problem that you want. For example, if you want the problem with the smallest jacobian, you can do this :
 
-```
+```julia
 sort!(df, [:nequ, :nvar])
 74×5 DataFrame
  Row │ name                     group      nequ      nvar     nnzj      
@@ -38,14 +38,14 @@ sort!(df, [:nequ, :nvar])
 
 Now that you know the problem name, you can either get the path to the archive to do whatever you want with it afterwards. The artifact will automatically be downloaded if it has never been before :
 
-```
+```julia
 julia> path = fetch_bal_name("problem-49-7776-pre", "ladybug")
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
 You can also get an array of the paths of an entire group of problems
 
-```
+```julia
 julia> path = fetch_bal_group("ladybug")
 30-element Vector{String}:
  "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
@@ -59,7 +59,7 @@ julia> path = fetch_bal_group("ladybug")
 
 Or you can directly construct a non linear least squares model based on NLPModels :
 
-```
+```julia
 julia> model = BALNLSModel("problem-49-7776-pre", "ladybug")
 BALNLSModel{Float64, Vector{Float64}}
 ```
@@ -87,14 +87,14 @@ BALNLSModel{Float64, Vector{Float64}}
 
 If you want to leave some space and properly delete and artifact before uninstalling the package you can use this function :
 
-```
+```julia
 julia> delete_balartifact!("problem-49-7776-pre", "ladybug")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
 Or delete all the problems' artifacts :
 
-```
+```julia
 julia> delete_all_balartifacts!()
 [ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 has not been found
 [ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 has not been found
