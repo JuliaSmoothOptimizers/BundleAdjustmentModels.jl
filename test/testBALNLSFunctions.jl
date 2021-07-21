@@ -1,8 +1,8 @@
 @testset "test fetch_bal_name" begin
     df = problems_df()
     for group ∈ bal_groups
-        sort!(df[ ( df.group .== string(group) ), :], [:nequ, :nvar])
-        name, group = get_first_name_and_group(df)
+        filter_df = sort!(df[ ( df.group .== string(group) ), :], [:nequ, :nvar])
+        name, group = get_first_name_and_group(filter_df)
         path = fetch_bal_name(name, group)
         @test isdir(path)
         @test isfile(joinpath(path, "$name.txt.bz2"))
