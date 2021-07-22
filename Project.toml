@@ -11,6 +11,8 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+
+[extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
@@ -18,3 +20,6 @@ CodecBzip2 = "0.7.2"
 DataFrames = "1.2.0"
 JLD2 = "0.4.11"
 NLPModels = "0.17.0"
+
+[targets]
+test = ["Test"]
