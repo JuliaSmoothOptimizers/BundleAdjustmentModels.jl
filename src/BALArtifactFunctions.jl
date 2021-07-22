@@ -128,7 +128,7 @@ and avoid checking from official repository since these files are not official a
 """
 function bal_ensure_artifact_installed(filename::String,
                                         artifact_name::String, 
-                                        artifacts_toml::String, 
+                                        artifacts_toml::String; 
                                         pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                         verbose::Bool = false,
                                         quiet_download::Bool = false,
@@ -189,9 +189,10 @@ function bal_download_artifact(
       # hash.  This will be fixed in a future Julia release which will properly interrogate
       # the filesystem ACLs for executable permissions, which git tree hashes care about.
       try
-          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$filename"))
+          download_verify(tarball_url, tarball_hash, joinpath(dest_dir, "$filename"),
+                          verbose=verbose, quiet_download=quiet_download)
       catch err
-          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
+          @error "download_artifact error" tree_hash tarball_url tarball_hash err
           # Clean that destination directory out if something went wrong
           rm(dest_dir; force=true, recursive=true)
 
