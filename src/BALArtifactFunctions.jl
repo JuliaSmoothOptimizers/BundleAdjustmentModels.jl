@@ -40,7 +40,7 @@ function get_filename(name::AbstractString, group::AbstractString)
     filename = name*".bz2"
   elseif name[end-2:end] == "pre"
     filename = name*".txt.bz2"
-  elseif oococcursin(r"^[0-9]{64}$"i, name[end-3:end])
+  elseif occursin(r"^[0-9]{64}$"i, name[end-3:end])
     filename = name*"-pre.txt.bz2"
   else
     error("Cannot recognize $(name)")
@@ -227,7 +227,7 @@ function bal_download_artifact(
                   mv(joinpath(dir, "$filename"), joinpath(dest_dir, "$filename")) =#
           end
       catch err
-          @debug "download_artifact error" tree_hash tarball_url tarball_hash err
+          @error "download_artifact error" tree_hash tarball_url tarball_hash err
           if isa(err, InterruptException)
               rethrow(err)
           end
