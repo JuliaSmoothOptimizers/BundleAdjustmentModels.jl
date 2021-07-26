@@ -9,7 +9,7 @@
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-purple.svg
 [docs-dev-url]: https://juliasmoothoptimizers.github.io/BALNLSModels/dev/
 [build-ci-img]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/workflows/CI/badge.svg?branch=main
-[build-ci-url]: https://github.com/JuliaSmoothOptimizers/PDENLPModels.jl/actions
+[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/actions
 [codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels/branch/main/graph/badge.svg
 [codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels
 [release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BALNLSModels.svg?style=flat-square
