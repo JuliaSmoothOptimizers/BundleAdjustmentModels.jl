@@ -35,6 +35,54 @@ end
   @test meta_nls.nequ == 63686
 end
 
+@testset "test residual" begin
+  df = problems_df()
+  filter_df = sort!(df[(df.group .== "dubrovnik"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+
+  @test 4.18565951824972266331e+06 - obj(model, model.meta.x0) ≤ 10e-6
+
+  filter_df = sort!(df[(df.group .== "trafalgar"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+
+  @test 4.41323931443221028894e+06 - obj(model, model.meta.x0) ≤ 10e-6
+
+  filter_df = sort!(df[(df.group .== "ladybug"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+
+  @test 8.50912460680839605629e+05 - obj(model, model.meta.x0) ≤ 10e-6
+end
+
+@testset "test jacobian" begin
+  df = problems_df()
+  filter_df = sort!(df[(df.group .== "dubrovnik"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+  Fx = residual(model, model.meta.x0)
+  Jx = jac_op_residual(model, model.meta.x0)
+
+  @test 1.70677551536496222019e+08 - norm(Jx'*Fx) ≤ 10e-6
+
+  filter_df = sort!(df[(df.group .== "trafalgar"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+  Fx = residual(model, model.meta.x0)
+  Jx = jac_op_residual(model, model.meta.x0)
+
+  @test 1.64335338754470020533e+08 - norm(Jx'*Fx) ≤ 10e-6
+
+  filter_df = sort!(df[(df.group .== "ladybug"), :], [:nequ, :nvar])
+  name, group = get_first_name_and_group(filter_df)
+  model = BALNLSModel(name, group)
+  Fx = residual(model, model.meta.x0)
+  Jx = jac_op_residual(model, model.meta.x0)
+
+  @test 2.39615629098822921515e+07 - norm(Jx'*Fx) ≤ 10e-6 
+end
+
 @testset "test delete_balartifact!()" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])
