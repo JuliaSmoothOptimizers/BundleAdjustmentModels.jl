@@ -14,7 +14,7 @@
 [codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels
 [release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BALNLSModels.svg?style=flat-square
 [release-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/releases
-[doi-img]: https://zenodo.org/badge/DOI/10.5281/zenodo.5056629.svg
+[doi-img]: https://img.shields.io/badge/DOI-none-inactive
 [doi-url]: about:blank
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
