@@ -3,9 +3,7 @@ using Printf
 using BALNLSModels
 
 # Add index.md file as introduction to navigation menu
-pages = [
-  "Introduction" => "index.md",
-]
+pages = ["Introduction" => "index.md"]
 
 makedocs(
   sitename = "BALNLSModels",
