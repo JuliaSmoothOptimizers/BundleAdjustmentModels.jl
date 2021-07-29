@@ -64,7 +64,7 @@ end
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
-  @test 1.70677551536496222019e+08 ≈ norm(Jx'*Fx)
+  @test 1.70677551536496222019e+08 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-21-11315-pre"), :]
   name, group = get_first_name_and_group(filter_df)
@@ -72,7 +72,7 @@ end
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
-  @test 1.64335338754470020533e+08 ≈ norm(Jx'*Fx)
+  @test 1.64335338754470020533e+08 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-49-7776-pre"), :]
   name, group = get_first_name_and_group(filter_df)
@@ -80,7 +80,7 @@ end
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
-  @test 2.39615629098822921515e+07 ≈ norm(Jx'*Fx)
+  @test 2.39615629098822921515e+07 ≈ norm(Jx' * Fx)
 end
 
 @testset "test delete_balartifact!()" begin
