@@ -327,7 +327,7 @@ end
 """
     delete_all_balartifacts!()
 
-Delete all the BALNLSModels artifacts from the artifact store
+Delete all the BundleAdjustmentProblems artifacts from the artifact store
 """
 function delete_all_balartifacts!()
   for probs_symbol ∈ bal_groups

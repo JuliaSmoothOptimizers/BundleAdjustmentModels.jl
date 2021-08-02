@@ -1,4 +1,4 @@
-module BALNLSModels
+module BundleAdjustmentProblems
 
 using Pkg.Artifacts,
   Pkg.PlatformEngines, NLPModels, .Threads, CodecBzip2, SHA, DataFrames, JLD2, LinearAlgebra

@@ -1,5 +1,5 @@
 using Base: Float32
-using BALNLSModels, DataFrames, JLD2
+using BundleAdjustmentProblems, DataFrames, JLD2
 
 include("../src/BALProblemsList.jl")
 

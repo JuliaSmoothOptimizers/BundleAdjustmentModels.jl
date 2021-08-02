@@ -1,19 +1,19 @@
 using Documenter
 using Printf
-using BALNLSModels
+using BundleAdjustmentProblems
 
 # Add index.md file as introduction to navigation menu
 pages = ["Introduction" => "index.md", "Reference" => "reference.md"]
 
 makedocs(
-  sitename = "BALNLSModels",
+  sitename = "BundleAdjustmentProblems",
   format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
-  modules = [BALNLSModels],
+  modules = [BundleAdjustmentProblems],
   pages = pages,
 )
 
 deploydocs(
-  repo = "github.com/JuliaSmoothOptimizers/BALNLSModels",
+  repo = "github.com/JuliaSmoothOptimizers/BundleAdjustmentProblems",
   push_preview = true,
   devbranch = "main",
 )

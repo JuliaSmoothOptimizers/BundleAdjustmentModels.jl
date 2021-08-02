@@ -1,19 +1,19 @@
-# BALNLSModels
+# BundleAdjustmentProblems
 
 | **Documentation** | **CI** | **Coverage** | **Release** | **DOI** |
 |:-----------------:|:------:|:------------:|:-----------:|:-------:|
 | [![docs-stable][docs-stable-img]][docs-stable-url] [![docs-dev][docs-dev-img]][docs-dev-url] | [![build-ci][build-ci-img]][build-ci-url] | [![codecov][codecov-img]][codecov-url] | [![release][release-img]][release-url] | [![doi][doi-img]][doi-url] |
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://juliasmoothoptimizers.github.io/BALNLSModels/stable/
+[docs-stable-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentProblems/stable/
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-purple.svg
-[docs-dev-url]: https://juliasmoothoptimizers.github.io/BALNLSModels/dev/
-[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/workflows/CI/badge.svg?branch=main
-[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/actions
-[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels/branch/main/graph/badge.svg
-[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels
-[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BALNLSModels.svg?style=flat-square
-[release-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/releases
+[docs-dev-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentProblems/dev/
+[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentProblems/workflows/CI/badge.svg?branch=main
+[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentProblems/actions
+[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentProblems/branch/main/graph/badge.svg
+[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentProblems
+[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BundleAdjustmentProblems.svg?style=flat-square
+[release-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentProblems/releases
 [doi-img]: https://img.shields.io/badge/DOI-none-inactive
 [doi-url]: about:blank
 
@@ -22,7 +22,7 @@ Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adj
 ## Examples
 
 ```julia
-julia> using BALNLSModels
+julia> using BundleAdjustmentProblems
 ```
 
 `problems_df()` returns a DataFrame of all the problems, their group and other features.

@@ -1,11 +1,11 @@
-# [BALNLSModels documentation](@id Home)
+# [BundleAdjustmentProblems documentation](@id Home)
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository.
 
 ## Examples
 
 ```julia
-julia> using BALNLSModels
+julia> using BundleAdjustmentProblems
 ```
 
 `problems_df()` returns a DataFrame of all the problems, their group and other features.
