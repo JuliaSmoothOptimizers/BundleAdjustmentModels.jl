@@ -13,6 +13,6 @@ Pages = ["reference.md"]
 ```
 ​
 ```@autodocs
-Modules = [BALNLSModels]
+Modules = [BundleAdjustmentModels]
 Private = false
 ```

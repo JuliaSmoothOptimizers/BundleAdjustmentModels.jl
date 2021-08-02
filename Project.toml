@@ -1,5 +1,5 @@
-name = "BALNLSModels"
-uuid = "f5c5ffd7-ef9e-46ad-9b2e-92083a3cd0c6"
+name = "BundleAdjustmentModels"
+uuid = "0bf3e898-7c79-4b38-9ca6-2d9cc6573905"
 authors = ["AntoninKns <antonin.kenens@polymtl.ca>"]
 version = "0.1.0"
 

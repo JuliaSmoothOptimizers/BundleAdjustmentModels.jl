@@ -1,11 +1,11 @@
-# [BALNLSModels documentation](@id Home)
+# [BundleAdjustmentModels documentation](@id Home)
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository.
 
 ## Examples
 
 ```julia
-julia> using BALNLSModels
+julia> using BundleAdjustmentModels
 ```
 
 `problems_df()` returns a DataFrame of all the problems, their group and other features.
@@ -65,15 +65,15 @@ julia> path = fetch_bal_group("ladybug")
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
-julia> model = BALNLSModel("problem-49-7776-pre", "ladybug")
-BALNLSModel{Float64, Vector{Float64}}
+julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
+BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
 You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
 
 ```julia
-julia> model = BALNLSModel("../path/to/file/problem-49-7776-pre.txt.bz2")
-BALNLSModel{Float64, Vector{Float64}}
+julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
+BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
 Delete unneeded artifacts and free up disk space with `delete_balartifact!`:
