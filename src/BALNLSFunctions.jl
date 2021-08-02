@@ -10,7 +10,7 @@ Represent a bundle adjustement problem in the form
 
 where `F(x)` is the vector of residuals.
 """
-mutable struct BALNLSModel{T, S} <: AbstractNLSModel{T, S}
+mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   # Meta and counters are required in every model
   meta::NLPModelMeta{T, S}
   # nls_meta
@@ -44,11 +44,11 @@ function name(filename::AbstractString)
 end
 
 """
-    BALNLSModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
+    BundleAdjustmentModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
 
-Constructor of BALNLSModel, creates an NLSModel from a BAL archive
+Constructor of BundleAdjustmentModel, creates an NLSModel from a BAL archive
 """
-function BALNLSModel(filename::AbstractString; T::Type = Float64)
+function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
   cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T = T)
 
   S = typeof(x0)
@@ -69,7 +69,7 @@ function BALNLSModel(filename::AbstractString; T::Type = Float64)
   Jv = Vector{T}(undef, nls_meta.nequ)
   Jtv = Vector{T}(undef, nls_meta.nvar)
 
-  return BALNLSModel(
+  return BundleAdjustmentModel(
     meta,
     nls_meta,
     NLSCounters(),
@@ -87,7 +87,7 @@ function BALNLSModel(filename::AbstractString; T::Type = Float64)
   )
 end
 
-function NLPModels.residual!(nls::BALNLSModel, x::AbstractVector, cx::AbstractVector)
+function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, cx::AbstractVector)
   increment!(nls, :neval_residual)
   residuals!(nls.cams_indices, nls.pnts_indices, x, cx, nls.nobs, nls.npnts)
   cx .-= nls.pt2d
@@ -157,7 +157,7 @@ function scaling_factor(point::AbstractVector, k1::AbstractFloat, k2::AbstractFl
 end
 
 function NLPModels.jac_structure!(
-  nls::BALNLSModel,
+  nls::BundleAdjustmentModel,
   rows::AbstractVector{<:Integer},
   cols::AbstractVector{<:Integer},
 )
@@ -193,7 +193,7 @@ function NLPModels.jac_structure!(
   return rows, cols
 end
 
-function NLPModels.jac_coord!(nls::BALNLSModel, x::AbstractVector, vals::AbstractVector)
+function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
   increment!(nls, :neval_jac)
   nobs = nls.nobs
   npnts = nls.npnts
@@ -240,7 +240,7 @@ function NLPModels.jac_coord!(nls::BALNLSModel, x::AbstractVector, vals::Abstrac
   return vals
 end
 
-function NLPModels.jac_op_residual(nls::BALNLSModel, x::AbstractVector)
+function NLPModels.jac_op_residual(nls::BundleAdjustmentModel, x::AbstractVector)
   jac_structure!(nls, nls.rows, nls.cols)
   jac_coord!(nls, x, nls.vals)
   Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
@@ -248,12 +248,12 @@ function NLPModels.jac_op_residual(nls::BALNLSModel, x::AbstractVector)
 end
 
 """
-    jac_op_residual_update(nls :: BALNLSModel, x :: AbstractVector)
+    jac_op_residual_update(nls :: BundleAdjustmentModel, x :: AbstractVector)
 
 Update the jacobian operator of the residual wihtout jac_structure! instead
 of using jac_op_residual
 """
-function jac_op_residual_update(nls::BALNLSModel, x::AbstractVector)
+function jac_op_residual_update(nls::BundleAdjustmentModel, x::AbstractVector)
   jac_coord!(nls, x, nls.vals)
   Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
   return Jx

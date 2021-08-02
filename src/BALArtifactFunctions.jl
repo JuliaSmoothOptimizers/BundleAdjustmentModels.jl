@@ -4,7 +4,7 @@ export problems_df,
   get_first_name_and_group,
   fetch_bal_name,
   fetch_bal_group,
-  BALNLSModel,
+  BundleAdjustmentModel,
   delete_balartifact!,
   delete_all_balartifacts!
 
@@ -95,19 +95,19 @@ function fetch_bal_group(group::AbstractString)
 end
 
 """
-    BALNLSModel(name::AbstractString, group::AbstractString, T::Type=Float64)
+    BundleAdjustmentModel(name::AbstractString, group::AbstractString, T::Type=Float64)
 
-Alternate constructor of BALNLSModel
+Alternate constructor of BundleAdjustmentModel
 Get the path of the problem name `name` from the group `group` with the precision `T`.
 Return a NLSModel generated from this problem data using NLPModels
 """
-function BALNLSModel(name::AbstractString, group::AbstractString; T::Type = Float64)
+function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::Type = Float64)
   filename = get_filename(name, group)
 
   filedir = fetch_bal_name(filename, group)
   path_and_filename = joinpath(filedir, filename)
 
-  return BALNLSModel(path_and_filename, T = T)
+  return BundleAdjustmentModel(path_and_filename, T = T)
 end
 
 # DEFAULT_IO, stderr_f and can_fancyprint copied from

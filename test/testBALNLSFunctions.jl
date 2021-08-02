@@ -19,18 +19,18 @@ end
   end
 end
 
-@testset "tests BALNLSModel" begin
+@testset "tests BundleAdjustmentModel" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])
   name, group = get_first_name_and_group(df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
   meta_nls = nls_meta(model)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
 
   path = fetch_bal_name(name, group)
   filename = joinpath(path, "$name.txt.bz2")
-  model = BALNLSModel(filename)
+  model = BundleAdjustmentModel(filename)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
 end
@@ -39,19 +39,19 @@ end
   df = problems_df()
   filter_df = df[(df.name .== "problem-16-22106-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
 
   @test 4.18565951824972266331e+06 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-21-11315-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
 
   @test 4.41323931443221028894e+06 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-49-7776-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
 
   @test 8.50912460680839605629e+05 ≈ obj(model, model.meta.x0)
 end
@@ -60,7 +60,7 @@ end
   df = problems_df()
   filter_df = df[(df.name .== "problem-16-22106-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
@@ -68,7 +68,7 @@ end
 
   filter_df = df[(df.name .== "problem-21-11315-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
@@ -76,7 +76,7 @@ end
 
   filter_df = df[(df.name .== "problem-49-7776-pre"), :]
   name, group = get_first_name_and_group(filter_df)
-  model = BALNLSModel(name, group)
+  model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   Jx = jac_op_residual(model, model.meta.x0)
 
