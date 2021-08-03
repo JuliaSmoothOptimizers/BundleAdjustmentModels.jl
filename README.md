@@ -1,19 +1,19 @@
-# BALNLSModels
+# BundleAdjustmentModels
 
 | **Documentation** | **CI** | **Coverage** | **Release** | **DOI** |
 |:-----------------:|:------:|:------------:|:-----------:|:-------:|
 | [![docs-stable][docs-stable-img]][docs-stable-url] [![docs-dev][docs-dev-img]][docs-dev-url] | [![build-ci][build-ci-img]][build-ci-url] | [![codecov][codecov-img]][codecov-url] | [![release][release-img]][release-url] | [![doi][doi-img]][doi-url] |
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://juliasmoothoptimizers.github.io/BALNLSModels/stable/
+[docs-stable-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels/stable/
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-purple.svg
-[docs-dev-url]: https://juliasmoothoptimizers.github.io/BALNLSModels/dev/
-[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/workflows/CI/badge.svg?branch=main
-[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/actions
-[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels/branch/main/graph/badge.svg
-[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BALNLSModels
-[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BALNLSModels.svg?style=flat-square
-[release-url]: https://github.com/JuliaSmoothOptimizers/BALNLSModels/releases
+[docs-dev-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels/dev/
+[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/workflows/CI/badge.svg?branch=main
+[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/actions
+[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels/branch/main/graph/badge.svg
+[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels
+[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BundleAdjustmentModels.svg?style=flat-square
+[release-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/releases
 [doi-img]: https://img.shields.io/badge/DOI-none-inactive
 [doi-url]: about:blank
 
@@ -22,7 +22,7 @@ Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adj
 ## Examples
 
 ```julia
-julia> using BALNLSModels
+julia> using BundleAdjustmentModels
 ```
 
 `problems_df()` returns a DataFrame of all the problems, their group and other features.
@@ -58,17 +58,17 @@ julia> name, group = get_first_name_and_group(filter_df)
 ("problem-49-7776-pre", "ladybug")
 ```
 
-`fetch_bal_name` returns the path to the problem artifact. The artifact will download automatically:
+`fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
 ```julia
-julia> path = fetch_bal_name(name, group)
+julia> path = fetch_ba_name(name, group)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
 You can also get an array of the paths to an entire group of problems
 
 ```julia
-julia> path = fetch_bal_group("ladybug")
+julia> path = fetch_ba_group("ladybug")
 30-element Vector{String}:
  "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
  "C:\\Users\\xxxx\\.julia\\artifacts\\3d0853a3ca8e585814697fea9cd4d6956692e103"
@@ -82,28 +82,28 @@ julia> path = fetch_bal_group("ladybug")
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
-julia> model = BALNLSModel("problem-49-7776-pre", "ladybug")
-BALNLSModel{Float64, Vector{Float64}}
+julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
+BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
 You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
 
 ```julia
-julia> model = BALNLSModel("../path/to/file/problem-49-7776-pre.txt.bz2")
-BALNLSModel{Float64, Vector{Float64}}
+julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
+BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-Delete unneeded artifacts and free up disk space with `delete_balartifact!`:
+Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
 ```julia
-julia> delete_balartifact!("problem-49-7776-pre", "ladybug")
+julia> delete_ba_artifact!("problem-49-7776-pre", "ladybug")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
-Use  `delete_all_balartifacts!` to delete all artifacts:
+Use  `delete_all_ba_artifacts!` to delete all artifacts:
 
 ```julia
-julia> delete_all_balartifacts!()
+julia> delete_all_ba_artifacts!()
 [ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 was not found
 [ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 was not found
  ⋮

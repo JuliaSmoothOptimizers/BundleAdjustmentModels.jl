@@ -1,5 +1,5 @@
-name = "BALNLSModels"
-uuid = "f5c5ffd7-ef9e-46ad-9b2e-92083a3cd0c6"
+name = "BundleAdjustmentModels"
+uuid = "0bf3e898-7c79-4b38-9ca6-2d9cc6573905"
 authors = ["AntoninKns <antonin.kenens@polymtl.ca>"]
 version = "0.1.0"
 
@@ -12,10 +12,10 @@ Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [compat]
-CodecBzip2 = "0.7.2"
-DataFrames = "1.2.0"
-JLD2 = "0.4.11"
-NLPModels = "0.17.0"
+CodecBzip2 = "0.7"
+DataFrames = "1.2"
+JLD2 = "0.4"
+NLPModels = "0.17"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

@@ -84,4 +84,4 @@ const venice = [
   "problem-1778-993923-pre.txt.bz2",
 ]
 
-const bal_groups = [:dubrovnik, :trafalgar, :ladybug, :venice]
+const ba_groups = [:dubrovnik, :trafalgar, :ladybug, :venice]
