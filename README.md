@@ -58,17 +58,17 @@ julia> name, group = get_first_name_and_group(filter_df)
 ("problem-49-7776-pre", "ladybug")
 ```
 
-`fetch_bal_name` returns the path to the problem artifact. The artifact will download automatically:
+`fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
 ```julia
-julia> path = fetch_bal_name(name, group)
+julia> path = fetch_ba_name(name, group)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
 You can also get an array of the paths to an entire group of problems
 
 ```julia
-julia> path = fetch_bal_group("ladybug")
+julia> path = fetch_ba_group("ladybug")
 30-element Vector{String}:
  "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
  "C:\\Users\\xxxx\\.julia\\artifacts\\3d0853a3ca8e585814697fea9cd4d6956692e103"
@@ -93,17 +93,17 @@ julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-Delete unneeded artifacts and free up disk space with `delete_balartifact!`:
+Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
 ```julia
-julia> delete_balartifact!("problem-49-7776-pre", "ladybug")
+julia> delete_ba_artifact!("problem-49-7776-pre", "ladybug")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
-Use  `delete_all_balartifacts!` to delete all artifacts:
+Use  `delete_all_ba_artifacts!` to delete all artifacts:
 
 ```julia
-julia> delete_all_balartifacts!()
+julia> delete_all_ba_artifacts!()
 [ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 was not found
 [ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 was not found
  ⋮

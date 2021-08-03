@@ -1,10 +1,10 @@
 using Base: Float32
 using BundleAdjustmentModels, DataFrames, JLD2
 
-include("../src/BALProblemsList.jl")
+include("../src/BundleAdjustmentProblemsList.jl")
 
 df = DataFrame(name = String[], group = String[], nequ = Int64[], nvar = Int64[], nnzj = Int64[])
-for probs_symbol ∈ bal_groups
+for probs_symbol ∈ ba_groups
   problems = eval(probs_symbol)
   group = string(probs_symbol)
   for name in problems
@@ -13,8 +13,8 @@ for probs_symbol ∈ bal_groups
   end
 end
 
-balprobs_jld2 = joinpath(@__DIR__, "..", "src", "bal_probs_df.jld2")
+ba_probs_jld2 = joinpath(@__DIR__, "..", "src", "ba_probs_df.jld2")
 
-jldopen(balprobs_jld2, "w") do file
+jldopen(ba_probs_jld2, "w") do file
   file["df"] = df
 end

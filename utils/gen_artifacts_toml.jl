@@ -6,11 +6,11 @@ using Pkg.PlatformEngines
 using SHA
 import Base.SHA1
 
-include("../src/BALProblemsList.jl")
+include("../src/BundleAdjustmentProblemsList.jl")
 
 const artifact_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
-const bal_url = "https://grail.cs.washington.edu/projects/bal/data"
+const ba_url = "https://grail.cs.washington.edu/projects/bal/data"
 
 fails = String[]
 
@@ -23,11 +23,11 @@ end
 lazybool = true
 forcebool = true
 
-for probs_symbol ∈ bal_groups
+for probs_symbol ∈ ba_groups
   problems = eval(probs_symbol)
   group = string(probs_symbol)
   for problem ∈ problems
-    url = "$bal_url/$group/$problem"
+    url = "$ba_url/$group/$problem"
     println(problem)
     println(url)
     try

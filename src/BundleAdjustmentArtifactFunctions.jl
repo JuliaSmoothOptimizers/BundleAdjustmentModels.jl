@@ -2,13 +2,13 @@ import Base.SHA1, Pkg.PlatformEngines.download_verify
 
 export problems_df,
   get_first_name_and_group,
-  fetch_bal_name,
-  fetch_bal_group,
+  fetch_ba_name,
+  fetch_ba_group,
   BundleAdjustmentModel,
-  delete_balartifact!,
-  delete_all_balartifacts!
+  delete_ba_artifact!,
+  delete_all_ba_artifacts!
 
-const balprobs_jld2 = joinpath(@__DIR__, "..", "src", "bal_probs_df.jld2")
+const ba_probs_jld2 = joinpath(@__DIR__, "..", "src", "ba_probs_df.jld2")
 
 """
     problems_df()
@@ -16,10 +16,10 @@ const balprobs_jld2 = joinpath(@__DIR__, "..", "src", "bal_probs_df.jld2")
 Return a dataframe of the problems and their characteristics
 """
 function problems_df()
-  file = jldopen(balprobs_jld2, "r")
-  balprobs = file["df"]
+  file = jldopen(ba_probs_jld2, "r")
+  ba_probs = file["df"]
   close(file)
-  return balprobs
+  return ba_probs
 end
 
 """
@@ -52,7 +52,7 @@ function get_filename(name::AbstractString, group::AbstractString)
     error("Cannot recognize $(name)")
   end
 
-  if !(group in string.(bal_groups))
+  if !(group in string.(ba_groups))
     error("Cannot recognize $(group)")
   end
 
@@ -60,16 +60,16 @@ function get_filename(name::AbstractString, group::AbstractString)
 end
 
 """
-    fetch_bal_name(name::AbstractString, group::AbstractString)
+    fetch_ba_name(name::AbstractString, group::AbstractString)
 
 Get the problem with name `name` from the group `group`.
 Return the path where the problem is stored.
 """
-function fetch_bal_name(name::AbstractString, group::AbstractString)
+function fetch_ba_name(name::AbstractString, group::AbstractString)
   filename = get_filename(name, group)
 
   artifact_name = "$(group)/$(filename)"
-  loc = bal_ensure_artifact_installed(
+  loc = ba_ensure_artifact_installed(
     filename,
     artifact_name,
     joinpath(@__DIR__, "..", "Artifacts.toml"),
@@ -79,16 +79,16 @@ function fetch_bal_name(name::AbstractString, group::AbstractString)
 end
 
 """
-    fetch_bal_group(group::AbstractString)
+    fetch_ba_group(group::AbstractString)
 
 Get all the problems with the group name `group`.
 Return an array of the paths where the problems are stored.
 Group possibilities are : trafalgar, venice, dubrovnik and ladybug
 """
-function fetch_bal_group(group::AbstractString)
+function fetch_ba_group(group::AbstractString)
   problem_paths = String[]
   for problem ∈ eval(Symbol(group))
-    problem_path = fetch_bal_name(problem, group)
+    problem_path = fetch_ba_name(problem, group)
     push!(problem_paths, problem_path)
   end
   return problem_paths
@@ -104,7 +104,7 @@ Return a NLSModel generated from this problem data using NLPModels
 function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::Type = Float64)
   filename = get_filename(name, group)
 
-  filedir = fetch_bal_name(filename, group)
+  filedir = fetch_ba_name(filename, group)
   path_and_filename = joinpath(filedir, filename)
 
   return BundleAdjustmentModel(path_and_filename, T = T)
@@ -119,7 +119,7 @@ can_fancyprint(io::IO) = (io isa Base.TTY) && (get(ENV, "CI", nothing) != "true"
 # Big parts of code copied from ensure_artifact_installed
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Artifacts.jl
 """
-    bal_ensure_artifact_installed(filename::String, artifact_name::String, artifacts_toml::String;
+    ba_ensure_artifact_installed(filename::String, artifact_name::String, artifacts_toml::String;
                                     platform::AbstractPlatform = HostPlatform(),
                                     pkg_uuid::Union{Base.UUID,Nothing}=nothing,
                                     verbose::Bool = false,
@@ -131,7 +131,7 @@ Ensures an artifact is installed, downloading it via the download information st
 The modifications from the original functions are here to avoid unpacking the archive
 and avoid checking from official repository since these files are not official artifacts.
 """
-function bal_ensure_artifact_installed(
+function ba_ensure_artifact_installed(
   filename::String,
   artifact_name::String,
   artifacts_toml::String;
@@ -152,7 +152,7 @@ function bal_ensure_artifact_installed(
     for entry in meta["download"]
       url = entry["url"]
       tarball_hash = entry["sha256"]
-      download_success = bal_download_artifact(
+      download_success = ba_download_artifact(
         filename,
         hash,
         url,
@@ -172,14 +172,14 @@ end
 # Big parts of code copied from ensure_artifact_installed
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Artifacts.jl
 """
-    bal_download_artifact(tree_hash::SHA1, tarball_url::String, tarball_hash::String;
+    ba_download_artifact(tree_hash::SHA1, tarball_url::String, tarball_hash::String;
                       verbose::Bool = false, io::IO=stderr)
 
 Download/install an artifact into the artifact store.  Returns `true` on success.
 The modifications from the original functions are here to avoid unpacking the archive
 and avoid checking from official repository since these files are not official artifacts.
 """
-function bal_download_artifact(
+function ba_download_artifact(
   filename::String,
   tree_hash::SHA1,
   tarball_url::String,
@@ -298,11 +298,11 @@ function bal_download_artifact(
 end
 
 """
-    delete_balartifact!(name::AbstractString, group::AbstractString)
+    delete_ba_artifact!(name::AbstractString, group::AbstractString)
 
 Delete the artifact `name` from the artifact store
 """
-function delete_balartifact!(name::AbstractString, group::AbstractString)
+function delete_ba_artifact!(name::AbstractString, group::AbstractString)
   filename = get_filename(name, group)
 
   artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
@@ -325,16 +325,16 @@ function delete_balartifact!(name::AbstractString, group::AbstractString)
 end
 
 """
-    delete_all_balartifacts!()
+    delete_all_ba_artifacts!()
 
 Delete all the BundleAdjustmentModels artifacts from the artifact store
 """
-function delete_all_balartifacts!()
-  for probs_symbol ∈ bal_groups
+function delete_all_ba_artifacts!()
+  for probs_symbol ∈ ba_groups
     problems = eval(probs_symbol)
     group = string(probs_symbol)
     for problem ∈ problems
-      delete_balartifact!(problem, group)
+      delete_ba_artifact!(problem, group)
     end
   end
 end
