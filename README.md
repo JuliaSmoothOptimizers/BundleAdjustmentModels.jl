@@ -14,8 +14,8 @@
 [codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels
 [release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BundleAdjustmentModels.svg?style=flat-square
 [release-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/releases
-[doi-img]: https://img.shields.io/badge/DOI-none-inactive
-[doi-url]: about:blank
+[doi-img]: https://zenodo.org/badge/383587358.svg
+[doi-url]: https://zenodo.org/badge/latestdoi/383587358
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
 
