@@ -19,6 +19,10 @@
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
 
+## How to Cite
+
+If you use BundleAdjustmentModels.jl in your work, please cite using the format given in [`CITATION.bib`](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.bib).
+
 ## Examples
 
 ```julia
