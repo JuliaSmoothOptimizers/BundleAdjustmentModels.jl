@@ -1,11 +1,6 @@
 import NLPModels: increment!
 
 export BundleAdjustmentModel,
-  residual!,
-  residuals!,
-  jac_structure!,
-  jac_coord!,
-  jac_op_residual,
   jac_op_residual_update
 
 """
