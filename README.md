@@ -62,6 +62,15 @@ julia> name, group = get_first_name_and_group(filter_df)
 ("problem-49-7776-pre", "ladybug")
 ```
 
+`get_names_and_groups` returns an array of tuple of all the names and groups in the dataframe
+
+```julia
+julia> names_and_groups = get_names_and_groups(filter_df)
+2-element Vector{Tuple}:
+ ("problem-49-7776-pre", "ladybug")
+ ("problem-73-11032-pre", "ladybug")
+```
+
 `fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
 ```julia

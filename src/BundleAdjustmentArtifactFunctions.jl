@@ -2,6 +2,7 @@ import Base.SHA1, Pkg.PlatformEngines.download_verify
 
 export problems_df,
   get_first_name_and_group,
+  get_names_and_groups,
   fetch_ba_name,
   fetch_ba_group,
   BundleAdjustmentModel,
@@ -31,6 +32,21 @@ function get_first_name_and_group(dataframe::DataFrame)
   name = dataframe[1, :name]
   group = dataframe[1, :group]
   return name, group
+end
+
+"""get_names_and_groups(dataframe::DataFrame)
+
+Return an array of tuples of the names and groups in the DataFrame
+"""
+function get_names_and_groups(dataframe::DataFrame)
+  n = length(dataframe[!, 1])
+  names_and_groups = Vector{Tuple}(undef,n)
+  for i = 1 : n
+    name = dataframe[i, :name]
+    group = dataframe[i, :group]
+    names_and_groups[i] = (name, group)
+  end
+  return names_and_groups
 end
 
 """

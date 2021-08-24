@@ -19,6 +19,15 @@ end
   end
 end
 
+@testset "get_names_and_groups" begin
+  df = problems_df()
+  filter_df = df[ ( df.nequ .≤ 100000 ) .& ( df.nvar .≤ 50000 ), :]
+  names_and_groups = get_names_and_groups(filter_df)
+  @test names_and_groups[1] == ("problem-21-11315-pre", "trafalgar")
+  @test names_and_groups[2] == ("problem-49-7776-pre", "ladybug")
+  @test names_and_groups[3] == ("problem-73-11032-pre", "ladybug")
+end
+
 @testset "tests BundleAdjustmentModel" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])
