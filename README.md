@@ -5,15 +5,15 @@
 | [![docs-stable][docs-stable-img]][docs-stable-url] [![docs-dev][docs-dev-img]][docs-dev-url] | [![build-ci][build-ci-img]][build-ci-url] | [![codecov][codecov-img]][codecov-url] | [![release][release-img]][release-url] | [![doi][doi-img]][doi-url] |
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels/stable/
+[docs-stable-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels.jl/stable/
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-purple.svg
-[docs-dev-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels/dev/
-[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/workflows/CI/badge.svg?branch=main
-[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/actions
-[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels/branch/main/graph/badge.svg
-[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels
-[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BundleAdjustmentModels.svg?style=flat-square
-[release-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels/releases
+[docs-dev-url]: https://juliasmoothoptimizers.github.io/BundleAdjustmentModels.jl/dev/
+[build-ci-img]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/workflows/CI/badge.svg?branch=main
+[build-ci-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/actions
+[codecov-img]: https://codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/branch/main/graph/badge.svg
+[codecov-url]: https://app.codecov.io/gh/JuliaSmoothOptimizers/BundleAdjustmentModels.jl
+[release-img]: https://img.shields.io/github/v/release/JuliaSmoothOptimizers/BundleAdjustmentModels.jl.svg?style=flat-square
+[release-url]: https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/releases
 [doi-img]: https://zenodo.org/badge/383587358.svg
 [doi-url]: https://zenodo.org/badge/latestdoi/383587358
 
