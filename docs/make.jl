@@ -6,14 +6,14 @@ using BundleAdjustmentModels
 pages = ["Introduction" => "index.md", "Reference" => "reference.md"]
 
 makedocs(
-  sitename = "BundleAdjustmentModels",
+  sitename = "BundleAdjustmentModels.jl",
   format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
   modules = [BundleAdjustmentModels],
   pages = pages,
 )
 
 deploydocs(
-  repo = "github.com/JuliaSmoothOptimizers/BundleAdjustmentModels",
+  repo = "github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl",
   push_preview = true,
   devbranch = "main",
 )
