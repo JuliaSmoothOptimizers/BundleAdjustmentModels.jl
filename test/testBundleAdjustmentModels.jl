@@ -2,7 +2,7 @@ delete_all_ba_artifacts!()
 
 @testset "test fetch_ba_name" begin
   df = problems_df()
-  for group ∈ ba_groups
+  for group ∈ BundleAdjustmentModels.ba_groups
     filter_df = sort!(df[(df.group .== string(group)), :], [:nequ, :nvar])
     name, group = get_first_name_and_group(filter_df)
     path = fetch_ba_name(name, group)
