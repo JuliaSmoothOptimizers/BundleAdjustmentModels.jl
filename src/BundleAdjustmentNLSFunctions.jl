@@ -22,7 +22,7 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   # For each observation k, pnts_indices[k] gives the index of the 3D point observed in this observation
   pnts_indices::Vector{Int}
   # Each line contains the 2D coordinates of the observed point
-  pt2d::AbstractVector
+  pt2d::Vector{T}
   # Number of observations
   nobs::Int
   # Number of points
@@ -33,9 +33,13 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   ##### Jacobians data #####
   rows::Vector{Int}
   cols::Vector{Int}
-  vals::AbstractVector
-  Jv::AbstractVector
-  Jtv::AbstractVector
+  vals::S
+  Jv::S
+  Jtv::S
+
+  # temporary storage
+  k::S
+  P1::S
 end
 
 """ Create name from filename """
@@ -65,9 +69,12 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
 
   rows = Vector{Int}(undef, nls_meta.nnzj)
   cols = Vector{Int}(undef, nls_meta.nnzj)
-  vals = Vector{T}(undef, nls_meta.nnzj)
-  Jv = Vector{T}(undef, nls_meta.nequ)
-  Jtv = Vector{T}(undef, nls_meta.nvar)
+  vals = S(undef, nls_meta.nnzj)
+  Jv = S(undef, nls_meta.nequ)
+  Jtv = S(undef, nls_meta.nvar)
+
+  k = similar(x0)
+  P1 = similar(x0)
 
   return BundleAdjustmentModel(
     meta,
@@ -84,15 +91,15 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     vals,
     Jv,
     Jtv,
+    k,
+    P1
   )
 end
 
 function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, cx::AbstractVector)
   increment!(nls, :neval_residual)
-  residuals!(nls.cams_indices, nls.pnts_indices, x, cx, nls.nobs, nls.npnts)
+  residuals!(nls.cams_indices, nls.pnts_indices, x, cx, nls.nobs, nls.npnts, nls.k, nls.P1)
   cx .-= nls.pt2d
-  # If a value is NaN, we put it to 0 not to take it into account
-  # @views map!(x -> isnan(x) ? 0 : x, cx, cx)
   return cx
 end
 
@@ -100,9 +107,11 @@ function residuals!(
   cam_indices::Vector{Int},
   pnt_indices::Vector{Int},
   xs::AbstractVector,
-  r::AbstractVector,
+  rs::AbstractVector,
   nobs::Int,
   npts::Int,
+  vs::AbstractVector,
+  Ps::AbstractVector
 )
   q, re = divrem(nobs, nthreads())
   if re != 0
@@ -113,15 +122,31 @@ function residuals!(
     @simd for k = (1 + (t - 1) * q):min(t * q, nobs)
       cam_index = cam_indices[k]
       pnt_index = pnt_indices[k]
-      @views x = xs[((pnt_index - 1) * 3 + 1):((pnt_index - 1) * 3 + 3)]
-      @views c = xs[(3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)]
-      @views projection!(x, c, r[(2 * k - 1):(2 * k)], k)
+      pnt_range = ((pnt_index - 1) * 3 + 1):((pnt_index - 1) * 3 + 3)
+      cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
+      x = view(xs, pnt_range)
+      c = view(xs, cam_range)
+      v = view(vs, pnt_range)
+      P = view(Ps, pnt_range)
+      r = view(rs, (2 * k - 1):(2 * k))
+      projection!(x, c, r, k, v, P)
     end
   end
-  return r
+  return rs
 end
 
-#function projection!(p3  :: AbstractVector, r  :: AbstractVector, t  :: AbstractVector, k1 :: AbstractFloat, k2 :: AbstractFloat, f :: AbstractFloat, r2 ::  AbstractVector, idx :: Int)
+function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
+  if !(length(a) == length(b) == length(c) == 3)
+      throw(DimensionMismatch("cross product is only defined for vectors of length 3"))
+  end
+  a1, a2, a3 = a
+  b1, b2, b3 = b
+  c[1] = a2*b3-a3*b2
+  c[2] = a3*b1-a1*b3
+  c[3] = a1*b2-a2*b1
+  c
+end
+
 function projection!(
   p3::AbstractVector,
   r::AbstractVector,
@@ -131,29 +156,25 @@ function projection!(
   f,
   r2::AbstractVector,
   idx::Int,
+  k::AbstractVector,
+  P1::AbstractVector
 )
-  # θ = norm(r)
-  θ = sqrt(r[1]^2 + r[2]^2 + r[3]^2)
-  # if θ < eps(eltype(p3))
-  #   P1 = p3 + cross(r, p3)
-  # else
-  k = r / θ
-  P1 = cos(θ) * p3 + sin(θ) * cross(k, p3) + (1 - cos(θ)) * dot(k, p3) * k + t
-  # end
-  # if P1[3] == 0
-  #   r2 .= NaN
-  # else
-  P2 = -P1[1:2] / P1[3]
-  r2 .= f * scaling_factor(P2, k1, k2) * P2
-  # end
+  θ = norm(r)
+  k .= r / θ
+  cross!(P1, k, p3)
+  P1 .*= sin(θ)
+  P1 .+= cos(θ) * p3 .+ (1 - cos(θ)) * dot(k, p3) * k .+ t
+  r2 .= -P1[1:2] / P1[3]
+  s = scaling_factor(r2, k1, k2)
+  r2 .*= f * s
   return r2
 end
 
-projection!(x, c, r2, k) = projection!(x, c[1:3], c[4:6], c[7], c[8], c[9], r2, k)
+projection!(x, c, r2, k, v, P1) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, v, P1)
 
 function scaling_factor(point::AbstractVector, k1::AbstractFloat, k2::AbstractFloat)
   sq_norm_point = dot(point, point)
-  return 1.0 + k1 * sq_norm_point + k2 * sq_norm_point^2
+  return 1 + sq_norm_point * (k1 + k2 * sq_norm_point)
 end
 
 function NLPModels.jac_structure!(
