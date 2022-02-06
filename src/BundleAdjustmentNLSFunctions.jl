@@ -113,24 +113,17 @@ function residuals!(
   vs::AbstractVector,
   Ps::AbstractVector
 )
-  q, re = divrem(nobs, nthreads())
-  if re != 0
-    q += 1
-  end
-
-  @threads for t = 1:nthreads()
-    @simd for k = (1 + (t - 1) * q):min(t * q, nobs)
-      cam_index = cam_indices[k]
-      pnt_index = pnt_indices[k]
-      pnt_range = ((pnt_index - 1) * 3 + 1):((pnt_index - 1) * 3 + 3)
-      cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
-      x = view(xs, pnt_range)
-      c = view(xs, cam_range)
-      v = view(vs, pnt_range)
-      P = view(Ps, pnt_range)
-      r = view(rs, (2 * k - 1):(2 * k))
-      projection!(x, c, r, v, P)
-    end
+  @simd for k = 1:nobs
+    cam_index = cam_indices[k]
+    pnt_index = pnt_indices[k]
+    pnt_range = ((pnt_index - 1) * 3 + 1):((pnt_index - 1) * 3 + 3)
+    cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
+    x = view(xs, pnt_range)
+    c = view(xs, cam_range)
+    v = view(vs, pnt_range)
+    P = view(Ps, pnt_range)
+    r = view(rs, (2 * k - 1):(2 * k))
+    projection!(x, c, r, v, P)
   end
   return rs
 end
