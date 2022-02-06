@@ -163,7 +163,8 @@ function projection!(
   cross!(P1, k, p3)
   P1 .*= sin(θ)
   P1 .+= cos(θ) * p3 .+ (1 - cos(θ)) * dot(k, p3) * k .+ t
-  r2 .= -P1[1:2] / P1[3]
+  r2[1] = -P1[1] / P1[3]
+  r2[2] = -P1[2] / P1[3]
   s = scaling_factor(r2, k1, k2)
   r2 .*= f * s
   return r2
