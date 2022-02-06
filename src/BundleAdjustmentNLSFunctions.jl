@@ -129,7 +129,7 @@ function residuals!(
       v = view(vs, pnt_range)
       P = view(Ps, pnt_range)
       r = view(rs, (2 * k - 1):(2 * k))
-      projection!(x, c, r, k, v, P)
+      projection!(x, c, r, v, P)
     end
   end
   return rs
@@ -155,7 +155,6 @@ function projection!(
   k2,
   f,
   r2::AbstractVector,
-  idx::Int,
   k::AbstractVector,
   P1::AbstractVector
 )
@@ -170,7 +169,7 @@ function projection!(
   return r2
 end
 
-projection!(x, c, r2, k, v, P1) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, v, P1)
+projection!(x, c, r2, v, P1) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, v, P1)
 
 function scaling_factor(point::AbstractVector, k1::AbstractFloat, k2::AbstractFloat)
   sq_norm_point = dot(point, point)
