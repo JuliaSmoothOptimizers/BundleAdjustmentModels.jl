@@ -152,12 +152,12 @@ function projection!(
   P1::AbstractVector
 )
   θ = norm(r)
-  k .= r / θ
+  k .= r ./ θ
   cross!(P1, k, p3)
   P1 .*= sin(θ)
-  P1 .+= cos(θ) * p3 .+ (1 - cos(θ)) * dot(k, p3) * k .+ t
-  r2[1] = -P1[1] / P1[3]
-  r2[2] = -P1[2] / P1[3]
+  P1 .+= cos(θ) .* p3 .+ (1 - cos(θ)) .* dot(k, p3) .* k .+ t
+  r2[1] = -P1[1] ./ P1[3]
+  r2[2] = -P1[2] ./ P1[3]
   s = scaling_factor(r2, k1, k2)
   r2 .*= f * s
   return r2
@@ -165,7 +165,7 @@ end
 
 projection!(x, c, r2, v, P1) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, v, P1)
 
-function scaling_factor(point::AbstractVector, k1::AbstractFloat, k2::AbstractFloat)
+function scaling_factor(point::AbstractVector, k1, k2)
   sq_norm_point = dot(point, point)
   return 1 + sq_norm_point * (k1 + k2 * sq_norm_point)
 end
