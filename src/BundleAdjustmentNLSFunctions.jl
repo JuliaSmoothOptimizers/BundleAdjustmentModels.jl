@@ -176,33 +176,25 @@ function NLPModels.jac_structure!(
   cols::AbstractVector{<:Integer},
 )
   increment!(nls, :neval_jac)
-  nobs = nls.nobs
-  npnts_3 = 3 * nls.npnts
 
-  q, re = divrem(nobs, nthreads())
-  if re != 0
-    q += 1
-  end
-  @threads for t = 1:nthreads()
-    @simd for k = (1 + (t - 1) * q):min(t * q, nobs)
-      idx_obs = (k - 1) * 24
-      idx_cam = npnts_3 + 9 * (nls.cams_indices[k] - 1)
-      idx_pnt = 3 * (nls.pnts_indices[k] - 1)
+  @simd for k = 1 : nls.nobs
+    idx_obs = (k - 1) * 24
+    idx_cam = 3 * nls.npnts + 9 * (nls.cams_indices[k] - 1)
+    idx_pnt = 3 * (nls.pnts_indices[k] - 1)
 
-      # Only the two rows corresponding to the observation k are not empty
-      p = 2 * k
-      @views fill!(rows[(idx_obs + 1):(idx_obs + 12)], p - 1)
-      @views fill!(rows[(idx_obs + 13):(idx_obs + 24)], p)
+    # Only the two rows corresponding to the observation k are not empty
+    p = 2 * k
+    @views fill!(rows[(idx_obs + 1):(idx_obs + 12)], p - 1)
+    @views fill!(rows[(idx_obs + 13):(idx_obs + 24)], p)
 
-      # 3 columns for the 3D point observed
-      @inbounds cols[(idx_obs + 1):(idx_obs + 3)] = (idx_pnt + 1):(idx_pnt + 3)
-      # 9 columns for the camera
-      @inbounds cols[(idx_obs + 4):(idx_obs + 12)] = (idx_cam + 1):(idx_cam + 9)
-      # 3 columns for the 3D point observed
-      @inbounds cols[(idx_obs + 13):(idx_obs + 15)] = (idx_pnt + 1):(idx_pnt + 3)
-      # 9 columns for the camera
-      @inbounds cols[(idx_obs + 16):(idx_obs + 24)] = (idx_cam + 1):(idx_cam + 9)
-    end
+    # 3 columns for the 3D point observed
+    @inbounds cols[(idx_obs + 1):(idx_obs + 3)] .= (idx_pnt + 1):(idx_pnt + 3)
+    # 9 columns for the camera
+    @inbounds cols[(idx_obs + 4):(idx_obs + 12)] .= (idx_cam + 1):(idx_cam + 9)
+    # 3 columns for the 3D point observed
+    @inbounds cols[(idx_obs + 13):(idx_obs + 15)] .= (idx_pnt + 1):(idx_pnt + 3)
+    # 9 columns for the camera
+    @inbounds cols[(idx_obs + 16):(idx_obs + 24)] .= (idx_cam + 1):(idx_cam + 9)
   end
   return rows, cols
 end
