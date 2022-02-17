@@ -48,6 +48,14 @@ julia> path = fetch_ba_name(name, group)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
+It can be used with different types of parameters:
+
+```julia
+julia> path = fetch_ba_name(filter_df[1,[:name,:group]])
+julia> path = fetch_ba_name(copy(filter_df[1,[:name,:group]]))
+"C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
+```
+
 You can also get an array of the paths to an entire group of problems
 
 ```julia
@@ -66,6 +74,14 @@ You can directly construct a nonlinear least-squares model based on [NLPModels](
 
 ```julia
 julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
+BundleAdjustmentModel{Float64, Vector{Float64}}
+```
+
+Again, it can be used with different types of parameters:
+
+```julia
+julia> model = BundleAdjustmentModel(filter_df[1,[:name,:group]])
+julia> model = BundleAdjustmentModel(copy(filter_df[1,[:name,:group]]))
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
