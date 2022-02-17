@@ -78,6 +78,10 @@ function fetch_ba_name(name::AbstractString, group::AbstractString)
   return loc
 end
 
+fetch_ba_name(problem::NamedTuple) = fetch_ba_name(problem[1], problem[2])
+
+fetch_ba_name(problem::DataFrameRow) = fetch_ba_name(copy(problem))
+
 """
     fetch_ba_group(group::AbstractString)
 
@@ -109,6 +113,10 @@ function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::T
 
   return BundleAdjustmentModel(path_and_filename, T = T)
 end
+
+BundleAdjustmentModel(problem::NamedTuple; T::Type = Float64) = BundleAdjustmentModel(problem[1], problem[2]; T)
+
+BundleAdjustmentModel(problem::DataFrameRow; T::Type = Float64) = BundleAdjustmentModel(copy(problem); T)
 
 # DEFAULT_IO, stderr_f and can_fancyprint copied from
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Pkg.jl

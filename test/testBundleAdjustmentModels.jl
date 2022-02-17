@@ -8,6 +8,14 @@ delete_all_ba_artifacts!()
     path = fetch_ba_name(name, group)
     @test isdir(path)
     @test isfile(joinpath(path, "$name.txt.bz2"))
+
+    path2 = fetch_ba_name(filter_df[1,[:name,:group]])
+    @test isdir(path2)
+    @test isfile(joinpath(path2, "$name.txt.bz2"))
+    
+    path3 = fetch_ba_name(copy(filter_df[1,[:name,:group]]))
+    @test isdir(path3)
+    @test isfile(joinpath(path3, "$name.txt.bz2"))
   end
 end
 
@@ -25,6 +33,16 @@ end
   name, group = get_first_name_and_group(df)
   model = BundleAdjustmentModel(name, group)
   meta_nls = nls_meta(model)
+  @test meta_nls.nvar == 23769
+  @test meta_nls.nequ == 63686
+
+  model2 = BundleAdjustmentModel(df[1,[:name,:group]])
+  meta_nls2 = nls_meta(model2)
+  @test meta_nls.nvar == 23769
+  @test meta_nls.nequ == 63686
+
+  model3 = BundleAdjustmentModel(copy(df[1,[:name,:group]]))
+  meta_nls2 = nls_meta(model3)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
 
