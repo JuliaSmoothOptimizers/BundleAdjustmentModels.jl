@@ -92,7 +92,7 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     Jv,
     Jtv,
     k,
-    P1
+    P1,
   )
 end
 
@@ -111,7 +111,7 @@ function residuals!(
   nobs::Int,
   npts::Int,
   vs::AbstractVector,
-  Ps::AbstractVector
+  Ps::AbstractVector,
 )
   @simd for k = 1:nobs
     cam_index = cam_indices[k]
@@ -130,13 +130,13 @@ end
 
 function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
   if !(length(a) == length(b) == length(c) == 3)
-      throw(DimensionMismatch("cross product is only defined for vectors of length 3"))
+    throw(DimensionMismatch("cross product is only defined for vectors of length 3"))
   end
   a1, a2, a3 = a
   b1, b2, b3 = b
-  c[1] = a2*b3-a3*b2
-  c[2] = a3*b1-a1*b3
-  c[3] = a1*b2-a2*b1
+  c[1] = a2 * b3 - a3 * b2
+  c[2] = a3 * b1 - a1 * b3
+  c[3] = a1 * b2 - a2 * b1
   c
 end
 
@@ -149,7 +149,7 @@ function projection!(
   f,
   r2::AbstractVector,
   k::AbstractVector,
-  P1::AbstractVector
+  P1::AbstractVector,
 )
   θ = norm(r)
   k .= r ./ θ
@@ -163,7 +163,8 @@ function projection!(
   return r2
 end
 
-projection!(x, c, r2, v, P1) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, v, P1)
+projection!(x, c, r2, v, P1) =
+  projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, v, P1)
 
 function scaling_factor(point::AbstractVector, k1, k2)
   sq_norm_point = dot(point, point)
@@ -177,7 +178,7 @@ function NLPModels.jac_structure!(
 )
   increment!(nls, :neval_jac)
 
-  @simd for k = 1 : nls.nobs
+  @simd for k = 1:(nls.nobs)
     idx_obs = (k - 1) * 24
     idx_cam = 3 * nls.npnts + 9 * (nls.cams_indices[k] - 1)
     idx_pnt = 3 * (nls.pnts_indices[k] - 1)
