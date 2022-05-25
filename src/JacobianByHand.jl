@@ -1,15 +1,6 @@
 """
 First step in camera projection
 """
-function P1(r, t, X)
-  θ = norm(r)
-  k = r / θ
-  return cos(θ) * X + sin(θ) * cross(k, X) + (1 - cos(θ)) * dot(k, X) * k + t
-end
-
-"""
-First step in camera projection
-"""
 function P1!(r, t, X, P1_vec, P1_cross)
   θ = norm(r)
   P1_vec .= r ./ θ
@@ -17,17 +8,6 @@ function P1!(r, t, X, P1_vec, P1_cross)
   P1_cross[2] = P1_vec[3]*X[1]-P1_vec[1]*X[3]
   P1_cross[3] = P1_vec[1]*X[2]-P1_vec[2]*X[1]
   P1_vec .= cos(θ) .* X .+ sin(θ) .* P1_cross .+ (1 - cos(θ)) .* dot(P1_vec, X) .* P1_vec .+ t
-end
-
-"""
-Second step in camera projection
-"""
-function P2(X)
-  if X[3] == 0
-    return NaN * X[1:2]
-  else
-    return -X[1:2] / X[3]
-  end
 end
 
 """
