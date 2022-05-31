@@ -260,7 +260,7 @@ function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, val
     mul!(nls.JProdP32, nls.JP3_mat, nls.JP2_mat)
     mul!(nls.JProdP321, nls.JProdP32, nls.JP1_mat)
 
-    # Feel vals with the values of JProdP321 = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
+    # Fill vals with the values of JProdP321 = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
     # If a value is NaN, we put it to 0 not to take it into account
     replace!(nls.JProdP321, NaN=>zero(T))
     @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
