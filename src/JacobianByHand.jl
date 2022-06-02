@@ -4,9 +4,7 @@ First step in camera projection
 function P1!(r, t, X, P1_vec, P1_cross)
   θ = norm(r)
   P1_vec .= r ./ θ
-  P1_cross[1] = P1_vec[2]*X[3]-P1_vec[3]*X[2]
-  P1_cross[2] = P1_vec[3]*X[1]-P1_vec[1]*X[3]
-  P1_cross[3] = P1_vec[1]*X[2]-P1_vec[2]*X[1]
+  cross!(P1_cross, P1_vec, X)
   P1_vec .= cos(θ) .* X .+ sin(θ) .* P1_cross .+ (1 - cos(θ)) .* dot(P1_vec, X) .* P1_vec .+ t
 end
 

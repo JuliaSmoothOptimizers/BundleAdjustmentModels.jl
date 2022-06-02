@@ -232,9 +232,6 @@ function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, val
   increment!(nls, :neval_jac)
   T = eltype(x)
 
-  # nobs = nls.nobs
-  # npnts = nls.npnts
-
   fill!(nls.JP1_mat, zero(T))
   nls.JP1_mat[1, 7], nls.JP1_mat[2, 8], nls.JP1_mat[3, 9] = 1, 1, 1 
   nls.JP1_mat[4, 10], nls.JP1_mat[5, 11], nls.JP1_mat[6, 12] = 1, 1, 1
