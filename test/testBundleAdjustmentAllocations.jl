@@ -6,8 +6,9 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     model = BundleAdjustmentModel(name, group)
     r = typeof(model.meta.x0)(undef, model.nls_meta.nequ)
 
-    bench = @benchmark residual!($model, $model.meta.x0, $r)
-    @test allocs(bench) == 0
+    residual!(model, model.meta.x0, r)
+    residual_alloc(model, r) = @allocated residual!(model, model.meta.x0, r)
+    @test residual_alloc(model, r) == 0
   end
   
   @testset "jac_structure allocations" begin
@@ -16,8 +17,9 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     name, group = get_first_name_and_group(filter_df)
     model = BundleAdjustmentModel(name, group)
   
-    bench = @benchmark jac_structure!($model, $model.rows, $model.cols)
-    @test allocs(bench) == 0
+    jac_structure!(model, model.rows, model.cols)
+    jac_structure_alloc(model) = @allocated jac_structure!(model, model.rows, model.cols)
+    @test jac_structure_alloc(model) == 0
   end
   
   @testset "jac_coord allocations" begin
@@ -26,7 +28,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     name, group = get_first_name_and_group(filter_df)
     model = BundleAdjustmentModel(name, group)
   
-    bench = @benchmark jac_coord!($model, $model.meta.x0, $model.vals)
-    @test allocs(bench) == 0
+    jac_coord!(model, model.meta.x0, model.vals)
+    jac_coord_alloc(model) = @allocated jac_coord!(model, model.meta.x0, model.vals)
+    @test jac_coord_alloc(model) == 0
   end
 end
