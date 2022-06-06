@@ -1,5 +1,7 @@
 # Manual jacobian functions are not proven
 
+export cross!
+
 import NLPModels: increment!
 
 """
