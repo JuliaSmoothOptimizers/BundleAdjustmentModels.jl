@@ -5,3 +5,4 @@ if VERSION ≤ VersionNumber(1, 6, 0)
 end
 
 include("testBundleAdjustmentModels.jl")
+include("testBundleAdjustmentAllocations.jl")

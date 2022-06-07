@@ -1,5 +1,7 @@
 # Manual jacobian functions are not proven
 
+export cross!
+
 import NLPModels: increment!
 
 """
@@ -37,9 +39,19 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   Jv::S
   Jtv::S
 
-  # temporary storage
+  # temporary storage for residual
   k::S
   P1::S
+
+  # temporary storage for jacobian
+  JProdP321::Matrix{T}
+  JProdP32::Matrix{T}
+  JP1_mat::Matrix{T}
+  JP2_mat::Matrix{T}
+  JP3_mat::Matrix{T}
+  P1_vec::S
+  P1_cross::S
+  P2_vec::S
 end
 
 """ Create name from filename """
@@ -76,6 +88,15 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
   k = similar(x0)
   P1 = similar(x0)
 
+  JProdP321 = Matrix{T}(undef, 2, 12)
+  JProdP32 = Matrix{T}(undef, 2, 6)
+  JP1_mat = Matrix{T}(undef, 6, 12)
+  JP2_mat = Matrix{T}(undef, 5, 6)
+  JP3_mat = Matrix{T}(undef, 2, 5)
+  P1_vec = S(undef, 3)
+  P1_cross = S(undef, 3)
+  P2_vec = S(undef, 2)
+
   return BundleAdjustmentModel(
     meta,
     nls_meta,
@@ -93,6 +114,14 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     Jtv,
     k,
     P1,
+    JProdP321,
+    JProdP32,
+    JP1_mat,
+    JP2_mat,
+    JP3_mat,
+    P1_vec,
+    P1_cross,
+    P2_vec
   )
 end
 
@@ -201,48 +230,39 @@ function NLPModels.jac_structure!(
 end
 
 function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
+
   increment!(nls, :neval_jac)
-  nobs = nls.nobs
-  npnts = nls.npnts
   T = eltype(x)
 
-  # jac_coord is optimal with 3 threads
-  nthreads_used = min(3, nthreads())
+  fill!(nls.JP1_mat, zero(T))
+  nls.JP1_mat[1, 7], nls.JP1_mat[2, 8], nls.JP1_mat[3, 9] = 1, 1, 1 
+  nls.JP1_mat[4, 10], nls.JP1_mat[5, 11], nls.JP1_mat[6, 12] = 1, 1, 1
 
-  q, re = divrem(nobs, nthreads_used)
-  if re != 0
-    q += 1
-  end
+  fill!(nls.JP2_mat, zero(T))
+  nls.JP2_mat[3, 4], nls.JP2_mat[4, 5], nls.JP2_mat[5, 6] = 1, 1, 1
 
-  @threads for t = 1:nthreads_used
-    denseJ = Matrix{T}(undef, 2, 12)
-    JP1_mat = zeros(6, 12)
-    JP1_mat[1, 7], JP1_mat[2, 8], JP1_mat[3, 9], JP1_mat[4, 10], JP1_mat[5, 11], JP1_mat[6, 12] =
-      1, 1, 1, 1, 1, 1
-    JP2_mat = zeros(5, 6)
-    JP2_mat[3, 4], JP2_mat[4, 5], JP2_mat[5, 6] = 1, 1, 1
-    JP3_mat = Matrix{T}(undef, 2, 5)
+  @simd for k = 1:nls.nobs
+    idx_cam = nls.cams_indices[k]
+    idx_pnt = nls.pnts_indices[k]
+    @views X = x[((idx_pnt - 1) * 3 + 1):((idx_pnt - 1) * 3 + 3)] # 3D point coordinates
+    @views C = x[(3 * nls.npnts + (idx_cam - 1) * 9 + 1):(3 * nls.npnts + (idx_cam - 1) * 9 + 9)] # camera parameters
+    @views r = C[1:3] # is the Rodrigues vector for the rotation
+    @views t = C[4:6] # is the translation vector
+    # k1, k2, f = C[7:9] is the focal length and radial distortion factors
 
-    @simd for k = (1 + (t - 1) * q):min(t * q, nobs)
-      idx_cam = nls.cams_indices[k]
-      idx_pnt = nls.pnts_indices[k]
-      @views X = x[((idx_pnt - 1) * 3 + 1):((idx_pnt - 1) * 3 + 3)] # 3D point coordinates
-      @views C = x[(3 * npnts + (idx_cam - 1) * 9 + 1):(3 * npnts + (idx_cam - 1) * 9 + 9)] # camera parameters
-      r = C[1:3]  # Rodrigues vector for the rotation
-      t = C[4:6]  # translation vector
-      k1, k2, f = C[7:9]  # focal length and radial distortion factors
+    # JProdP321 = JP3∘P2∘P1 x JP2∘P1 x JP1
+    P1!(r, t, X, nls.P1_vec, nls.P1_cross)
+    P2!(nls.P1_vec, nls.P2_vec)
+    JP2!(nls.JP2_mat, nls.P1_vec)
+    JP1!(nls.JP1_mat, r, X, nls.P1_vec)
+    JP3!(nls.JP3_mat, nls.P2_vec, C[9], C[7], C[8])
+    mul!(nls.JProdP32, nls.JP3_mat, nls.JP2_mat)
+    mul!(nls.JProdP321, nls.JProdP32, nls.JP1_mat)
 
-      # denseJ = JP3∘P2∘P1 x JP2∘P1 x JP1
-      p1 = P1(r, t, X)
-      JP1!(JP1_mat, r, X)
-      JP2!(JP2_mat, p1)
-      JP3!(JP3_mat, P2(p1), f, k1, k2)
-      mul!(denseJ, JP3_mat * JP2_mat, JP1_mat)
-
-      # Feel vals with the values of denseJ = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
-      # If a value is NaN, we put it to 0 not to take it into account
-      vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] .= map(x -> isnan(x) ? 0 : x, denseJ'[:])
-    end
+    # Fill vals with the values of JProdP321 = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
+    # If a value is NaN, we put it to 0 not to take it into account
+    replace!(nls.JProdP321, NaN=>zero(T))
+    @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
   end
   return vals
 end

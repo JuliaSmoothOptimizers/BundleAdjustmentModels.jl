@@ -1,30 +1,33 @@
 """
 First step in camera projection
 """
-function P1(r, t, X)
+function P1!(r, t, X, P1_vec, P1_cross)
   θ = norm(r)
-  k = r / θ
-  return cos(θ) * X + sin(θ) * cross(k, X) + (1 - cos(θ)) * dot(k, X) * k + t
+  P1_vec .= r ./ θ
+  cross!(P1_cross, P1_vec, X)
+  P1_vec .= cos(θ) .* X .+ sin(θ) .* P1_cross .+ (1 - cos(θ)) .* dot(P1_vec, X) .* P1_vec .+ t
+  return P1_vec
 end
 
 """
 Second step in camera projection
 """
-function P2(X)
+function P2!(X, P2_vec)
   if X[3] == 0
-    return NaN * X[1:2]
+    @views P2_vec .= NaN .* X[1:2]
   else
-    return -X[1:2] / X[3]
+    @views P2_vec .= .-X[1:2] ./ X[3]
   end
+  return P2_vec
 end
 
 """
 Jacobian of the first step of the projection
 """
-function JP1!(JP1, r, X)
+function JP1!(JP1, r, X, k)
   θ = norm(r)
   c, s = cos(θ), sin(θ)
-  k = r / θ
+  k .= r ./ θ
   x, y, z = X
   kx, ky, kz = k
   d = dot(k, X)
