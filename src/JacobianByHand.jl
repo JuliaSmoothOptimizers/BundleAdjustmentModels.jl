@@ -6,17 +6,19 @@ function P1!(r, t, X, P1_vec, P1_cross)
   P1_vec .= r ./ θ
   cross!(P1_cross, P1_vec, X)
   P1_vec .= cos(θ) .* X .+ sin(θ) .* P1_cross .+ (1 - cos(θ)) .* dot(P1_vec, X) .* P1_vec .+ t
+  return P1_vec
 end
 
 """
 Second step in camera projection
 """
-function P2!(X,P2_vec)
+function P2!(X, P2_vec)
   if X[3] == 0
     @views P2_vec .= NaN .* X[1:2]
   else
     @views P2_vec .= .-X[1:2] ./ X[3]
   end
+  return P2_vec
 end
 
 """
