@@ -121,7 +121,7 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     JP3_mat,
     P1_vec,
     P1_cross,
-    P2_vec
+    P2_vec,
   )
 end
 
@@ -230,18 +230,17 @@ function NLPModels.jac_structure!(
 end
 
 function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
-
   increment!(nls, :neval_jac)
   T = eltype(x)
 
   fill!(nls.JP1_mat, zero(T))
-  nls.JP1_mat[1, 7], nls.JP1_mat[2, 8], nls.JP1_mat[3, 9] = 1, 1, 1 
+  nls.JP1_mat[1, 7], nls.JP1_mat[2, 8], nls.JP1_mat[3, 9] = 1, 1, 1
   nls.JP1_mat[4, 10], nls.JP1_mat[5, 11], nls.JP1_mat[6, 12] = 1, 1, 1
 
   fill!(nls.JP2_mat, zero(T))
   nls.JP2_mat[3, 4], nls.JP2_mat[4, 5], nls.JP2_mat[5, 6] = 1, 1, 1
 
-  @simd for k = 1:nls.nobs
+  @simd for k = 1:(nls.nobs)
     idx_cam = nls.cams_indices[k]
     idx_pnt = nls.pnts_indices[k]
     @views X = x[((idx_pnt - 1) * 3 + 1):((idx_pnt - 1) * 3 + 3)] # 3D point coordinates
@@ -261,7 +260,7 @@ function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, val
 
     # Fill vals with the values of JProdP321 = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
     # If a value is NaN, we put it to 0 not to take it into account
-    replace!(nls.JProdP321, NaN=>zero(T))
+    replace!(nls.JProdP321, NaN => zero(T))
     @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
   end
   return vals
