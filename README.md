@@ -97,7 +97,7 @@ julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-You can then evaluate the residual and jacobian function ( or their in-place version ) from NLPModels.
+You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:
 
 ```julia
 julia> using NLPModels
