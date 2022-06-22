@@ -104,7 +104,7 @@ julia> using NLPModels
 ```
 
 ```julia
-julia> Fx = residual(model, model.meta.x0)
+julia> residual!(model, model.meta.x0, model.F)
 63686-element Vector{Float64}:
  -9.020226301243213
  11.263958304987227
@@ -113,15 +113,27 @@ julia> Fx = residual(model, model.meta.x0)
  -0.4486499211288866
 ```
 
-Before using the ``jac_op_residual`` it is required to call ``jac_structure_residual!``:
+You need to call ``jac_structure_residual!`` at least once before calling ``jac_op_residual!``.
 
-```
+```julia
 julia> jac_structure_residual!(model, model.rows, model.cols)
 ([1, 1  …  63686, 63686], [1, 2  …  23768, 23769])
 ```
 
+You need to call ``jac_coord_residual!`` everytime before calling ``jac_op_residual!``.
+
 ```julia
-julia> Jx = jac_op_residual(model, model.meta.x0)
+julia> jac_coord_residual!(model, model.meta.x0, model.vals)
+764232-element Vector{Float64}:
+   545.1179297695714
+    -5.058282392703829
+     ⋮
+     1.680958440896614
+     0.06413511779846102
+```
+
+```julia
+julia> jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
 Linear operator
   nrow: 63686
   ncol: 23769

@@ -4,11 +4,10 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     filter_df = df[(df.name .== "problem-49-7776-pre"), :]
     name, group = get_first_name_and_group(filter_df)
     model = BundleAdjustmentModel(name, group)
-    r = typeof(model.meta.x0)(undef, model.nls_meta.nequ)
 
-    residual!(model, model.meta.x0, r)
-    residual_alloc(model, r) = @allocated residual!(model, model.meta.x0, r)
-    @test residual_alloc(model, r) == 0
+    residual!(model, model.meta.x0, model.F)
+    residual_alloc(model) = @allocated residual!(model, model.meta.x0, model.F)
+    @test residual_alloc(model) == 0
   end
 
   @testset "jac_structure_residual allocations" begin

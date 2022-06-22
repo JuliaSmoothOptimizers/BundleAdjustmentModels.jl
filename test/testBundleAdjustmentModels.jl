@@ -63,7 +63,8 @@ end
   model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   jac_structure_residual!(model, model.rows, model.cols)
-  Jx = jac_op_residual(model, model.meta.x0)
+  jac_coord_residual!(model, model.meta.x0, model.vals)
+  Jx = jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
 
   @test 1.70677551536496222019e+08 ≈ norm(Jx' * Fx)
 
@@ -72,7 +73,8 @@ end
   model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   jac_structure_residual!(model, model.rows, model.cols)
-  Jx = jac_op_residual(model, model.meta.x0)
+  jac_coord_residual!(model, model.meta.x0, model.vals)
+  Jx = jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
 
   @test 1.64335338754470020533e+08 ≈ norm(Jx' * Fx)
 
@@ -81,7 +83,8 @@ end
   model = BundleAdjustmentModel(name, group)
   Fx = residual(model, model.meta.x0)
   jac_structure_residual!(model, model.rows, model.cols)
-  Jx = jac_op_residual(model, model.meta.x0)
+  jac_coord_residual!(model, model.meta.x0, model.vals)
+  Jx = jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
 
   @test 2.39615629098822921515e+07 ≈ norm(Jx' * Fx)
 end

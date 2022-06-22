@@ -31,6 +31,9 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   # Number of cameras
   ncams::Int
 
+  ##### Residual data #####
+  F::S
+
   ##### Jacobians data #####
   rows::Vector{Int}
   cols::Vector{Int}
@@ -78,6 +81,8 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
   meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
   nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
 
+  F = S(undef, nls_meta.nequ)
+
   rows = Vector{Int}(undef, nls_meta.nnzj)
   cols = Vector{Int}(undef, nls_meta.nnzj)
   vals = S(undef, nls_meta.nnzj)
@@ -106,6 +111,7 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     nobs,
     npnts,
     ncams,
+    F,
     rows,
     cols,
     vals,
@@ -262,10 +268,4 @@ function NLPModels.jac_coord_residual!(nls::BundleAdjustmentModel, x::AbstractVe
     @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
   end
   return vals
-end
-
-function NLPModels.jac_op_residual(nls::BundleAdjustmentModel, x::AbstractVector)
-  jac_coord_residual!(nls, x, nls.vals)
-  Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
-  return Jx
 end
