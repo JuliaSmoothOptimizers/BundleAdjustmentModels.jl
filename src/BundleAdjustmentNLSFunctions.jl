@@ -2,7 +2,7 @@
 
 export cross!
 
-import NLPModels: increment! 
+import NLPModels: increment!
 
 """
 Represent a bundle adjustement problem in the form
