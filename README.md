@@ -133,7 +133,7 @@ Linear operator
   nctprod: 0
 ```
 
-There is no second order information available fore these problems in the module.
+There is no second order information available for problems in this module.
 
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
