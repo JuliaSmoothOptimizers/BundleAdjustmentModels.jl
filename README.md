@@ -90,12 +90,45 @@ julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
+You can also construct a nonlinear least-squares model by giving the constructor the path to the archive:
 
 ```julia
 julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
+
+You can then evaluate the residual and jacobian function ( or their in-place version ):
+
+```julia
+julia> Fx = residual(model, model.meta.x0)
+63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+ -1.8332297149469525
+  5.304698960898122
+ -4.332321480806684
+  ⋮
+  0.23044496991071384
+  0.04927878647407624
+  0.47289578243411867
+ -0.01443314653496941
+ -0.4486499211288866
+```
+
+```julia
+julia> Jx = jac_op_residual(model, model.meta.x0)
+Linear operator
+  nrow: 63686
+  ncol: 23769
+  eltype: Float64
+  symmetric: false
+  hermitian: false
+  nprod:   0
+  ntprod:  0
+  nctprod: 0
+```
+
+There is no second order information available fore these problems in the module.
 
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 

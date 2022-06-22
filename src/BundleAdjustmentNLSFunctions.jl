@@ -2,13 +2,12 @@
 
 export cross!
 
-import NLPModels: increment!
+import NLPModels: increment! 
 
 """
 Represent a bundle adjustement problem in the form
 
-    minimize    0
-    subject to  F(x) = 0,
+    minimize    ||F(x)||²
 
 where `F(x)` is the vector of residuals.
 """
@@ -200,12 +199,11 @@ function scaling_factor(point::AbstractVector, k1, k2)
   return 1 + sq_norm_point * (k1 + k2 * sq_norm_point)
 end
 
-function NLPModels.jac_structure!(
+function NLPModels.jac_structure_residual!(
   nls::BundleAdjustmentModel,
   rows::AbstractVector{<:Integer},
   cols::AbstractVector{<:Integer},
 )
-  increment!(nls, :neval_jac)
 
   @simd for k = 1:(nls.nobs)
     idx_obs = (k - 1) * 24
@@ -229,8 +227,8 @@ function NLPModels.jac_structure!(
   return rows, cols
 end
 
-function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
-  increment!(nls, :neval_jac)
+function NLPModels.jac_coord_residual!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
+  increment!(nls, :neval_jac_residual)
   T = eltype(x)
 
   fill!(nls.JP1_mat, zero(T))
@@ -267,20 +265,7 @@ function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, val
 end
 
 function NLPModels.jac_op_residual(nls::BundleAdjustmentModel, x::AbstractVector)
-  jac_structure!(nls, nls.rows, nls.cols)
-  jac_coord!(nls, x, nls.vals)
-  Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
-  return Jx
-end
-
-"""
-    jac_op_residual_update(nls :: BundleAdjustmentModel, x :: AbstractVector)
-
-Update the jacobian operator of the residual wihtout jac_structure! instead
-of using jac_op_residual
-"""
-function jac_op_residual_update(nls::BundleAdjustmentModel, x::AbstractVector)
-  jac_coord!(nls, x, nls.vals)
+  jac_coord_residual!(nls, x, nls.vals)
   Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
   return Jx
 end
