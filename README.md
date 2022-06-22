@@ -113,7 +113,7 @@ julia> Fx = residual(model, model.meta.x0)
  -0.4486499211288866
 ```
 
-Before using the ``jac_op_residual`` it is required to call ``jac_structure_residual!``.
+Before using the ``jac_op_residual`` it is required to call ``jac_structure_residual!``:
 
 ```
 julia> jac_structure_residual!(model, model.rows, model.cols)
