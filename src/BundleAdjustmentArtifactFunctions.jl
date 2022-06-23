@@ -46,7 +46,7 @@ function get_filename(name::AbstractString)
     filename = name * ".bz2"
   elseif name[(end - 2):end] == "pre"
     filename = name * ".txt.bz2"
-  elseif occursin(r"^[0-9]{64}$"i, name[(end - 3):end])
+  elseif occursin(r"[0-9]{3}", name[(end - 2):end])
     filename = name * "-pre.txt.bz2"
   else
     error("Cannot recognize $(name)")
@@ -68,7 +68,7 @@ function get_filename(name::AbstractString, group::AbstractString)
     filename = name * ".bz2"
   elseif name[(end - 2):end] == "pre"
     filename = name * ".txt.bz2"
-  elseif occursin(r"^[0-9]{64}$"i, name[(end - 3):end])
+  elseif occursin(r"[0-9]{3}", name[(end - 2):end])
     filename = name * "-pre.txt.bz2"
   else
     error("Cannot recognize $(name)")
