@@ -138,10 +138,7 @@ end
 """
     BundleAdjustmentModel(name::AbstractString; T::Type=Float64)
 
-Alternate constructor of BundleAdjustmentModel.
-Get the path of the problem name `name` with the precision `T`. 
-It will automatically find the group it belongs to.
-Return a NLSModel generated from this problem data using NLPModels
+Return a NLSModel for problem `name` with precision `T`.
 """
 function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
 
