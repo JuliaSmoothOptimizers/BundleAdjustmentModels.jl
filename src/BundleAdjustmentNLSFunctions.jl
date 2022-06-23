@@ -60,11 +60,11 @@ function name(filename::AbstractString)
 end
 
 """
-    BundleAdjustmentModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
+    BundleAdjustmentModel(filename::AbstractString, T::Type; verbose::Bool=false)
 
 Constructor of BundleAdjustmentModel, creates an NLSModel from a BundleAdjustment archive
 """
-function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
+function BundleAdjustmentModel(filename::AbstractString, T::Type)
   cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T = T)
 
   S = typeof(x0)

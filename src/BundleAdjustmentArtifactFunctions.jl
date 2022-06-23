@@ -34,6 +34,28 @@ function get_first_name_and_group(dataframe::DataFrame)
 end
 
 """
+    get_filename(name::AbstractString)
+
+Analyze the `name` given to check if it matches one of the known names.
+Return the corrected name if needed.
+"""
+function get_filename(name::AbstractString)
+  if name[(end - 2):end] == "bz2"
+    filename = name
+  elseif name[(end - 2):end] == "txt"
+    filename = name * ".bz2"
+  elseif name[(end - 2):end] == "pre"
+    filename = name * ".txt.bz2"
+  elseif occursin(r"^[0-9]{64}$"i, name[(end - 3):end])
+    filename = name * "-pre.txt.bz2"
+  else
+    error("Cannot recognize $(name)")
+  end
+
+  return filename
+end
+
+"""
     get_filename(name::AbstractString, group::AbstractString)
 
 Analyze the `name` and `group` given to check if they match the names and groups known
@@ -57,6 +79,25 @@ function get_filename(name::AbstractString, group::AbstractString)
   end
 
   return filename
+end
+
+"""
+    get_group(name::AbstractString)
+
+Get the group corresponding to the given `name` of the problem.
+"""
+function get_group(name::AbstractString)
+  if name in BundleAdjustmentModels.dubrovnik
+    return "dubrovnik"
+  elseif name in BundleAdjustmentModels.trafalgar
+    return "trafalgar"
+  elseif name in BundleAdjustmentModels.ladybug
+    return "ladybug"
+  elseif name in BundleAdjustmentModels.venice
+    return "venice"
+  else
+    error("$(name) does not match any group")
+  end
 end
 
 """
@@ -95,6 +136,26 @@ function fetch_ba_group(group::AbstractString)
 end
 
 """
+    BundleAdjustmentModel(name::AbstractString; T::Type=Float64)
+
+Alternate constructor of BundleAdjustmentModel.
+Get the path of the problem name `name` with the precision `T`. 
+It will automatically find the group it belongs to.
+Return a NLSModel generated from this problem data using NLPModels
+"""
+function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
+
+  filename = get_filename(name)
+
+  group = get_group(filename)
+
+  filedir = fetch_ba_name(filename, group)
+  path_and_filename = joinpath(filedir, filename)
+
+  return BundleAdjustmentModel(path_and_filename, T)
+end
+
+"""
     BundleAdjustmentModel(name::AbstractString, group::AbstractString, T::Type=Float64)
 
 Alternate constructor of BundleAdjustmentModel
@@ -107,7 +168,7 @@ function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::T
   filedir = fetch_ba_name(filename, group)
   path_and_filename = joinpath(filedir, filename)
 
-  return BundleAdjustmentModel(path_and_filename, T = T)
+  return BundleAdjustmentModel(path_and_filename, T)
 end
 
 # DEFAULT_IO, stderr_f and can_fancyprint copied from
