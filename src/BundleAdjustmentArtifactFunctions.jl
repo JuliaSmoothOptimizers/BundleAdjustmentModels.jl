@@ -141,14 +141,10 @@ end
 Return a NLSModel for problem `name` with precision `T`.
 """
 function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
-
   filename = get_filename(name)
-
   group = get_group(filename)
-
   filedir = fetch_ba_name(filename, group)
   path_and_filename = joinpath(filedir, filename)
-
   return BundleAdjustmentModel(path_and_filename, T)
 end
 
