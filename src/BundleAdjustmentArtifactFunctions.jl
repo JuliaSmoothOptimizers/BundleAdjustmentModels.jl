@@ -171,6 +171,8 @@ function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::T
   return BundleAdjustmentModel(path_and_filename, T)
 end
 
+@deprecate BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::Type = Float64) BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
+
 # DEFAULT_IO, stderr_f and can_fancyprint copied from
 # https://github.com/JuliaLang/Pkg.jl/blob/master/src/Pkg.jl
 const DEFAULT_IO = Ref{Union{IO, Nothing}}(nothing)
