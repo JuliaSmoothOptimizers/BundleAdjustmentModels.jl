@@ -7,8 +7,7 @@ import NLPModels: increment!
 """
 Represent a bundle adjustement problem in the form
 
-    minimize    0
-    subject to  F(x) = 0,
+    minimize    ||F(x)||²
 
 where `F(x)` is the vector of residuals.
 """
@@ -31,13 +30,6 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   npnts::Int
   # Number of cameras
   ncams::Int
-
-  ##### Jacobians data #####
-  rows::Vector{Int}
-  cols::Vector{Int}
-  vals::S
-  Jv::S
-  Jtv::S
 
   # temporary storage for residual
   k::S
@@ -79,12 +71,6 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
   meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
   nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
 
-  rows = Vector{Int}(undef, nls_meta.nnzj)
-  cols = Vector{Int}(undef, nls_meta.nnzj)
-  vals = S(undef, nls_meta.nnzj)
-  Jv = S(undef, nls_meta.nequ)
-  Jtv = S(undef, nls_meta.nvar)
-
   k = similar(x0)
   P1 = similar(x0)
 
@@ -107,11 +93,6 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     nobs,
     npnts,
     ncams,
-    rows,
-    cols,
-    vals,
-    Jv,
-    Jtv,
     k,
     P1,
     JProdP321,
@@ -200,12 +181,11 @@ function scaling_factor(point::AbstractVector, k1, k2)
   return 1 + sq_norm_point * (k1 + k2 * sq_norm_point)
 end
 
-function NLPModels.jac_structure!(
+function NLPModels.jac_structure_residual!(
   nls::BundleAdjustmentModel,
   rows::AbstractVector{<:Integer},
   cols::AbstractVector{<:Integer},
 )
-  increment!(nls, :neval_jac)
 
   @simd for k = 1:(nls.nobs)
     idx_obs = (k - 1) * 24
@@ -229,8 +209,8 @@ function NLPModels.jac_structure!(
   return rows, cols
 end
 
-function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
-  increment!(nls, :neval_jac)
+function NLPModels.jac_coord_residual!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
+  increment!(nls, :neval_jac_residual)
   T = eltype(x)
 
   fill!(nls.JP1_mat, zero(T))
@@ -264,23 +244,4 @@ function NLPModels.jac_coord!(nls::BundleAdjustmentModel, x::AbstractVector, val
     @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
   end
   return vals
-end
-
-function NLPModels.jac_op_residual(nls::BundleAdjustmentModel, x::AbstractVector)
-  jac_structure!(nls, nls.rows, nls.cols)
-  jac_coord!(nls, x, nls.vals)
-  Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
-  return Jx
-end
-
-"""
-    jac_op_residual_update(nls :: BundleAdjustmentModel, x :: AbstractVector)
-
-Update the jacobian operator of the residual wihtout jac_structure! instead
-of using jac_op_residual
-"""
-function jac_op_residual_update(nls::BundleAdjustmentModel, x::AbstractVector)
-  jac_coord!(nls, x, nls.vals)
-  Jx = jac_op_residual!(nls, nls.rows, nls.cols, nls.vals, nls.Jv, nls.Jtv)
-  return Jx
 end

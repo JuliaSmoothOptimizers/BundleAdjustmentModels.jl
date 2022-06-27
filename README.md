@@ -90,12 +90,62 @@ julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
+You can also construct a nonlinear least-squares model by giving the constructor the path to the archive:
 
 ```julia
 julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
+
+You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:
+
+```julia
+julia> using NLPModels
+```
+
+```julia
+julia> residual!(model, model.meta.x0, model.F)
+63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+  ⋮
+ -0.01443314653496941
+ -0.4486499211288866
+```
+
+You need to call ``jac_structure_residual!`` at least once before calling ``jac_op_residual!``.
+
+```julia
+julia> jac_structure_residual!(model, model.rows, model.cols)
+([1, 1  …  63686, 63686], [1, 2  …  23768, 23769])
+```
+
+You need to call ``jac_coord_residual!`` everytime before calling ``jac_op_residual!``.
+
+```julia
+julia> jac_coord_residual!(model, model.meta.x0, model.vals)
+764232-element Vector{Float64}:
+   545.1179297695714
+    -5.058282392703829
+     ⋮
+     1.680958440896614
+     0.06413511779846102
+```
+
+```julia
+julia> jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
+Linear operator
+  nrow: 63686
+  ncol: 23769
+  eltype: Float64
+  symmetric: false
+  hermitian: false
+  nprod:   0
+  ntprod:  0
+  nctprod: 0
+```
+
+There is no second order information available for problems in this module.
 
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
