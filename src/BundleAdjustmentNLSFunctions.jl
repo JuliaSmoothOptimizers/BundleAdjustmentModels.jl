@@ -186,7 +186,6 @@ function NLPModels.jac_structure_residual!(
   rows::AbstractVector{<:Integer},
   cols::AbstractVector{<:Integer},
 )
-
   @simd for k = 1:(nls.nobs)
     idx_obs = (k - 1) * 24
     idx_cam = 3 * nls.npnts + 9 * (nls.cams_indices[k] - 1)
@@ -209,7 +208,11 @@ function NLPModels.jac_structure_residual!(
   return rows, cols
 end
 
-function NLPModels.jac_coord_residual!(nls::BundleAdjustmentModel, x::AbstractVector, vals::AbstractVector)
+function NLPModels.jac_coord_residual!(
+  nls::BundleAdjustmentModel,
+  x::AbstractVector,
+  vals::AbstractVector,
+)
   increment!(nls, :neval_jac_residual)
   T = eltype(x)
 
