@@ -24,7 +24,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     cols = Vector{Int}(undef, meta_nls.nnzj)
 
     jac_structure_residual!(model, rows, cols)
-    jac_structure_residual_alloc(model, rows, cols) = @allocated jac_structure_residual!(model, rows, cols)
+    jac_structure_residual_alloc(model, rows, cols) =
+      @allocated jac_structure_residual!(model, rows, cols)
     @test jac_structure_residual_alloc(model, rows, cols) == 0
   end
 
@@ -38,7 +39,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
     vals = S(undef, meta_nls.nnzj)
 
     jac_coord_residual!(model, model.meta.x0, vals)
-    jac_coord_residual_alloc(model, vals) = @allocated jac_coord_residual!(model, model.meta.x0, vals)
+    jac_coord_residual_alloc(model, vals) =
+      @allocated jac_coord_residual!(model, model.meta.x0, vals)
     @test jac_coord_residual_alloc(model, vals) == 0
   end
 end
