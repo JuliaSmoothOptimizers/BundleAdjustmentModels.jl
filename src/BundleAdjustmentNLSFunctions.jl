@@ -31,16 +31,6 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   # Number of cameras
   ncams::Int
 
-  ##### Residual data #####
-  F::S
-
-  ##### Jacobians data #####
-  rows::Vector{Int}
-  cols::Vector{Int}
-  vals::S
-  Jv::S
-  Jtv::S
-
   # temporary storage for residual
   k::S
   P1::S
@@ -81,14 +71,6 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
   meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
   nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
 
-  F = S(undef, nls_meta.nequ)
-
-  rows = Vector{Int}(undef, nls_meta.nnzj)
-  cols = Vector{Int}(undef, nls_meta.nnzj)
-  vals = S(undef, nls_meta.nnzj)
-  Jv = S(undef, nls_meta.nequ)
-  Jtv = S(undef, nls_meta.nvar)
-
   k = similar(x0)
   P1 = similar(x0)
 
@@ -111,12 +93,6 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
     nobs,
     npnts,
     ncams,
-    F,
-    rows,
-    cols,
-    vals,
-    Jv,
-    Jtv,
     k,
     P1,
     JProdP321,
