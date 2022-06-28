@@ -55,17 +55,17 @@ julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
    2 │ problem-73-11032-pre  ladybug  92244  33753  1106928
 ```
 
-`get_first_name_and_group` returns a tuple of the name and group in the first row of the dataframe
+You can get the name of the problem by handling the dataframe.
 
 ```julia
-julia> name, group = get_first_name_and_group(filter_df)
-("problem-49-7776-pre", "ladybug")
+julia> name = filter_df[1, :name]
+"problem-49-7776-pre"
 ```
 
 `fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
 ```julia
-julia> path = fetch_ba_name(name, group)
+julia> path = fetch_ba_name(name)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
@@ -86,14 +86,15 @@ julia> path = fetch_ba_group("ladybug")
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
-julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
+julia> model = BundleAdjustmentModel("problem-49-7776-pre")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive:
+You can also construct a nonlinear least-squares model by giving the constructor the path to the archive.
+You must also set `direct_path = true`
 
 ```julia
-julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
+julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2", direct_path = true)
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
@@ -104,7 +105,7 @@ julia> using NLPModels
 ```
 
 ```julia
-julia> residual!(model, model.meta.x0, model.F)
+julia> residual(model, model.meta.x0)
 63686-element Vector{Float64}:
  -9.020226301243213
  11.263958304987227
@@ -113,17 +114,37 @@ julia> residual!(model, model.meta.x0, model.F)
  -0.4486499211288866
 ```
 
-You need to call ``jac_structure_residual!`` at least once before calling ``jac_op_residual!``.
-
 ```julia
-julia> jac_structure_residual!(model, model.rows, model.cols)
-([1, 1  …  63686, 63686], [1, 2  …  23768, 23769])
+julia> meta_nls = nls_meta(model)
+julia> S = typeof(model.meta.x0)
+julia> F = S(undef, meta_nls.nequ)
+julia> residual!(model, model.meta.x0, F)
+63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+  ⋮
+ -0.01443314653496941
+ -0.4486499211288866
 ```
 
-You need to call ``jac_coord_residual!`` everytime before calling ``jac_op_residual!``.
+You need to call `jac_structure_residual!` at least once before calling `jac_op_residual`.
 
 ```julia
-julia> jac_coord_residual!(model, model.meta.x0, model.vals)
+julia> S = typeof(model.meta.x0)
+julia> meta_nls = nls_meta(model)
+julia> rows = Vector{Int}(undef, meta_nls.nnzj)
+julia> cols = Vector{Int}(undef, meta_nls.nnzj)
+julia> jac_structure_residual!(model, rows, cols)
+([1, 1 … 63686, 63686], [1, 2 … 23768, 23769])
+```
+
+You need to call `jac_coord_residual!` everytime before calling `jac_op_residual`.
+
+```julia
+julia> S = typeof(model.meta.x0)
+julia> meta_nls = nls_meta(model)
+julia> vals = S(undef, meta_nls.nnzj)
+julia> jac_coord_residual!(model, model.meta.x0, vals)
 764232-element Vector{Float64}:
    545.1179297695714
     -5.058282392703829
@@ -133,7 +154,7 @@ julia> jac_coord_residual!(model, model.meta.x0, model.vals)
 ```
 
 ```julia
-julia> jac_op_residual!(model, model.rows, model.cols, model.vals, model.Jv, model.Jtv)
+julia> jac_op_residual(model, model.meta.x0)
 Linear operator
   nrow: 63686
   ncol: 23769
