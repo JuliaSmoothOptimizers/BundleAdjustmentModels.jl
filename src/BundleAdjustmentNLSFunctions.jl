@@ -1,6 +1,6 @@
 # Manual jacobian functions are not proven
 
-export cross!
+export cross!, BundleAdjustmentModel
 
 import NLPModels: increment!
 
@@ -46,18 +46,26 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   P2_vec::S
 end
 
-""" Create name from filename """
-function name(filename::AbstractString)
-  return splitdir(splitext(splitext(filename)[1])[1])[2]
-end
-
 """
-    BundleAdjustmentModel(filename::AbstractString; T::Type=Float64, verbose::Bool=false)
+    BundleAdjustmentModel(name::AbstractString; T::Type=Float64, direct_path::Bool = False)
 
-Constructor of BundleAdjustmentModel, creates an NLSModel from a BundleAdjustment archive
+Constructor of BundleAdjustmentModel, creates an NLSModel with name `name` from a BundleAdjustment archive with precision `T`.
+Set `direct_path` to `True` if name is the path to the archive itself instead of the name of the problem.
 """
-function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
-  cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(filename, T = T)
+function BundleAdjustmentModel(name::AbstractString; T::Type = Float64, direct_path::Bool = false)
+  
+  if direct_path == true
+    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(name, T = T)
+    problem_name = splitdir(splitext(splitext(name)[1])[1])[2]
+    problem_name = problem_name[1:end-4]
+  else
+    filename = get_filename(name)
+    filedir = fetch_ba_name(filename)
+    path_and_filename = joinpath(filedir, filename)
+    problem_name = filename[1:end-12]
+
+    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(path_and_filename, T = T)
+  end
 
   S = typeof(x0)
 
@@ -68,7 +76,7 @@ function BundleAdjustmentModel(filename::AbstractString; T::Type = Float64)
 
   @debug "BundleAdjustmentModel $filename" nvar nequ
 
-  meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name(filename))
+  meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = problem_name)
   nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
 
   k = similar(x0)

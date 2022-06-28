@@ -1,10 +1,8 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
 export problems_df,
-  get_first_name_and_group,
   fetch_ba_name,
   fetch_ba_group,
-  BundleAdjustmentModel,
   delete_ba_artifact!,
   delete_all_ba_artifacts!
 
@@ -23,51 +21,53 @@ function problems_df()
 end
 
 """
-    get_first_name_and_group(dataframe::DataFrame)
-
-Return the name and the group of the first row in the DataFrame
+    get_filename(name::AbstractString)
+Analyze the `name` given to check if it matches one of the known names.
+Return the corrected name if needed.
 """
-function get_first_name_and_group(dataframe::DataFrame)
-  name = dataframe[1, :name]
-  group = dataframe[1, :group]
-  return name, group
-end
-
-"""
-    get_filename(name::AbstractString, group::AbstractString)
-
-Analyze the `name` and `group` given to check if they match the names and groups known
-Return the corrected name if needed
-"""
-function get_filename(name::AbstractString, group::AbstractString)
+function get_filename(name::AbstractString)
   if name[(end - 2):end] == "bz2"
     filename = name
   elseif name[(end - 2):end] == "txt"
     filename = name * ".bz2"
   elseif name[(end - 2):end] == "pre"
     filename = name * ".txt.bz2"
-  elseif occursin(r"^[0-9]{64}$"i, name[(end - 3):end])
+  elseif occursin(r"[0-9]{3}", name[(end - 2):end])
     filename = name * "-pre.txt.bz2"
   else
     error("Cannot recognize $(name)")
-  end
-
-  if !(group in string.(ba_groups))
-    error("Cannot recognize $(group)")
   end
 
   return filename
 end
 
 """
-    fetch_ba_name(name::AbstractString, group::AbstractString)
+    get_group(name::AbstractString)
+Get the group corresponding to the given `name` of the problem.
+"""
+function get_group(name::AbstractString)
+  if name in BundleAdjustmentModels.dubrovnik
+    return "dubrovnik"
+  elseif name in BundleAdjustmentModels.trafalgar
+    return "trafalgar"
+  elseif name in BundleAdjustmentModels.ladybug
+    return "ladybug"
+  elseif name in BundleAdjustmentModels.venice
+    return "venice"
+  else
+    error("$(name) does not match any group")
+  end
+end
 
-Get the problem with name `name` from the group `group`.
+"""
+    fetch_ba_name(name::AbstractString)
+
+Get the problem with name `name`.
 Return the path where the problem is stored.
 """
-function fetch_ba_name(name::AbstractString, group::AbstractString)
-  filename = get_filename(name, group)
-
+function fetch_ba_name(name::AbstractString)
+  filename = get_filename(name)
+  group = get_group(filename)
   artifact_name = "$(group)/$(filename)"
   loc = ba_ensure_artifact_installed(
     filename,
@@ -88,26 +88,10 @@ Group possibilities are : trafalgar, venice, dubrovnik and ladybug
 function fetch_ba_group(group::AbstractString)
   problem_paths = String[]
   for problem ∈ eval(Symbol(group))
-    problem_path = fetch_ba_name(problem, group)
+    problem_path = fetch_ba_name(problem)
     push!(problem_paths, problem_path)
   end
   return problem_paths
-end
-
-"""
-    BundleAdjustmentModel(name::AbstractString, group::AbstractString, T::Type=Float64)
-
-Alternate constructor of BundleAdjustmentModel
-Get the path of the problem name `name` from the group `group` with the precision `T`.
-Return a NLSModel generated from this problem data using NLPModels
-"""
-function BundleAdjustmentModel(name::AbstractString, group::AbstractString; T::Type = Float64)
-  filename = get_filename(name, group)
-
-  filedir = fetch_ba_name(filename, group)
-  path_and_filename = joinpath(filedir, filename)
-
-  return BundleAdjustmentModel(path_and_filename, T = T)
 end
 
 # DEFAULT_IO, stderr_f and can_fancyprint copied from
@@ -298,12 +282,13 @@ function ba_download_artifact(
 end
 
 """
-    delete_ba_artifact!(name::AbstractString, group::AbstractString)
+    delete_ba_artifact!(name::AbstractString)
 
 Delete the artifact `name` from the artifact store
 """
-function delete_ba_artifact!(name::AbstractString, group::AbstractString)
-  filename = get_filename(name, group)
+function delete_ba_artifact!(name::AbstractString)
+  filename = get_filename(name)
+  group = get_group(filename)
 
   artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
@@ -332,9 +317,8 @@ Delete all the BundleAdjustmentModels artifacts from the artifact store
 function delete_all_ba_artifacts!()
   for probs_symbol ∈ ba_groups
     problems = eval(probs_symbol)
-    group = string(probs_symbol)
     for problem ∈ problems
-      delete_ba_artifact!(problem, group)
+      delete_ba_artifact!(problem)
     end
   end
 end

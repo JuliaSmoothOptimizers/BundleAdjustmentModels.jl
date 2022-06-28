@@ -2,8 +2,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
   @testset "residual allocations" begin
     df = problems_df()
     filter_df = df[(df.name .== "problem-49-7776-pre"), :]
-    name, group = get_first_name_and_group(filter_df)
-    model = BundleAdjustmentModel(name, group)
+    name = filter_df[1, :name]
+    model = BundleAdjustmentModel(name)
     meta_nls = nls_meta(model)
     S = typeof(model.meta.x0)
     F = S(undef, meta_nls.nequ)
@@ -16,8 +16,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
   @testset "jac_structure_residual allocations" begin
     df = problems_df()
     filter_df = df[(df.name .== "problem-49-7776-pre"), :]
-    name, group = get_first_name_and_group(filter_df)
-    model = BundleAdjustmentModel(name, group)
+    name = filter_df[1, :name]
+    model = BundleAdjustmentModel(name)
     S = typeof(model.meta.x0)
     meta_nls = nls_meta(model)
     rows = Vector{Int}(undef, meta_nls.nnzj)
@@ -32,8 +32,8 @@ if VERSION ≥ VersionNumber(1, 7, 3)
   @testset "jac_coord_residual allocations" begin
     df = problems_df()
     filter_df = df[(df.name .== "problem-49-7776-pre"), :]
-    name, group = get_first_name_and_group(filter_df)
-    model = BundleAdjustmentModel(name, group)
+    name = filter_df[1, :name]
+    model = BundleAdjustmentModel(name)
     S = typeof(model.meta.x0)
     meta_nls = nls_meta(model)
     vals = S(undef, meta_nls.nnzj)

@@ -4,8 +4,8 @@ delete_all_ba_artifacts!()
   df = problems_df()
   for group ∈ BundleAdjustmentModels.ba_groups
     filter_df = sort!(df[(df.group .== string(group)), :], [:nequ, :nvar])
-    name, group = get_first_name_and_group(filter_df)
-    path = fetch_ba_name(name, group)
+    name = filter_df[1, :name]
+    path = fetch_ba_name(name)
     @test isdir(path)
     @test isfile(joinpath(path, "$name.txt.bz2"))
   end
@@ -20,38 +20,66 @@ end
 end
 
 @testset "tests BundleAdjustmentModel" begin
-  df = problems_df()
-  sort!(df, [:nequ, :nvar])
-  name, group = get_first_name_and_group(df)
-  model = BundleAdjustmentModel(name, group)
+  model = BundleAdjustmentModel("problem-16-22106-pre.txt.bz2")
+  meta_nls = nls_meta(model)
+  @test meta_nls.nvar == 66462
+  @test meta_nls.nequ == 167436
+  @test model.meta.name == "problem-16-22106"
+  path = fetch_ba_name("problem-16-22106-pre.txt.bz2")
+  filename = joinpath(path, "problem-16-22106-pre.txt.bz2")
+  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
+  @test meta_nls.nvar == 66462
+  @test meta_nls.nequ == 167436
+  @test model.meta.name == "problem-16-22106"
+
+  model = BundleAdjustmentModel("problem-21-11315-pre.txt")
+  meta_nls = nls_meta(model)
+  @test meta_nls.nvar == 34134
+  @test meta_nls.nequ == 72910
+  path = fetch_ba_name("problem-21-11315-pre.txt")
+  filename = joinpath(path, "problem-21-11315-pre.txt.bz2")
+  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
+  @test meta_nls.nvar == 34134
+  @test meta_nls.nequ == 72910
+
+  model = BundleAdjustmentModel("problem-49-7776-pre")
   meta_nls = nls_meta(model)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
-
-  path = fetch_ba_name(name, group)
-  filename = joinpath(path, "$name.txt.bz2")
-  model = BundleAdjustmentModel(filename)
+  path = fetch_ba_name("problem-49-7776-pre")
+  filename = joinpath(path, "problem-49-7776-pre.txt.bz2")
+  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
+
+  model = BundleAdjustmentModel("problem-52-64053")
+  meta_nls = nls_meta(model)
+  @test meta_nls.nvar == 192627
+  @test meta_nls.nequ == 694346
+  path = fetch_ba_name("problem-52-64053")
+  filename = joinpath(path, "problem-52-64053-pre.txt.bz2")
+  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
+  @test meta_nls.nvar == 192627
+  @test meta_nls.nequ == 694346
 end
 
 @testset "test residual" begin
   df = problems_df()
   filter_df = df[(df.name .== "problem-16-22106-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
 
   @test 4.18565951824972266331e+06 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-21-11315-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
 
   @test 4.41323931443221028894e+06 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-49-7776-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
 
   @test 8.50912460680839605629e+05 ≈ obj(model, model.meta.x0)
 end
@@ -59,8 +87,8 @@ end
 @testset "test jacobian" begin
   df = problems_df()
   filter_df = df[(df.name .== "problem-16-22106-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
   Fx = residual(model, model.meta.x0)
   S = typeof(model.meta.x0)
   meta_nls = nls_meta(model)
@@ -76,8 +104,8 @@ end
   @test 1.70677551536496222019e+08 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-21-11315-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
   Fx = residual(model, model.meta.x0)
   S = typeof(model.meta.x0)
   meta_nls = nls_meta(model)
@@ -93,8 +121,8 @@ end
   @test 1.64335338754470020533e+08 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-49-7776-pre"), :]
-  name, group = get_first_name_and_group(filter_df)
-  model = BundleAdjustmentModel(name, group)
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
   Fx = residual(model, model.meta.x0)
   S = typeof(model.meta.x0)
   meta_nls = nls_meta(model)
@@ -113,11 +141,11 @@ end
 @testset "test delete_ba_artifact!()" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])
-  name, group = get_first_name_and_group(df)
-  path = fetch_ba_name(name, group)
+  name = df[1, :name]
+  path = fetch_ba_name(name)
   @test isdir(path)
   @test isfile(joinpath(path, "$name.txt.bz2"))
-  delete_ba_artifact!(name, group)
+  delete_ba_artifact!(name)
   @test !isdir(path)
   @test !isfile(joinpath(path, "$name.txt.bz2"))
 end
