@@ -179,6 +179,6 @@ julia> delete_all_ba_artifacts!()
 [ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 was not found
 ```
 
-Special thanks to Célestine Angla for her initial work on this project as an internship.
+Special thanks to Célestine Angla for her initial work on this project during her internship.
 
 Licensed under the MPL-2.0 [License](LICENSE.md) 
