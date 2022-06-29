@@ -47,7 +47,7 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
 end
 
 """
-    BundleAdjustmentModel(name::AbstractString; T::Type=Float64, direct_path::Bool = False)
+    BundleAdjustmentModel(name::AbstractString; T::Type=Float64)
 
 Constructor of BundleAdjustmentModel, creates an NLSModel with name `name` from a BundleAdjustment archive with precision `T`.
 """

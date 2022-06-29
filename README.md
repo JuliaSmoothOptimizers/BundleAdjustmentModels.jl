@@ -108,8 +108,7 @@ julia> residual(model, model.meta.x0)
 
 ```julia
 julia> meta_nls = nls_meta(model)
-julia> S = typeof(model.meta.x0)
-julia> Fx = S(undef, meta_nls.nequ)
+julia> Fx = similar(model.meta.x0, meta_nls.nequ)
 julia> residual!(model, model.meta.x0, Fx)
 63686-element Vector{Float64}:
  -9.020226301243213
@@ -132,8 +131,7 @@ julia> jac_structure_residual!(model, rows, cols)
 You need to call `jac_coord_residual!` everytime before calling `jac_op_residual!`.
 
 ```julia
-julia> S = typeof(model.meta.x0)
-julia> vals = S(undef, meta_nls.nnzj)
+julia> vals = similar(model.meta.x0, meta_nls.nnzj)
 julia> jac_coord_residual!(model, model.meta.x0, vals)
 764232-element Vector{Float64}:
    545.1179297695714
@@ -144,9 +142,9 @@ julia> jac_coord_residual!(model, model.meta.x0, vals)
 ```
 
 ```julia
-julia> Jv = S(undef, meta_nls.nequ)
-julia> Jtv = S(undef, meta_nls.nvar)
-julia> jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+julia> Jv = similar(model.meta.x0, meta_nls.nequ)
+julia> Jtv = similar(model.meta.x0, meta_nls.nvar)
+julia> Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
 Linear operator
   nrow: 63686
   ncol: 23769
@@ -163,7 +161,7 @@ There is no second order information available for problems in this module.
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
 ```julia
-julia> delete_ba_artifact!("problem-49-7776-pre", "ladybug")
+julia> delete_ba_artifact!("problem-49-7776-pre")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
