@@ -23,7 +23,7 @@ end
 """
     get_filename(name::AbstractString)
 Analyze the `name` given to check if it matches one of the known names.
-Return the corrected name if needed.
+Return the full name with "-pre.txt.bz2" extension.
 """
 function get_filename(name::AbstractString)
   if name[(end - 2):end] == "bz2"
@@ -46,17 +46,12 @@ end
 Get the group corresponding to the given `name` of the problem.
 """
 function get_group(name::AbstractString)
-  if name in BundleAdjustmentModels.dubrovnik
-    return "dubrovnik"
-  elseif name in BundleAdjustmentModels.trafalgar
-    return "trafalgar"
-  elseif name in BundleAdjustmentModels.ladybug
-    return "ladybug"
-  elseif name in BundleAdjustmentModels.venice
-    return "venice"
-  else
-    error("$(name) does not match any group")
+  for group in BundleAdjustmentModels.ba_groups
+    if name in eval(group)
+      return String(group)
+    end
   end
+  error("$(name) does not match any group")
 end
 
 """

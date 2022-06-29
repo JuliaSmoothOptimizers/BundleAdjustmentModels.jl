@@ -86,15 +86,7 @@ julia> path = fetch_ba_group("ladybug")
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
-julia> model = BundleAdjustmentModel("problem-49-7776-pre")
-BundleAdjustmentModel{Float64, Vector{Float64}}
-```
-
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive.
-You must also set `direct_path = true`
-
-```julia
-julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2", direct_path = true)
+julia> model = BundleAdjustmentModel("problem-49-7776")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
@@ -117,8 +109,8 @@ julia> residual(model, model.meta.x0)
 ```julia
 julia> meta_nls = nls_meta(model)
 julia> S = typeof(model.meta.x0)
-julia> F = S(undef, meta_nls.nequ)
-julia> residual!(model, model.meta.x0, F)
+julia> Fx = S(undef, meta_nls.nequ)
+julia> residual!(model, model.meta.x0, Fx)
 63686-element Vector{Float64}:
  -9.020226301243213
  11.263958304987227
@@ -127,10 +119,9 @@ julia> residual!(model, model.meta.x0, F)
  -0.4486499211288866
 ```
 
-You need to call `jac_structure_residual!` at least once before calling `jac_op_residual`.
+You need to call `jac_structure_residual!` at least once before calling `jac_op_residual!`.
 
 ```julia
-julia> S = typeof(model.meta.x0)
 julia> meta_nls = nls_meta(model)
 julia> rows = Vector{Int}(undef, meta_nls.nnzj)
 julia> cols = Vector{Int}(undef, meta_nls.nnzj)
@@ -138,11 +129,10 @@ julia> jac_structure_residual!(model, rows, cols)
 ([1, 1 … 63686, 63686], [1, 2 … 23768, 23769])
 ```
 
-You need to call `jac_coord_residual!` everytime before calling `jac_op_residual`.
+You need to call `jac_coord_residual!` everytime before calling `jac_op_residual!`.
 
 ```julia
 julia> S = typeof(model.meta.x0)
-julia> meta_nls = nls_meta(model)
 julia> vals = S(undef, meta_nls.nnzj)
 julia> jac_coord_residual!(model, model.meta.x0, vals)
 764232-element Vector{Float64}:
@@ -154,7 +144,9 @@ julia> jac_coord_residual!(model, model.meta.x0, vals)
 ```
 
 ```julia
-julia> jac_op_residual(model, model.meta.x0)
+julia> Jv = S(undef, meta_nls.nequ)
+julia> Jtv = S(undef, meta_nls.nvar)
+julia> jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
 Linear operator
   nrow: 63686
   ncol: 23769

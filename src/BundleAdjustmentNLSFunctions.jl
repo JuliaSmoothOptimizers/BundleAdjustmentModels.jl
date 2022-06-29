@@ -50,22 +50,15 @@ end
     BundleAdjustmentModel(name::AbstractString; T::Type=Float64, direct_path::Bool = False)
 
 Constructor of BundleAdjustmentModel, creates an NLSModel with name `name` from a BundleAdjustment archive with precision `T`.
-Set `direct_path` to `True` if name is the path to the archive itself instead of the name of the problem.
 """
-function BundleAdjustmentModel(name::AbstractString; T::Type = Float64, direct_path::Bool = false)
+function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
   
-  if direct_path == true
-    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(name, T = T)
-    problem_name = splitdir(splitext(splitext(name)[1])[1])[2]
-    problem_name = problem_name[1:end-4]
-  else
-    filename = get_filename(name)
-    filedir = fetch_ba_name(filename)
-    path_and_filename = joinpath(filedir, filename)
-    problem_name = filename[1:end-12]
+  filename = get_filename(name)
+  filedir = fetch_ba_name(filename)
+  path_and_filename = joinpath(filedir, filename)
+  problem_name = filename[1:end-12]
 
-    cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(path_and_filename, T = T)
-  end
+  cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(path_and_filename, T = T)
 
   S = typeof(x0)
 

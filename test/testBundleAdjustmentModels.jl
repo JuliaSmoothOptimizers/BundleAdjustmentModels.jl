@@ -25,20 +25,9 @@ end
   @test meta_nls.nvar == 66462
   @test meta_nls.nequ == 167436
   @test model.meta.name == "problem-16-22106"
-  path = fetch_ba_name("problem-16-22106-pre.txt.bz2")
-  filename = joinpath(path, "problem-16-22106-pre.txt.bz2")
-  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
-  @test meta_nls.nvar == 66462
-  @test meta_nls.nequ == 167436
-  @test model.meta.name == "problem-16-22106"
 
   model = BundleAdjustmentModel("problem-21-11315-pre.txt")
   meta_nls = nls_meta(model)
-  @test meta_nls.nvar == 34134
-  @test meta_nls.nequ == 72910
-  path = fetch_ba_name("problem-21-11315-pre.txt")
-  filename = joinpath(path, "problem-21-11315-pre.txt.bz2")
-  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
   @test meta_nls.nvar == 34134
   @test meta_nls.nequ == 72910
 
@@ -46,19 +35,9 @@ end
   meta_nls = nls_meta(model)
   @test meta_nls.nvar == 23769
   @test meta_nls.nequ == 63686
-  path = fetch_ba_name("problem-49-7776-pre")
-  filename = joinpath(path, "problem-49-7776-pre.txt.bz2")
-  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
-  @test meta_nls.nvar == 23769
-  @test meta_nls.nequ == 63686
 
   model = BundleAdjustmentModel("problem-52-64053")
   meta_nls = nls_meta(model)
-  @test meta_nls.nvar == 192627
-  @test meta_nls.nequ == 694346
-  path = fetch_ba_name("problem-52-64053")
-  filename = joinpath(path, "problem-52-64053-pre.txt.bz2")
-  model = BundleAdjustmentModel(filename, T=Float64, direct_path=true)
   @test meta_nls.nvar == 192627
   @test meta_nls.nequ == 694346
 end
