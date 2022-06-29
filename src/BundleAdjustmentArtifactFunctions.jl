@@ -7,7 +7,7 @@ const ba_probs_jld2 = joinpath(@__DIR__, "..", "src", "ba_probs_df.jld2")
 """
     problems_df()
     
-Return a dataframe of the problems and their characteristics
+Return a dataframe of the problems and their characteristics.
 """
 function problems_df()
   file = jldopen(ba_probs_jld2, "r")
@@ -18,6 +18,7 @@ end
 
 """
     get_filename(name::AbstractString)
+
 Analyze the `name` given to check if it matches one of the known names.
 Return the full name with "-pre.txt.bz2" extension.
 """
@@ -39,6 +40,7 @@ end
 
 """
     get_group(name::AbstractString)
+
 Get the group corresponding to the given `name` of the problem.
 """
 function get_group(name::AbstractString)
@@ -74,7 +76,7 @@ end
 
 Get all the problems with the group name `group`.
 Return an array of the paths where the problems are stored.
-Group possibilities are : trafalgar, venice, dubrovnik and ladybug
+Group possibilities are : trafalgar, venice, dubrovnik and ladybug.
 """
 function fetch_ba_group(group::AbstractString)
   problem_paths = String[]
@@ -275,7 +277,7 @@ end
 """
     delete_ba_artifact!(name::AbstractString)
 
-Delete the artifact `name` from the artifact store
+Delete the artifact `name` from the artifact store.
 """
 function delete_ba_artifact!(name::AbstractString)
   filename = get_filename(name)
@@ -303,7 +305,7 @@ end
 """
     delete_all_ba_artifacts!()
 
-Delete all the BundleAdjustmentModels artifacts from the artifact store
+Delete all the BundleAdjustmentModels artifacts from the artifact store.
 """
 function delete_all_ba_artifacts!()
   for probs_symbol ∈ ba_groups
