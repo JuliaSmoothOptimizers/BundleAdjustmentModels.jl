@@ -55,7 +55,7 @@ function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
   filename = get_filename(name)
   filedir = fetch_ba_name(filename)
   path_and_filename = joinpath(filedir, filename)
-  problem_name = filename[1:(end - 12)]
+  problem_name = filename[1:end-12]
 
   cams_indices, pnts_indices, pt2d, x0, ncams, npnts, nobs = readfile(path_and_filename, T = T)
 
