@@ -55,7 +55,7 @@ julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
    2 │ problem-73-11032-pre  ladybug  92244  33753  1106928
 ```
 
-You can get the name of the problem by handling the dataframe.
+You can get the problem name directly from the dataframe:
 
 ```julia
 julia> name = filter_df[1, :name]
