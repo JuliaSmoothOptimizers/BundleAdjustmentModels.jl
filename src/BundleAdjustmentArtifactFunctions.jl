@@ -1,10 +1,6 @@
 import Base.SHA1, Pkg.PlatformEngines.download_verify
 
-export problems_df,
-  fetch_ba_name,
-  fetch_ba_group,
-  delete_ba_artifact!,
-  delete_all_ba_artifacts!
+export problems_df, fetch_ba_name, fetch_ba_group, delete_ba_artifact!, delete_all_ba_artifacts!
 
 const ba_probs_jld2 = joinpath(@__DIR__, "..", "src", "ba_probs_df.jld2")
 
