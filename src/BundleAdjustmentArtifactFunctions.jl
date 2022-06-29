@@ -76,7 +76,7 @@ end
 
 Get all the problems with the group name `group`.
 Return an array of the paths where the problems are stored.
-Group possibilities are : trafalgar, venice, dubrovnik and ladybug.
+Group possibilities are : "trafalgar", "venice", "dubrovnik" and "ladybug".
 """
 function fetch_ba_group(group::AbstractString)
   problem_paths = String[]
@@ -305,7 +305,7 @@ end
 """
     delete_all_ba_artifacts!()
 
-Delete all the BundleAdjustmentModels artifacts from the artifact store.
+Delete all the `BundleAdjustmentModel` artifacts from the artifact store.
 """
 function delete_all_ba_artifacts!()
   for probs_symbol ∈ ba_groups
