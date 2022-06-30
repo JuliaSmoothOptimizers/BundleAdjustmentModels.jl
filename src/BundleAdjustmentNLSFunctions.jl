@@ -7,7 +7,7 @@ import NLPModels: increment!
 """
 Represent a bundle adjustement problem in the form
 
-    minimize    ||F(x)||²
+    minimize   ½ ‖F(x)‖²
 
 where `F(x)` is the vector of residuals.
 """
