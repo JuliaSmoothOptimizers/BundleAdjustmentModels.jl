@@ -18,12 +18,12 @@ mutable struct BundleAdjustmentModel{T, S} <: AbstractNLSModel{T, S}
   nls_meta::NLSMeta{T, S}
   # Counters of NLPModel
   counters::NLSCounters
-  # For each observation k, cams_indices[k] gives the index of thecamera used for this observation
+  # For each observation i, cams_indices[i] gives the index of thecamera used for this observation
   cams_indices::Vector{Int}
-  # For each observation k, pnts_indices[k] gives the index of the 3D point observed in this observation
+  # For each observation i, pnts_indices[i] gives the index of the 3D point observed in this observation
   pnts_indices::Vector{Int}
   # Each line contains the 2D coordinates of the observed point
-  pt2d::Vector{T}
+  pt2d::S
   # Number of observations
   nobs::Int
   # Number of points
@@ -106,36 +106,37 @@ function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
   )
 end
 
-function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, cx::AbstractVector)
+function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, rx::AbstractVector)
   increment!(nls, :neval_residual)
-  residuals!(nls.cams_indices, nls.pnts_indices, x, cx, nls.nobs, nls.npnts, nls.k, nls.P1)
-  cx .-= nls.pt2d
-  return cx
+  residuals!(x, rx, nls.cams_indices, nls.pnts_indices, nls.nobs, nls.npnts, nls.k, nls.P1, nls.pt2d)
+  return rx
 end
 
 function residuals!(
+  xs::AbstractVector,
+  rxs::AbstractVector,
   cam_indices::Vector{Int},
   pnt_indices::Vector{Int},
-  xs::AbstractVector,
-  rs::AbstractVector,
   nobs::Int,
   npts::Int,
-  vs::AbstractVector,
+  ks::AbstractVector,
   Ps::AbstractVector,
+  pt2d::AbstractVector
 )
-  @simd for k = 1:nobs
-    cam_index = cam_indices[k]
-    pnt_index = pnt_indices[k]
+  @simd for i = 1:nobs
+    cam_index = cam_indices[i]
+    pnt_index = pnt_indices[i]
     pnt_range = ((pnt_index - 1) * 3 + 1):((pnt_index - 1) * 3 + 3)
     cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
     x = view(xs, pnt_range)
     c = view(xs, cam_range)
-    v = view(vs, pnt_range)
+    k = view(ks, pnt_range)
     P = view(Ps, pnt_range)
-    r = view(rs, (2 * k - 1):(2 * k))
-    projection!(x, c, r, v, P)
+    r = view(rxs, (2 * i - 1):(2 * i))
+    projection!(x, c, r, k, P)
   end
-  return rs
+  rxs .-= pt2d
+  return rxs
 end
 
 function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
@@ -173,8 +174,8 @@ function projection!(
   return r2
 end
 
-projection!(x, c, r2, v, P1) =
-  projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, v, P1)
+projection!(x, c, r2, k, P1) =
+  projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, P1)
 
 function scaling_factor(point, k1, k2)
   sq_norm_point = dot(point, point)
@@ -186,13 +187,13 @@ function NLPModels.jac_structure_residual!(
   rows::AbstractVector{<:Integer},
   cols::AbstractVector{<:Integer},
 )
-  @simd for k = 1:(nls.nobs)
-    idx_obs = (k - 1) * 24
-    idx_cam = 3 * nls.npnts + 9 * (nls.cams_indices[k] - 1)
-    idx_pnt = 3 * (nls.pnts_indices[k] - 1)
+  @simd for i = 1:(nls.nobs)
+    idx_obs = (i - 1) * 24
+    idx_cam = 3 * nls.npnts + 9 * (nls.cams_indices[i] - 1)
+    idx_pnt = 3 * (nls.pnts_indices[i] - 1)
 
-    # Only the two rows corresponding to the observation k are not empty
-    p = 2 * k
+    # Only the two rows corresponding to the observation i are not empty
+    p = 2 * i
     @views fill!(rows[(idx_obs + 1):(idx_obs + 12)], p - 1)
     @views fill!(rows[(idx_obs + 13):(idx_obs + 24)], p)
 
@@ -223,9 +224,9 @@ function NLPModels.jac_coord_residual!(
   fill!(nls.JP2_mat, zero(T))
   nls.JP2_mat[3, 4], nls.JP2_mat[4, 5], nls.JP2_mat[5, 6] = 1, 1, 1
 
-  @simd for k = 1:(nls.nobs)
-    idx_cam = nls.cams_indices[k]
-    idx_pnt = nls.pnts_indices[k]
+  @simd for i = 1:(nls.nobs)
+    idx_cam = nls.cams_indices[i]
+    idx_pnt = nls.pnts_indices[i]
     @views X = x[((idx_pnt - 1) * 3 + 1):((idx_pnt - 1) * 3 + 3)] # 3D point coordinates
     @views C = x[(3 * nls.npnts + (idx_cam - 1) * 9 + 1):(3 * nls.npnts + (idx_cam - 1) * 9 + 9)] # camera parameters
     @views r = C[1:3] # is the Rodrigues vector for the rotation
@@ -244,7 +245,7 @@ function NLPModels.jac_coord_residual!(
     # Fill vals with the values of JProdP321 = [[∂P.x/∂X ∂P.x/∂C], [∂P.y/∂X ∂P.y/∂C]]
     # If a value is NaN, we put it to 0 not to take it into account
     replace!(nls.JProdP321, NaN => zero(T))
-    @views vals[((k - 1) * 24 + 1):((k - 1) * 24 + 24)] = nls.JProdP321'[:]
+    @views vals[((i - 1) * 24 + 1):((i - 1) * 24 + 24)] = nls.JProdP321'[:]
   end
   return vals
 end
