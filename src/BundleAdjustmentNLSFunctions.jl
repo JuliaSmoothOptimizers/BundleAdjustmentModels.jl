@@ -108,7 +108,17 @@ end
 
 function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, rx::AbstractVector)
   increment!(nls, :neval_residual)
-  residuals!(x, rx, nls.cams_indices, nls.pnts_indices, nls.nobs, nls.npnts, nls.k, nls.P1, nls.pt2d)
+  residuals!(
+    x,
+    rx,
+    nls.cams_indices,
+    nls.pnts_indices,
+    nls.nobs,
+    nls.npnts,
+    nls.k,
+    nls.P1,
+    nls.pt2d,
+  )
   return rx
 end
 
@@ -121,7 +131,7 @@ function residuals!(
   npts::Int,
   ks::AbstractVector,
   Ps::AbstractVector,
-  pt2d::AbstractVector
+  pt2d::AbstractVector,
 )
   @simd for i = 1:nobs
     cam_index = cam_indices[i]
