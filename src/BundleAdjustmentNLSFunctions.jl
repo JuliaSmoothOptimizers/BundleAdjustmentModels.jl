@@ -1,6 +1,6 @@
 # Manual jacobian functions are not proven
 
-export cross!, BundleAdjustmentModel
+export BundleAdjustmentModel
 
 import NLPModels: increment!
 
@@ -149,18 +149,6 @@ function residuals!(
   return rxs
 end
 
-function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
-  if !(length(a) == length(b) == length(c) == 3)
-    throw(DimensionMismatch("cross product is only defined for vectors of length 3"))
-  end
-  a1, a2, a3 = a
-  b1, b2, b3 = b
-  c[1] = a2 * b3 - a3 * b2
-  c[2] = a3 * b1 - a1 * b3
-  c[3] = a1 * b2 - a2 * b1
-  c
-end
-
 function projection!(
   p3::AbstractVector,
   r::AbstractVector,
@@ -186,6 +174,18 @@ end
 
 projection!(x, c, r2, k, P1) =
   projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, P1)
+
+function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
+  if !(length(a) == length(b) == length(c) == 3)
+    throw(DimensionMismatch("cross product is only defined for vectors of length 3"))
+  end
+  a1, a2, a3 = a
+  b1, b2, b3 = b
+  c[1] = a2 * b3 - a3 * b2
+  c[2] = a3 * b1 - a1 * b3
+  c[3] = a1 * b2 - a2 * b1
+  c
+end
 
 function scaling_factor(point, k1, k2)
   sq_norm_point = dot(point, point)

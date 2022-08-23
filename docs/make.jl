@@ -3,7 +3,7 @@ using Printf
 using BundleAdjustmentModels
 
 # Add index.md file as introduction to navigation menu
-pages = ["Introduction" => "index.md", "Reference" => "reference.md"]
+pages = ["Introduction" => "index.md", "Reference" => "reference.md", "Internals" => "internals.md"]
 
 makedocs(
   sitename = "BundleAdjustmentModels.jl",

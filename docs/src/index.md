@@ -1,6 +1,10 @@
 # [BundleAdjustmentModels documentation](@id Home)
 
-Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository.
+Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
+
+## How to Cite
+
+If you use BundleAdjustmentModels.jl in your work, please cite using the format given in [`CITATION.bib`](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.bib).
 
 # Tutorial
 
@@ -45,17 +49,17 @@ julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
    2 │ problem-73-11032-pre  ladybug  92244  33753  1106928
 ```
 
-`get_first_name_and_group` returns a tuple of the name and group in the first row of the dataframe
+You can get the problem name directly from the dataframe:
 
 ```julia
-julia> name, group = get_first_name_and_group(filter_df)
-("problem-49-7776-pre", "ladybug")
+julia> name = filter_df[1, :name]
+"problem-49-7776-pre"
 ```
 
 `fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
 ```julia
-julia> path = fetch_ba_name(name, group)
+julia> path = fetch_ba_name(name)
 "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
 ```
 
@@ -76,21 +80,82 @@ julia> path = fetch_ba_group("ladybug")
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
 ```julia
-julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
+julia> model = BundleAdjustmentModel("problem-49-7776")
 BundleAdjustmentModel{Float64, Vector{Float64}}
 ```
 
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
+You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:
 
 ```julia
-julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
-BundleAdjustmentModel{Float64, Vector{Float64}}
+julia> using NLPModels
 ```
+
+```julia
+julia> residual(model, model.meta.x0)
+63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+  ⋮
+ -0.01443314653496941
+ -0.4486499211288866
+```
+
+```julia
+julia> meta_nls = nls_meta(model)
+julia> Fx = similar(model.meta.x0, meta_nls.nequ)
+julia> residual!(model, model.meta.x0, Fx)
+63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+  ⋮
+ -0.01443314653496941
+ -0.4486499211288866
+```
+
+You need to call `jac_structure_residual!` at least once before calling `jac_op_residual!`.
+
+```julia
+julia> meta_nls = nls_meta(model)
+julia> rows = Vector{Int}(undef, meta_nls.nnzj)
+julia> cols = Vector{Int}(undef, meta_nls.nnzj)
+julia> jac_structure_residual!(model, rows, cols)
+([1, 1 … 63686, 63686], [1, 2 … 23768, 23769])
+```
+
+You need to call `jac_coord_residual!` everytime before calling `jac_op_residual!`.
+
+```julia
+julia> vals = similar(model.meta.x0, meta_nls.nnzj)
+julia> jac_coord_residual!(model, model.meta.x0, vals)
+764232-element Vector{Float64}:
+   545.1179297695714
+    -5.058282392703829
+     ⋮
+     1.680958440896614
+     0.06413511779846102
+```
+
+```julia
+julia> Jv = similar(model.meta.x0, meta_nls.nequ)
+julia> Jtv = similar(model.meta.x0, meta_nls.nvar)
+julia> Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+Linear operator
+  nrow: 63686
+  ncol: 23769
+  eltype: Float64
+  symmetric: false
+  hermitian: false
+  nprod:   0
+  ntprod:  0
+  nctprod: 0
+```
+
+There is no second order information available for problems in this module.
 
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
 ```julia
-julia> delete_ba_artifact!("problem-49-7776-pre", "ladybug")
+julia> delete_ba_artifact!("problem-49-7776-pre")
 [ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
 ```
 
