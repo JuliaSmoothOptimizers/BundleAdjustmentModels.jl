@@ -71,8 +71,8 @@ function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
   meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = problem_name)
   nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
 
-  k = similar(x0)
-  P1 = similar(x0)
+  k = similar(x0, 3)
+  P1 = similar(x0, 3)
 
   JProdP321 = Matrix{T}(undef, 2, 12)
   JProdP32 = Matrix{T}(undef, 2, 6)
@@ -129,8 +129,8 @@ function residuals!(
   pnt_indices::Vector{Int},
   nobs::Int,
   npts::Int,
-  ks::AbstractVector,
-  Ps::AbstractVector,
+  k::AbstractVector,
+  P::AbstractVector,
   pt2d::AbstractVector,
 )
   @simd for i = 1:nobs
@@ -140,10 +140,8 @@ function residuals!(
     cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
     x = view(xs, pnt_range)
     c = view(xs, cam_range)
-    k = view(ks, pnt_range)
-    P = view(Ps, pnt_range)
     r = view(rxs, (2 * i - 1):(2 * i))
-    projection!(x, c, r, k, P)
+    projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r, k, P)
   end
   rxs .-= pt2d
   return rxs
@@ -183,9 +181,6 @@ function projection!(
   r2 .*= f * s
   return r2
 end
-
-projection!(x, c, r2, k, P1) =
-  projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, P1)
 
 function scaling_factor(point, k1, k2)
   sq_norm_point = dot(point, point)
