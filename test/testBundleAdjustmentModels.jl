@@ -117,6 +117,50 @@ end
   @test 2.39615629098822921515e+07 ≈ norm(Jx' * Fx)
 end
 
+@testset "test convert" begin
+  df = problems_df()
+  filter_df = df[(df.name .== "problem-49-7776-pre"), :]
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
+  T = Float64
+  S = Vector{Float64}
+
+  @test typeof(model.meta) == NLPModelMeta{T,S}
+  @test typeof(model.nls_meta) == NLSMeta{T,S}
+  @test typeof(model.meta.x0) == S
+  @test typeof(model.pt2d) == S
+  @test typeof(model.k) == S
+  @test typeof(model.P1) == S
+  @test typeof(model.JProdP321) == Matrix{T}
+  @test typeof(model.JProdP32) == Matrix{T}
+  @test typeof(model.JP1_mat) == Matrix{T}
+  @test typeof(model.JP2_mat) == Matrix{T}
+  @test typeof(model.JP3_mat) == Matrix{T}
+  @test typeof(model.P1_vec) == S
+  @test typeof(model.P1_cross) == S
+  @test typeof(model.P2_vec) == S
+
+  T32 = Float32
+  S32 = Vector{T32}
+
+  model32 = convert(T32, model)
+
+  @test typeof(model32.meta) == NLPModelMeta{T32,S32}
+  @test typeof(model32.nls_meta) == NLSMeta{T32,S32}
+  @test typeof(model32.meta.x0) == S32
+  @test typeof(model32.pt2d) == S32
+  @test typeof(model32.k) == S32
+  @test typeof(model32.P1) == S32
+  @test typeof(model32.JProdP321) == Matrix{T32}
+  @test typeof(model32.JProdP32) == Matrix{T32}
+  @test typeof(model32.JP1_mat) == Matrix{T32}
+  @test typeof(model32.JP2_mat) == Matrix{T32}
+  @test typeof(model32.JP3_mat) == Matrix{T32}
+  @test typeof(model32.P1_vec) == S32
+  @test typeof(model32.P1_cross) == S32
+  @test typeof(model32.P2_vec) == S32
+end
+
 @testset "test delete_ba_artifact!()" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])

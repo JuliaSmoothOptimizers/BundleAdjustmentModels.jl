@@ -259,3 +259,53 @@ function NLPModels.jac_coord_residual!(
   end
   return vals
 end
+
+function Base.convert(
+  T::Type,
+  nls::BundleAdjustmentModel
+)
+  S = Vector{T}
+  nvar = nls.meta.nvar
+  nequ = nls.nls_meta.nequ
+  x0 = S(nls.meta.x0)
+  name = nls.meta.name
+  nnzj = nls.nls_meta.nnzj
+  meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = name)
+  nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = nnzj)
+
+  pt2d = S(nls.pt2d)
+
+  k = S(nls.k)
+  P1 = S(nls.P1)
+
+  JProdP321 = Matrix{T}(nls.JProdP321)
+  JProdP32 = Matrix{T}(nls.JProdP32)
+  JP1_mat = Matrix{T}(nls.JP1_mat)
+  JP2_mat = Matrix{T}(nls.JP2_mat)
+  JP3_mat = Matrix{T}(nls.JP3_mat)
+  P1_vec = S(nls.P1_vec)
+  P1_cross = S(nls.P1_cross)
+  P2_vec = S(nls.P2_vec)
+
+  return BundleAdjustmentModel(
+    meta,
+    nls_meta,
+    nls.counters,
+    nls.cams_indices,
+    nls.pnts_indices,
+    pt2d,
+    nls.nobs,
+    nls.npnts,
+    nls.ncams,
+    k,
+    P1,
+    JProdP321,
+    JProdP32,
+    JP1_mat,
+    JP2_mat,
+    JP3_mat,
+    P1_vec,
+    P1_cross,
+    P2_vec,
+  )
+end
