@@ -143,7 +143,7 @@ end
   T32 = Float32
   S32 = Vector{T32}
 
-  model32 = convert(T32, model)
+  model32 = convert_type(T32, model)
 
   @test typeof(model32.meta) == NLPModelMeta{T32,S32}
   @test typeof(model32.nls_meta) == NLSMeta{T32,S32}

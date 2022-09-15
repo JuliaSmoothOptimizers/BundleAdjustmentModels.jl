@@ -1,6 +1,6 @@
 # Manual jacobian functions are not proven
 
-export cross!, BundleAdjustmentModel
+export cross!, BundleAdjustmentModel, convert_type
 
 import NLPModels: increment!
 
@@ -260,7 +260,7 @@ function NLPModels.jac_coord_residual!(
   return vals
 end
 
-function Base.convert(
+function convert_type(
   T::Type,
   nls::BundleAdjustmentModel
 )
