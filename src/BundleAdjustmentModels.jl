@@ -8,5 +8,6 @@ include("BundleAdjustmentNLSFunctions.jl")
 include("BundleAdjustmentArtifactFunctions.jl")
 include("ReadFiles.jl")
 include("JacobianByHand.jl")
+include("BundleAdjustment3D.jl")
 
 end
