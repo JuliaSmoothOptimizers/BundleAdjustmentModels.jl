@@ -2,6 +2,10 @@
 
 Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository.
 
+# Tutorial
+
+Check an [Introduction to BundleAdjustmentModels](https://juliasmoothoptimizers.github.io/tutorials/introduction-to-bundleadjustmentmodels/) and more tutorials on the [JSO tutorials page](https://juliasmoothoptimizers.github.io/tutorials/).
+
 # Bug reports and discussions
 
 If you think you found a bug, feel free to open an [issue](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/issues).
