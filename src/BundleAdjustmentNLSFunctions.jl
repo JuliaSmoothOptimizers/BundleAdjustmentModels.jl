@@ -69,7 +69,7 @@ function BundleAdjustmentModel(name::AbstractString; T::Type = Float64)
   @debug "BundleAdjustmentModel $filename" nvar nequ
 
   meta = NLPModelMeta{T, S}(nvar, x0 = x0, name = problem_name)
-  nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12)
+  nls_meta = NLSMeta{T, S}(nequ, nvar, x0 = x0, nnzj = 2 * nobs * 12, nnzh = 0)
 
   k = similar(x0)
   P1 = similar(x0)
