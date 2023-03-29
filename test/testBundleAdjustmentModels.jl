@@ -1,5 +1,22 @@
 delete_all_ba_artifacts!()
 
+@testset "test get_filename" begin
+  @test BundleAdjustmentModels.get_filename("problem-49-7776") == "problem-49-7776-pre.txt.bz2"
+  @test_throws ErrorException("Cannot recognize error_test") BundleAdjustmentModels.get_filename("error_test")
+end
+
+@testset "test get_group" begin
+  @test BundleAdjustmentModels.get_group("problem-49-7776-pre.txt.bz2") == "ladybug"
+  @test_throws ErrorException("error_test does not match any group") BundleAdjustmentModels.get_group("error_test")
+end
+
+@testset "test ba_download_artifact" begin
+  @test_logs (:error, "download_artifact error") match_mode = :any BundleAdjustmentModels.ba_download_artifact("problem-49-7776-pre.txt.bz2",
+                                                          Base.SHA1("dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"),
+                                                          "https://grail.cs.washington.edu/projects/bal/data/ladybug/test_error",
+                                                          "1ccb15701a92a8ad909d30860a0108cd3f2d7916c1ecf2851e59a6198b9de6b0")
+end
+
 @testset "test fetch_ba_name" begin
   df = problems_df()
   for group ∈ BundleAdjustmentModels.ba_groups
@@ -40,6 +57,11 @@ end
   meta_nls = nls_meta(model)
   @test meta_nls.nvar == 192627
   @test meta_nls.nequ == 694346
+end
+
+@testset "test cross!" begin
+  @test_throws(DimensionMismatch("cross product is only defined for vectors of length 3"),
+               BundleAdjustmentModels.cross!(zeros(3), ones(2), ones(3)))
 end
 
 @testset "test residual" begin

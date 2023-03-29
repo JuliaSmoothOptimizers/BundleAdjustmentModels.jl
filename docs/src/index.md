@@ -1,6 +1,10 @@
 # [BundleAdjustmentModels documentation](@id Home)
 
-Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository.
+Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adjustment) problems from the [Bundle Adjustment in the Large](http://grail.cs.washington.edu/projects/bal/) repository
+
+## How to Cite
+
+If you use BundleAdjustmentModels.jl in your work, please cite using the format given in [`CITATION.bib`](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.bib).
 
 # Tutorial
 
@@ -15,97 +19,96 @@ If you want to ask a question not suited for a bug report, feel free to start a 
 
 ## Examples
 
-```julia
-julia> using BundleAdjustmentModels
+```@example ex1
+using BundleAdjustmentModels, DataFrames
 ```
 
 `problems_df()` returns a DataFrame of all the problems, their group and other features.
 
-```julia
-julia> df = problems_df()
-74×5 DataFrame
- Row │ name                     group      nequ      nvar     nnzj      
-     │ String                   String     Int64     Int64    Int64     
-─────┼──────────────────────────────────────────────────────────────────
-   1 │ problem-16-22106-pre     dubrovnik    167436    66462    2009232
-  ⋮  │            ⋮                 ⋮         ⋮         ⋮         ⋮
-  74 │ problem-1778-993923-pre  venice     10003892  2997771  120046704
-                                                         72 rows omitted
+```@example ex1
+df = problems_df()
 ```
 
 When you get this dataframe you can sort through it to get the problems that you want. For example, if you want to filter problems based on their size you can apply this filter:
 
-```julia
-julia> filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
-2×5 DataFrame
- Row │ name                  group    nequ   nvar   nnzj    
-     │ String                String   Int64  Int64  Int64   
-─────┼──────────────────────────────────────────────────────
-   1 │ problem-49-7776-pre   ladybug  63686  23769   764232
-   2 │ problem-73-11032-pre  ladybug  92244  33753  1106928
+```@example ex1
+filter_df = df[ ( df.nequ .≥ 50000 ) .& ( df.nvar .≤ 34000 ), :]
 ```
 
-`get_first_name_and_group` returns a tuple of the name and group in the first row of the dataframe
+You can get the problem name directly from the dataframe:
 
-```julia
-julia> name, group = get_first_name_and_group(filter_df)
-("problem-49-7776-pre", "ladybug")
+```@example ex1
+name = filter_df[1, :name]
 ```
 
 `fetch_ba_name` returns the path to the problem artifact. The artifact will download automatically:
 
-```julia
-julia> path = fetch_ba_name(name, group)
-"C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
+```@example ex1
+path = fetch_ba_name(name)
 ```
 
 You can also get an array of the paths to an entire group of problems
 
-```julia
-julia> path = fetch_ba_group("ladybug")
-30-element Vector{String}:
- "C:\\Users\\xxxx\\.julia\\artifacts\\dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2"
- "C:\\Users\\xxxx\\.julia\\artifacts\\3d0853a3ca8e585814697fea9cd4d6956692e103"
- "C:\\Users\\xxxx\\.julia\\artifacts\\5c5c938c998d6c083f549bc584cfeb07bd296d89"
- ⋮
- "C:\\Users\\xxxx\\.julia\\artifacts\\00be55410c27068ec73261e122a39258100a1a11"
- "C:\\Users\\xxxx\\.julia\\artifacts\\0303e7ae8256c494c9da052d977277f21265899b"
- "C:\\Users\\xxxx\\.julia\\artifacts\\389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84"
+```@example ex1
+path = fetch_ba_group("ladybug")
 ```
 
 You can directly construct a nonlinear least-squares model based on [NLPModels](http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/):
 
-```julia
-julia> model = BundleAdjustmentModel("problem-49-7776-pre", "ladybug")
-BundleAdjustmentModel{Float64, Vector{Float64}}
+```@example ex1
+model = BundleAdjustmentModel("problem-49-7776")
 ```
 
-You can also construct a nonlinear least-squares model by giving the constructor the path to the archive :
+You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:
 
-```julia
-julia> model = BundleAdjustmentModel("../path/to/file/problem-49-7776-pre.txt.bz2")
-BundleAdjustmentModel{Float64, Vector{Float64}}
+```@example ex1
+using NLPModels
 ```
+
+```@example ex1
+residual(model, model.meta.x0)
+```
+
+```@example ex1
+meta_nls = nls_meta(model)
+Fx = similar(model.meta.x0, meta_nls.nequ)
+residual!(model, model.meta.x0, Fx)
+```
+
+You need to call `jac_structure_residual!` at least once before calling `jac_op_residual!`.
+
+```@example ex1
+meta_nls = nls_meta(model)
+rows = Vector{Int}(undef, meta_nls.nnzj)
+cols = Vector{Int}(undef, meta_nls.nnzj)
+jac_structure_residual!(model, rows, cols)
+```
+
+You need to call `jac_coord_residual!` everytime before calling `jac_op_residual!`.
+
+```@example ex1
+vals = similar(model.meta.x0, meta_nls.nnzj)
+jac_coord_residual!(model, model.meta.x0, vals)
+```
+
+```@example ex1
+Jv = similar(model.meta.x0, meta_nls.nequ)
+Jtv = similar(model.meta.x0, meta_nls.nvar)
+Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+```
+
+There is no second order information available for problems in this module.
 
 Delete unneeded artifacts and free up disk space with `delete_ba_artifact!`:
 
-```julia
-julia> delete_ba_artifact!("problem-49-7776-pre", "ladybug")
-[ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted
+```@example ex1
+delete_ba_artifact!("problem-49-7776-pre")
 ```
 
 Use  `delete_all_ba_artifacts!` to delete all artifacts:
 
-```julia
-julia> delete_all_ba_artifacts!()
-[ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 was not found
-[ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 was not found
- ⋮
-[ Info: The artifact ladybug/problem-138-19878-pre.txt.bz2 has been deleted
-[ Info: The artifact ladybug/problem-318-41628-pre.txt.bz2 has been deleted
- ⋮
-[ Info: The artifact venice/problem-1408-912229-pre.txt.bz2 was not found
-[ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 was not found
+```@example ex1
+delete_all_ba_artifacts!()
 ```
 
-Licensed under the MPL-2.0 [License](LICENSE.md) 
+Licensed under the MPL-2.0 [License](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/LICENSE.md) 
