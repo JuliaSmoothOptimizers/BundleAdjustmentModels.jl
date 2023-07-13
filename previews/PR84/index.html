@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Introduction · BundleAdjustmentModels.jl</title><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>BundleAdjustmentModels.jl</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Introduction</a><ul class="internal"><li><a class="tocitem" href="#How-to-Cite"><span>How to Cite</span></a></li><li class="toplevel"><a class="tocitem" href="#Tutorial"><span>Tutorial</span></a></li><li class="toplevel"><a class="tocitem" href="#Bug-reports-and-discussions"><span>Bug reports and discussions</span></a></li><li><a class="tocitem" href="#Examples"><span>Examples</span></a></li></ul></li><li><a class="tocitem" href="reference/">Reference</a></li><li><a class="tocitem" href="internals/">Internals</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Introduction</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Introduction</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Home"><a class="docs-heading-anchor" href="#Home">BundleAdjustmentModels documentation</a><a id="Home-1"></a><a class="docs-heading-anchor-permalink" href="#Home" title="Permalink"></a></h1><p>Julia repository of <a href="https://en.wikipedia.org/wiki/Bundle_adjustment">bundle adjustment</a> problems from the <a href="http://grail.cs.washington.edu/projects/bal/">Bundle Adjustment in the Large</a> repository</p><h2 id="How-to-Cite"><a class="docs-heading-anchor" href="#How-to-Cite">How to Cite</a><a id="How-to-Cite-1"></a><a class="docs-heading-anchor-permalink" href="#How-to-Cite" title="Permalink"></a></h2><p>If you use BundleAdjustmentModels.jl in your work, please cite using the format given in <a href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.bib"><code>CITATION.bib</code></a>.</p><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><p>Check an <a href="https://juliasmoothoptimizers.github.io/tutorials/introduction-to-bundleadjustmentmodels/">Introduction to BundleAdjustmentModels</a> and more tutorials on the <a href="https://juliasmoothoptimizers.github.io/tutorials/">JSO tutorials page</a>.</p><h1 id="Bug-reports-and-discussions"><a class="docs-heading-anchor" href="#Bug-reports-and-discussions">Bug reports and discussions</a><a id="Bug-reports-and-discussions-1"></a><a class="docs-heading-anchor-permalink" href="#Bug-reports-and-discussions" title="Permalink"></a></h1><p>If you think you found a bug, feel free to open an <a href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/issues">issue</a>. Focused suggestions and requests can also be opened as issues. Before opening a pull request, start an issue or a discussion on the topic, please.</p><p>If you want to ask a question not suited for a bug report, feel free to start a discussion <a href="https://github.com/JuliaSmoothOptimizers/Organization/discussions">here</a>. This forum is for general discussion about this repository and the <a href="https://github.com/JuliaSmoothOptimizers">JuliaSmoothOptimizers</a>, so questions about any of our packages are welcome.</p><h2 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h2><pre><code class="language-julia hljs">using BundleAdjustmentModels, DataFrames</code></pre><p><code>problems_df()</code> returns a DataFrame of all the problems, their group and other features.</p><pre><code class="language-julia hljs">df = problems_df()</code></pre><div class="data-frame"><p>74 rows × 5 columns</p><table class="data-frame"><thead><tr><th></th><th>name</th><th>group</th><th>nequ</th><th>nvar</th><th>nnzj</th></tr><tr><th></th><th title="String">String</th><th title="String">String</th><th title="Int64">Int64</th><th title="Int64">Int64</th><th title="Int64">Int64</th></tr></thead><tbody><tr><th>1</th><td>problem-16-22106-pre</td><td>dubrovnik</td><td>167436</td><td>66462</td><td>2009232</td></tr><tr><th>2</th><td>problem-88-64298-pre</td><td>dubrovnik</td><td>767874</td><td>193686</td><td>9214488</td></tr><tr><th>3</th><td>problem-135-90642-pre</td><td>dubrovnik</td><td>1106672</td><td>273141</td><td>13280064</td></tr><tr><th>4</th><td>problem-142-93602-pre</td><td>dubrovnik</td><td>1131216</td><td>282084</td><td>13574592</td></tr><tr><th>5</th><td>problem-150-95821-pre</td><td>dubrovnik</td><td>1136238</td><td>288813</td><td>13634856</td></tr><tr><th>6</th><td>problem-161-103832-pre</td><td>dubrovnik</td><td>1184038</td><td>312945</td><td>14208456</td></tr><tr><th>7</th><td>problem-173-111908-pre</td><td>dubrovnik</td><td>1269140</td><td>337281</td><td>15229680</td></tr><tr><th>8</th><td>problem-182-116770-pre</td><td>dubrovnik</td><td>1337410</td><td>351948</td><td>16048920</td></tr><tr><th>9</th><td>problem-202-132796-pre</td><td>dubrovnik</td><td>1503304</td><td>400206</td><td>18039648</td></tr><tr><th>10</th><td>problem-237-154414-pre</td><td>dubrovnik</td><td>1716662</td><td>465375</td><td>20599944</td></tr><tr><th>11</th><td>problem-253-163691-pre</td><td>dubrovnik</td><td>1798310</td><td>493350</td><td>21579720</td></tr><tr><th>12</th><td>problem-262-169354-pre</td><td>dubrovnik</td><td>1839376</td><td>510420</td><td>22072512</td></tr><tr><th>13</th><td>problem-273-176305-pre</td><td>dubrovnik</td><td>1885940</td><td>531372</td><td>22631280</td></tr><tr><th>14</th><td>problem-287-182023-pre</td><td>dubrovnik</td><td>1942584</td><td>548652</td><td>23311008</td></tr><tr><th>15</th><td>problem-308-195089-pre</td><td>dubrovnik</td><td>2090394</td><td>588039</td><td>25084728</td></tr><tr><th>16</th><td>problem-356-226730-pre</td><td>dubrovnik</td><td>2510536</td><td>683394</td><td>30126432</td></tr><tr><th>17</th><td>problem-21-11315-pre</td><td>trafalgar</td><td>72910</td><td>34134</td><td>874920</td></tr><tr><th>18</th><td>problem-39-18060-pre</td><td>trafalgar</td><td>127102</td><td>54531</td><td>1525224</td></tr><tr><th>19</th><td>problem-50-20431-pre</td><td>trafalgar</td><td>147934</td><td>61743</td><td>1775208</td></tr><tr><th>20</th><td>problem-126-40037-pre</td><td>trafalgar</td><td>296656</td><td>121245</td><td>3559872</td></tr><tr><th>21</th><td>problem-138-44033-pre</td><td>trafalgar</td><td>331798</td><td>133341</td><td>3981576</td></tr><tr><th>22</th><td>problem-161-48126-pre</td><td>trafalgar</td><td>364144</td><td>145827</td><td>4369728</td></tr><tr><th>23</th><td>problem-170-49267-pre</td><td>trafalgar</td><td>371630</td><td>149331</td><td>4459560</td></tr><tr><th>24</th><td>problem-174-50489-pre</td><td>trafalgar</td><td>377618</td><td>153033</td><td>4531416</td></tr><tr><th>25</th><td>problem-193-53101-pre</td><td>trafalgar</td><td>393052</td><td>161040</td><td>4716624</td></tr><tr><th>26</th><td>problem-201-54427-pre</td><td>trafalgar</td><td>399876</td><td>165090</td><td>4798512</td></tr><tr><th>27</th><td>problem-206-54562-pre</td><td>trafalgar</td><td>401430</td><td>165540</td><td>4817160</td></tr><tr><th>28</th><td>problem-215-55910-pre</td><td>trafalgar</td><td>408404</td><td>169665</td><td>4900848</td></tr><tr><th>29</th><td>problem-225-57665-pre</td><td>trafalgar</td><td>417244</td><td>175020</td><td>5006928</td></tr><tr><th>30</th><td>problem-257-65132-pre</td><td>trafalgar</td><td>451822</td><td>197709</td><td>5421864</td></tr><tr><th>31</th><td>problem-49-7776-pre</td><td>ladybug</td><td>63686</td><td>23769</td><td>764232</td></tr><tr><th>32</th><td>problem-73-11032-pre</td><td>ladybug</td><td>92244</td><td>33753</td><td>1106928</td></tr><tr><th>33</th><td>problem-138-19878-pre</td><td>ladybug</td><td>170434</td><td>60876</td><td>2045208</td></tr><tr><th>34</th><td>problem-318-41628-pre</td><td>ladybug</td><td>359838</td><td>127746</td><td>4318056</td></tr><tr><th>35</th><td>problem-372-47423-pre</td><td>ladybug</td><td>408944</td><td>145617</td><td>4907328</td></tr><tr><th>36</th><td>problem-412-52215-pre</td><td>ladybug</td><td>448484</td><td>160353</td><td>5381808</td></tr><tr><th>37</th><td>problem-460-56811-pre</td><td>ladybug</td><td>483754</td><td>174573</td><td>5805048</td></tr><tr><th>38</th><td>problem-539-65220-pre</td><td>ladybug</td><td>554546</td><td>200511</td><td>6654552</td></tr><tr><th>39</th><td>problem-598-69218-pre</td><td>ladybug</td><td>608340</td><td>213036</td><td>7300080</td></tr><tr><th>40</th><td>problem-646-73584-pre</td><td>ladybug</td><td>654594</td><td>226566</td><td>7855128</td></tr><tr><th>41</th><td>problem-707-78455-pre</td><td>ladybug</td><td>699880</td><td>241728</td><td>8398560</td></tr><tr><th>42</th><td>problem-783-84444-pre</td><td>ladybug</td><td>754104</td><td>260379</td><td>9049248</td></tr><tr><th>43</th><td>problem-810-88814-pre</td><td>ladybug</td><td>787550</td><td>273732</td><td>9450600</td></tr><tr><th>44</th><td>problem-856-93344-pre</td><td>ladybug</td><td>831538</td><td>287736</td><td>9978456</td></tr><tr><th>45</th><td>problem-885-97473-pre</td><td>ladybug</td><td>869810</td><td>300384</td><td>10437720</td></tr><tr><th>46</th><td>problem-931-102699-pre</td><td>ladybug</td><td>914920</td><td>316476</td><td>10979040</td></tr><tr><th>47</th><td>problem-969-105826-pre</td><td>ladybug</td><td>949254</td><td>326199</td><td>11391048</td></tr><tr><th>48</th><td>problem-1031-110968-pre</td><td>ladybug</td><td>1000530</td><td>342183</td><td>12006360</td></tr><tr><th>49</th><td>problem-1064-113655-pre</td><td>ladybug</td><td>1020422</td><td>350541</td><td>12245064</td></tr><tr><th>50</th><td>problem-1118-118384-pre</td><td>ladybug</td><td>1057852</td><td>365214</td><td>12694224</td></tr><tr><th>51</th><td>problem-1152-122269-pre</td><td>ladybug</td><td>1091638</td><td>377175</td><td>13099656</td></tr><tr><th>52</th><td>problem-1197-126327-pre</td><td>ladybug</td><td>1127468</td><td>389754</td><td>13529616</td></tr><tr><th>53</th><td>problem-1235-129634-pre</td><td>ladybug</td><td>1152572</td><td>400017</td><td>13830864</td></tr><tr><th>54</th><td>problem-1266-132593-pre</td><td>ladybug</td><td>1175884</td><td>409173</td><td>14110608</td></tr><tr><th>55</th><td>problem-1340-137079-pre</td><td>ladybug</td><td>1225186</td><td>423297</td><td>14702232</td></tr><tr><th>56</th><td>problem-1469-145199-pre</td><td>ladybug</td><td>1283292</td><td>448818</td><td>15399504</td></tr><tr><th>57</th><td>problem-1514-147317-pre</td><td>ladybug</td><td>1302960</td><td>455577</td><td>15635520</td></tr><tr><th>58</th><td>problem-1587-150845-pre</td><td>ladybug</td><td>1326578</td><td>466818</td><td>15918936</td></tr><tr><th>59</th><td>problem-1642-153820-pre</td><td>ladybug</td><td>1342536</td><td>476238</td><td>16110432</td></tr><tr><th>60</th><td>problem-1695-155710-pre</td><td>ladybug</td><td>1353190</td><td>482385</td><td>16238280</td></tr><tr><th>61</th><td>problem-52-64053-pre</td><td>venice</td><td>694346</td><td>192627</td><td>8332152</td></tr><tr><th>62</th><td>problem-89-110973-pre</td><td>venice</td><td>1125952</td><td>333720</td><td>13511424</td></tr><tr><th>63</th><td>problem-245-198739-pre</td><td>venice</td><td>2182772</td><td>598422</td><td>26193264</td></tr><tr><th>64</th><td>problem-427-310384-pre</td><td>venice</td><td>3398290</td><td>934995</td><td>40779480</td></tr><tr><th>65</th><td>problem-744-543562-pre</td><td>venice</td><td>6117726</td><td>1637382</td><td>73412712</td></tr><tr><th>66</th><td>problem-951-708276-pre</td><td>venice</td><td>7497784</td><td>2133387</td><td>89973408</td></tr><tr><th>67</th><td>problem-1102-780462-pre</td><td>venice</td><td>8104680</td><td>2351304</td><td>97256160</td></tr><tr><th>68</th><td>problem-1158-802917-pre</td><td>venice</td><td>8261006</td><td>2419173</td><td>99132072</td></tr><tr><th>69</th><td>problem-1184-816583-pre</td><td>venice</td><td>8358094</td><td>2460405</td><td>100297128</td></tr><tr><th>70</th><td>problem-1238-843534-pre</td><td>venice</td><td>8581006</td><td>2541744</td><td>102972072</td></tr><tr><th>71</th><td>problem-1288-866452-pre</td><td>venice</td><td>8766012</td><td>2610948</td><td>105192144</td></tr><tr><th>72</th><td>problem-1350-894716-pre</td><td>venice</td><td>9034252</td><td>2696298</td><td>108411024</td></tr><tr><th>73</th><td>problem-1408-912229-pre</td><td>venice</td><td>9269060</td><td>2749359</td><td>111228720</td></tr><tr><th>74</th><td>problem-1778-993923-pre</td><td>venice</td><td>10003892</td><td>2997771</td><td>120046704</td></tr></tbody></table></div><p>When you get this dataframe you can sort through it to get the problems that you want. For example, if you want to filter problems based on their size you can apply this filter:</p><pre><code class="language-julia hljs">filter_df = df[ ( df.nequ .≥ 50000 ) .&amp; ( df.nvar .≤ 34000 ), :]</code></pre><div class="data-frame"><p>2 rows × 5 columns</p><table class="data-frame"><thead><tr><th></th><th>name</th><th>group</th><th>nequ</th><th>nvar</th><th>nnzj</th></tr><tr><th></th><th title="String">String</th><th title="String">String</th><th title="Int64">Int64</th><th title="Int64">Int64</th><th title="Int64">Int64</th></tr></thead><tbody><tr><th>1</th><td>problem-49-7776-pre</td><td>ladybug</td><td>63686</td><td>23769</td><td>764232</td></tr><tr><th>2</th><td>problem-73-11032-pre</td><td>ladybug</td><td>92244</td><td>33753</td><td>1106928</td></tr></tbody></table></div><p>You can get the problem name directly from the dataframe:</p><pre><code class="language-julia hljs">name = filter_df[1, :name]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;problem-49-7776-pre&quot;</code></pre><p><code>fetch_ba_name</code> returns the path to the problem artifact. The artifact will download automatically:</p><pre><code class="language-julia hljs">path = fetch_ba_name(name)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">&quot;/home/runner/.julia/artifacts/dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2&quot;</code></pre><p>You can also get an array of the paths to an entire group of problems</p><pre><code class="language-julia hljs">path = fetch_ba_group(&quot;ladybug&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">30-element Vector{String}:
+ &quot;/home/runner/.julia/artifacts/dd2da5f94014b5f9086a2b38a87f8c1bc171b9c2&quot;
+ &quot;/home/runner/.julia/artifacts/3d0853a3ca8e585814697fea9cd4d6956692e103&quot;
+ &quot;/home/runner/.julia/artifacts/5c5c938c998d6c083f549bc584cfeb07bd296d89&quot;
+ &quot;/home/runner/.julia/artifacts/e8ebdcec7cd5dc3ec4825dcb6642064e541fa625&quot;
+ &quot;/home/runner/.julia/artifacts/111ebd1dcdf5670eac8a12f4e2ce5a3b79b4f7f6&quot;
+ &quot;/home/runner/.julia/artifacts/3e8acd1ef4cb13d93a7140be1c3702b5eb165978&quot;
+ &quot;/home/runner/.julia/artifacts/69595726ce3990604ef56b80c273fe7f95506f2e&quot;
+ &quot;/home/runner/.julia/artifacts/1eab751f4850b1e22302a7f97894d4b769c7350e&quot;
+ &quot;/home/runner/.julia/artifacts/90ce1588d82c76a81c2b07d9e6abcc984e0e4586&quot;
+ &quot;/home/runner/.julia/artifacts/05e4248f24d897a97e9be1f386e18d1de7e511e5&quot;
+ ⋮
+ &quot;/home/runner/.julia/artifacts/72cdf832cd3eedb4cc4c589127e7ab5b91a60f00&quot;
+ &quot;/home/runner/.julia/artifacts/1e01d6927d4d4e0acd3086d9c75d2ee783ab1220&quot;
+ &quot;/home/runner/.julia/artifacts/b92a8dfd520e7440769c4a72685e817632f9ea43&quot;
+ &quot;/home/runner/.julia/artifacts/366a8368c091027a23a190b1ed498158eef947a5&quot;
+ &quot;/home/runner/.julia/artifacts/ee08f4f6898cc26471d3a63502fe908cfa9a5dcc&quot;
+ &quot;/home/runner/.julia/artifacts/1a0ebf23b35d784ad3d39f4987bc7d785f5976b6&quot;
+ &quot;/home/runner/.julia/artifacts/00be55410c27068ec73261e122a39258100a1a11&quot;
+ &quot;/home/runner/.julia/artifacts/0303e7ae8256c494c9da052d977277f21265899b&quot;
+ &quot;/home/runner/.julia/artifacts/389ecea5c2f2e2b637a2b4439af0bd4ca98e6d84&quot;</code></pre><p>You can directly construct a nonlinear least-squares model based on <a href="http://juliasmoothoptimizers.github.io/NLPModels.jl/latest/">NLPModels</a>:</p><pre><code class="language-julia hljs">model = BundleAdjustmentModel(&quot;problem-49-7776&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">BundleAdjustmentModel{Float64, Vector{Float64}}
+  Problem name: problem-49-7776
+   All variables: ████████████████████ 23769  All constraints: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0        All residuals: ████████████████████ 63686 
+            free: ████████████████████ 23769             free: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               linear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0            nonlinear: ████████████████████ 63686 
+           upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 nnzj: ( 99.95% sparsity)   764232
+         low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 nnzh: (100.00% sparsity)   0     
+           fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+          infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+            nnzh: (  0.00% sparsity)   282494565          linear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                    nonlinear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                         nnzj: (------% sparsity)         
+
+  Counters:
+             obj: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 grad: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 cons: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+        cons_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0             cons_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 jcon: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jgrad: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                  jac: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              jac_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+         jac_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                jprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0            jprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+       jprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jtprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0           jtprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+      jtprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 hess: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                hprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jhess: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jhprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0             residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+    jac_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       jprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0      jtprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+   hess_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       jhess_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       hprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+</code></pre><p>You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:</p><pre><code class="language-julia hljs">using NLPModels</code></pre><pre><code class="language-julia hljs">residual(model, model.meta.x0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+ -1.8332297149469525
+  5.304698960898122
+ -4.332321480806684
+  7.117305031392988
+ -0.5632751791501462
+ -1.062178017695885
+ -3.9692059546843836
+ -2.2850712830954194
+  ⋮
+ -0.43775747920221164
+ -0.024461522651677114
+ -0.1961281328666189
+  0.008375315306523134
+  0.23044496991071384
+  0.04927878647407624
+  0.47289578243411867
+ -0.01443314653496941
+ -0.4486499211288866</code></pre><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
+Fx = similar(model.meta.x0, meta_nls.nequ)
+residual!(model, model.meta.x0, Fx)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">63686-element Vector{Float64}:
+ -9.020226301243213
+ 11.263958304987227
+ -1.8332297149469525
+  5.304698960898122
+ -4.332321480806684
+  7.117305031392988
+ -0.5632751791501462
+ -1.062178017695885
+ -3.9692059546843836
+ -2.2850712830954194
+  ⋮
+ -0.43775747920221164
+ -0.024461522651677114
+ -0.1961281328666189
+  0.008375315306523134
+  0.23044496991071384
+  0.04927878647407624
+  0.47289578243411867
+ -0.01443314653496941
+ -0.4486499211288866</code></pre><p>You need to call <code>jac_structure_residual!</code> at least once before calling <code>jac_op_residual!</code>.</p><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
+rows = Vector{Int}(undef, meta_nls.nnzj)
+cols = Vector{Int}(undef, meta_nls.nnzj)
+jac_structure_residual!(model, rows, cols)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686], [1, 2, 3, 23329, 23330, 23331, 23332, 23333, 23334, 23335  …  23328, 23761, 23762, 23763, 23764, 23765, 23766, 23767, 23768, 23769])</code></pre><p>You need to call <code>jac_coord_residual!</code> everytime before calling <code>jac_op_residual!</code>.</p><pre><code class="language-julia hljs">vals = similar(model.meta.x0, meta_nls.nnzj)
+jac_coord_residual!(model, model.meta.x0, vals)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">764232-element Vector{Float64}:
+   545.1179297695714
+    -5.058282392703829
+  -478.0666614182794
+  -283.5120110272222
+ -1296.3388697208218
+  -320.60334752077165
+   551.1773498438256
+     0.00020469082949125088
+  -471.09490058346296
+  -409.36200783910084
+     ⋮
+  1246.0491342213195
+   -96.64898276178089
+   622.4628407807937
+     2.852854717671426e-7
+   305.00859581263086
+    19.561762292226746
+     6.5984133899730155
+     1.680958440896614
+     0.06413511779846102</code></pre><pre><code class="language-julia hljs">Jv = similar(model.meta.x0, meta_nls.nequ)
+Jtv = similar(model.meta.x0, meta_nls.nvar)
+Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Linear operator
+  nrow: 63686
+  ncol: 23769
+  eltype: Float64
+  symmetric: false
+  hermitian: false
+  nprod:   0
+  ntprod:  0
+  nctprod: 0
+
+</code></pre><p>There is no second order information available for problems in this module.</p><p>Delete unneeded artifacts and free up disk space with <code>delete_ba_artifact!</code>:</p><pre><code class="language-julia hljs">delete_ba_artifact!(&quot;problem-49-7776-pre&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 has been deleted</code></pre><p>Use  <code>delete_all_ba_artifacts!</code> to delete all artifacts:</p><pre><code class="language-julia hljs">delete_all_ba_artifacts!()</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[ Info: The artifact dubrovnik/problem-16-22106-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-88-64298-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-135-90642-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-142-93602-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-150-95821-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-161-103832-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-173-111908-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-182-116770-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-202-132796-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-237-154414-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-253-163691-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-262-169354-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-273-176305-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-287-182023-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-308-195089-pre.txt.bz2 was not found
+[ Info: The artifact dubrovnik/problem-356-226730-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-21-11315-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-39-18060-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-50-20431-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-126-40037-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-138-44033-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-161-48126-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-170-49267-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-174-50489-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-193-53101-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-201-54427-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-206-54562-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-215-55910-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-225-57665-pre.txt.bz2 was not found
+[ Info: The artifact trafalgar/problem-257-65132-pre.txt.bz2 was not found
+[ Info: The artifact ladybug/problem-49-7776-pre.txt.bz2 was not found
+[ Info: The artifact ladybug/problem-73-11032-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-138-19878-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-318-41628-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-372-47423-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-412-52215-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-460-56811-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-539-65220-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-598-69218-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-646-73584-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-707-78455-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-783-84444-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-810-88814-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-856-93344-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-885-97473-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-931-102699-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-969-105826-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1031-110968-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1064-113655-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1118-118384-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1152-122269-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1197-126327-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1235-129634-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1266-132593-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1340-137079-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1469-145199-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1514-147317-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1587-150845-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1642-153820-pre.txt.bz2 has been deleted
+[ Info: The artifact ladybug/problem-1695-155710-pre.txt.bz2 has been deleted
+[ Info: The artifact venice/problem-52-64053-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-89-110973-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-245-198739-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-427-310384-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-744-543562-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-951-708276-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1102-780462-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1158-802917-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1184-816583-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1238-843534-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1288-866452-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1350-894716-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1408-912229-pre.txt.bz2 was not found
+[ Info: The artifact venice/problem-1778-993923-pre.txt.bz2 was not found</code></pre><p>Licensed under the MPL-2.0 <a href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/LICENSE.md">License</a> </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Thursday 13 July 2023 21:31">Thursday 13 July 2023</span>. Using Julia version 1.9.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
