@@ -115,8 +115,6 @@ function NLPModels.residual!(nls::BundleAdjustmentModel, x::AbstractVector, rx::
     nls.pnts_indices,
     nls.nobs,
     nls.npnts,
-    nls.k,
-    nls.P1,
     nls.pt2d,
   )
   return rx
@@ -129,8 +127,6 @@ function residuals!(
   pnt_indices::Vector{Int},
   nobs::Int,
   npts::Int,
-  ks::AbstractVector,
-  Ps::AbstractVector,
   pt2d::AbstractVector,
 )
   @simd for i = 1:nobs
@@ -140,10 +136,8 @@ function residuals!(
     cam_range = (3 * npts + (cam_index - 1) * 9 + 1):(3 * npts + (cam_index - 1) * 9 + 9)
     x = view(xs, pnt_range)
     c = view(xs, cam_range)
-    k = view(ks, pnt_range)
-    P = view(Ps, pnt_range)
     r = view(rxs, (2 * i - 1):(2 * i))
-    projection!(x, c, r, k, P)
+    projection!(x, c, r)
   end
   rxs .-= pt2d
   return rxs
@@ -153,27 +147,41 @@ function projection!(
   p3::AbstractVector,
   r::AbstractVector,
   t::AbstractVector,
-  k1,
-  k2,
+  k_1,
+  k_2,
   f,
   r2::AbstractVector,
-  k::AbstractVector,
-  P1::AbstractVector,
 )
   θ = norm(r)
-  k .= r ./ θ
-  cross!(P1, k, p3)
-  P1 .*= sin(θ)
-  P1 .+= cos(θ) .* p3 .+ (1 - cos(θ)) .* dot(k, p3) .* k .+ t
-  r2[1] = -P1[1] ./ P1[3]
-  r2[2] = -P1[2] ./ P1[3]
-  s = scaling_factor(r2, k1, k2)
+  #k .= r ./ θ
+  k1 = r[1] / θ
+  k2 = r[2] / θ
+  k3 = r[3] / θ
+
+  #cross!(P1, k, p3)
+  P1_1 = k2 * p3[3] - k3 * p3[2]
+  P1_2 = k3 * p3[1] - k1 * p3[3]
+  P1_3 = k1 * p3[2] - k2 * p3[1]
+
+  # P1 .*= sin(θ)
+  P1_1 *= sin(θ)
+  P1_2 *= sin(θ)
+  P1_3 *= sin(θ)
+
+  # P1 .+= cos(θ) .* p3 .+ (1 - cos(θ)) .* dot(k, p3) .* k .+ t
+  kp3 = p3[1] * r[1] / θ + p3[2] * r[2] / θ + p3[3] * r[3] / θ # dot(k, p3)
+  P1_1 += cos(θ) * p3[1] + (1 - cos(θ)) * kp3 * k1 + t[1]
+  P1_2 += cos(θ) * p3[2] + (1 - cos(θ)) * kp3 * k2 + t[2]
+  P1_3 += cos(θ) * p3[3] + (1 - cos(θ)) * kp3 * k3 + t[3]
+
+  r2[1] = -P1_1 / P1_3
+  r2[2] = -P1_2 / P1_3
+  s = scaling_factor(r2, k_1, k_2)
   r2 .*= f * s
   return r2
 end
 
-projection!(x, c, r2, k, P1) =
-  projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2, k, P1)
+projection!(x, c, r2) = projection!(x, view(c, 1:3), view(c, 4:6), c[7], c[8], c[9], r2)
 
 function cross!(c::AbstractVector, a::AbstractVector, b::AbstractVector)
   if !(length(a) == length(b) == length(c) == 3)
