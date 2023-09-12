@@ -147,6 +147,81 @@ end
   @test 2.39615629098822921515e+07 ≈ norm(Jx' * Fx)
 end
 
+@testset "test jprod_residual and jtprod_residual" begin
+  df = problems_df()
+  filter_df = df[(df.name .== "problem-16-22106-pre"), :]
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
+  Fx = residual(model, model.meta.x0)
+  S = typeof(model.meta.x0)
+  meta_nls = nls_meta(model)
+  rows = Vector{Int}(undef, meta_nls.nnzj)
+  cols = Vector{Int}(undef, meta_nls.nnzj)
+  vals = S(undef, meta_nls.nnzj)
+  Jv = S(undef, meta_nls.nequ)
+  Jtv = S(undef, meta_nls.nvar)
+  jac_structure_residual!(model, rows, cols)
+  jac_coord_residual!(model, model.meta.x0, vals)
+  Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+  Jtu = S(undef, meta_nls.nvar)
+  jtprod_residual!(model, model.meta.x0, Fx, Jtu)
+
+  @test 1.70677551536496222019e+08 ≈ norm(Jtu)
+
+  Ju = S(undef, meta_nls.nequ)
+  jprod_residual!(model, model.meta.x0, model.meta.x0, Ju)
+
+  @test norm(Jx * model.meta.x0) ≈ norm(Ju)
+
+  filter_df = df[(df.name .== "problem-21-11315-pre"), :]
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
+  Fx = residual(model, model.meta.x0)
+  S = typeof(model.meta.x0)
+  meta_nls = nls_meta(model)
+  rows = Vector{Int}(undef, meta_nls.nnzj)
+  cols = Vector{Int}(undef, meta_nls.nnzj)
+  vals = S(undef, meta_nls.nnzj)
+  Jv = S(undef, meta_nls.nequ)
+  Jtv = S(undef, meta_nls.nvar)
+  jac_structure_residual!(model, rows, cols)
+  jac_coord_residual!(model, model.meta.x0, vals)
+  Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+  Jtu = S(undef, meta_nls.nvar)
+  jtprod_residual!(model, model.meta.x0, Fx, Jtu)
+
+  @test 1.64335338754470020533e+08 ≈ norm(Jtu)
+
+  Ju = S(undef, meta_nls.nequ)
+  jprod_residual!(model, model.meta.x0, model.meta.x0, Ju)
+
+  @test norm(Jx * model.meta.x0) ≈ norm(Ju)
+
+  filter_df = df[(df.name .== "problem-49-7776-pre"), :]
+  name = filter_df[1, :name]
+  model = BundleAdjustmentModel(name)
+  Fx = residual(model, model.meta.x0)
+  S = typeof(model.meta.x0)
+  meta_nls = nls_meta(model)
+  rows = Vector{Int}(undef, meta_nls.nnzj)
+  cols = Vector{Int}(undef, meta_nls.nnzj)
+  vals = S(undef, meta_nls.nnzj)
+  Jv = S(undef, meta_nls.nequ)
+  Jtv = S(undef, meta_nls.nvar)
+  jac_structure_residual!(model, rows, cols)
+  jac_coord_residual!(model, model.meta.x0, vals)
+  Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
+  Jtu = S(undef, meta_nls.nvar)
+  jtprod_residual!(model, model.meta.x0, Fx, Jtu)
+
+  @test 2.39615629098822921515e+07 ≈ norm(Jtu)
+
+  Ju = S(undef, meta_nls.nequ)
+  jprod_residual!(model, model.meta.x0, model.meta.x0, Ju)
+
+  @test norm(Jx * model.meta.x0) ≈ norm(Ju)
+end
+
 @testset "test delete_ba_artifact!()" begin
   df = problems_df()
   sort!(df, [:nequ, :nvar])
