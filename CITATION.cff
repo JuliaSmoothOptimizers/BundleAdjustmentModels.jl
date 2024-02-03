@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Kenens"
+    given-names: "A."
+  - family-names: "Orban"
+    given-names: "D."
+  - name: "contributors"
+title: "BundleAdjustmentModels.jl: Julia repository of bundle adjustment problems"
+month: "July"
+year: 2021
+repository-code: "https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl"
+doi: "10.5281/zenodo.5167631"
