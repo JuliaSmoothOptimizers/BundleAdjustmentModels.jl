@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 type: software
 authors:
   - family-names: "Kenens"
-    given-names: "A."
+    given-names: "Antonin"
   - family-names: "Orban"
     given-names: "D."
   - name: "contributors"
