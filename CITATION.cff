@@ -5,7 +5,13 @@ authors:
   - family-names: "Kenens"
     given-names: "Antonin"
   - family-names: "Orban"
-    given-names: "D."
+    given-names: "Dominique"
+    email: dominique.orban@gerad.ca
+    orcid: 'https://orcid.org/0000-0002-8017-7687'
+    affiliation: >-
+      GERAD and Department of Mathematics and
+      Industrial Engineering, Polytechnique Montréal,
+      QC, Canada
   - name: "contributors"
 title: "BundleAdjustmentModels.jl: Julia repository of bundle adjustment problems"
 month: "July"
