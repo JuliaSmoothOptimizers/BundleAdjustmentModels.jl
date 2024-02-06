@@ -18,4 +18,11 @@ date-released: '2023-03-29'
 version: 0.3.2
 license: MPL-2.0
 repository-code: "https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl"
-doi: "10.5281/zenodo.5167631"
+keywords:
+  - Least squares
+  - Julia
+  - Bundle Adjustment
+identifiers:
+  - description: Zenodo archive
+    type: doi
+    value: 10.5281/zenodo.5167631
