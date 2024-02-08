@@ -4,7 +4,7 @@ Julia repository of [bundle adjustment](https://en.wikipedia.org/wiki/Bundle_adj
 
 ## How to Cite
 
-If you use BundleAdjustmentModels.jl in your work, please cite using the format given in [`CITATION.bib`](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.bib).
+If you use BundleAdjustmentModels.jl in your work, please cite using the format given in [`CITATION.cff`](https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/CITATION.cff).
 
 # Tutorial
 
