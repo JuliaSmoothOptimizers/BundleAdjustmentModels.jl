@@ -8,7 +8,6 @@ pages = ["Introduction" => "index.md", "Reference" => "reference.md", "Internals
 makedocs(
   sitename = "BundleAdjustmentModels.jl",
   linkcheck = true,
-  strict = true,
   format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
   modules = [BundleAdjustmentModels],
   pages = pages,
