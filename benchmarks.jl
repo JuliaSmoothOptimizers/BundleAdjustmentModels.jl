@@ -24,16 +24,17 @@ for i = 1:nproblems
   rows = Vector{Int}(undef, meta_nls.nnzj)
   cols = Vector{Int}(undef, meta_nls.nnzj)
   vals = similar(nls.meta.x0, meta_nls.nnzj)
+  x = rand(nls.meta.nvar)  # nls.meta.x0
 
   # warm-start
   residual(nls, nls.meta.x0)
   residual!(nls, nls.meta.x0, Fx)
   jac_structure_residual!(nls, rows, cols)
-  jac_coord_residual!(nls, nls.meta.x0, vals)
+  jac_coord_residual!(nls, x, vals)
 
   # benchmarks
   start_timer = time()
-  jac_coord_residual!(nls, nls.meta.x0, vals)
+  jac_coord_residual!(nls, x, vals)
   end_timer = time()
   timer_coord_residual = end_timer - start_timer
   @printf("| %21s | %7s | %7s | %22s | %6.5f seconds |\n", name_pb, nls.nls_meta.nequ, nls.meta.nvar, "BundleAdjustmentModels", timer_coord_residual)
@@ -53,11 +54,11 @@ for i = 1:nproblems
 
   # Warm-start
   jac_structure_residual!(nls2, rows2, cols2)
-  jac_coord_residual!(nls2, nls2.meta.x0, vals2)
+  jac_coord_residual!(nls2, x, vals2)
 
   # benchmarks
   start_timer = time()
-  jac_coord_residual!(nls2, nls2.meta.x0, vals2)
+  jac_coord_residual!(nls2, x, vals2)
   end_timer = time()
   timer2_coord_residual = end_timer - start_timer
   @printf("| %21s | %7s | %7s | %22s | %6.5f seconds |\n", name_pb, nls2.nls_meta.nequ, nls2.meta.nvar, "ADNLPModels", timer2_coord_residual)
@@ -68,5 +69,6 @@ for i = 1:nproblems
     J_nls = sparse(rows, cols, vals)
     J_nls2 = sparse(rows2, cols2, vals2)
     norm(J_nls - J_nls2) |> println
+    norm(J_nls - J_nls2, Inf) |> println
   end
 end
