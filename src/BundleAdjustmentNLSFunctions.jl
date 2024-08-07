@@ -261,3 +261,25 @@ function NLPModels.jac_coord_residual!(
   end
   return vals
 end
+
+function NLPModels.jprod_residual!(nls, x, v, Jv)
+  @lencheck nls.meta.nvar x v
+  @lencheck nls.nls_meta.nequ Jv
+  increment!(nls, :neval_jprod_residual)
+  rows, cols = jac_structure_residual(nls)
+  vals = jac_coord_residual(nls, x)
+  decrement!(nls, :neval_jac_residual)
+  coo_prod!(rows, cols, vals, v, Jv)
+  return Jv
+end
+
+function NLPModels.jtprod_residual!(nls, x, v, Jtv)
+  @lencheck nls.meta.nvar x Jtv
+  @lencheck nls.nls_meta.nequ v
+  increment!(nls, :neval_jtprod_residual)
+  rows, cols = jac_structure_residual(nls)
+  vals = jac_coord_residual(nls, x)
+  decrement!(nls, :neval_jac_residual)
+  coo_prod!(cols, rows, vals, v, Jtv)
+  return Jtv
+end
