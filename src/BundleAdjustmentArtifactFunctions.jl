@@ -2,15 +2,13 @@ import Base.SHA1, Pkg.PlatformEngines.download_verify
 
 export problems_df, fetch_ba_name, fetch_ba_group, delete_ba_artifact!, delete_all_ba_artifacts!
 
-const ba_probs_jld2 = joinpath(@__DIR__, "..", "src", "ba_probs_df.jld2")
-
 """
     problems_df()
     
 Return a dataframe of the problems and their characteristics.
 """
 function problems_df()
-  file = jldopen(ba_probs_jld2, "r")
+  file = jldopen(ba_jld2, "r")
   ba_probs = file["df"]
   close(file)
   return ba_probs
@@ -65,7 +63,7 @@ function fetch_ba_name(name::AbstractString)
   loc = ba_ensure_artifact_installed(
     filename,
     artifact_name,
-    joinpath(@__DIR__, "..", "Artifacts.toml"),
+    ba_artifacts,
   )
 
   return loc
@@ -283,13 +281,8 @@ function delete_ba_artifact!(name::AbstractString)
   filename = get_filename(name)
   group = get_group(filename)
 
-  artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
-
-  meta = artifact_meta("$(group)/$(filename)", artifacts_toml)
-
-  if meta === nothing
-    error("Cannot locate artifact '$(filename)' in '$(artifacts_toml)'")
-  end
+  meta = artifact_meta("$(group)/$(filename)", ba_artifacts)
+  (meta === nothing) && error("Cannot locate artifact '$(filename)' in '$(ba_artifacts)'")
 
   hash = SHA1(meta["git-tree-sha1"])
 
