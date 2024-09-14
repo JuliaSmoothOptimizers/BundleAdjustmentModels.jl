@@ -144,8 +144,7 @@ function projection!(
   f,
   r2::AbstractVector,
 )
-  # θ = norm(r)
-  θ = sqrt(dot(r, r))
+  θ = norm(r)
 
   # k .= r ./ θ
   k1 = r[1] / θ
