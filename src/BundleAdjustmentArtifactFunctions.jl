@@ -60,11 +60,7 @@ function fetch_ba_name(name::AbstractString)
   filename = get_filename(name)
   group = get_group(filename)
   artifact_name = "$(group)/$(filename)"
-  loc = ba_ensure_artifact_installed(
-    filename,
-    artifact_name,
-    ba_artifacts,
-  )
+  loc = ba_ensure_artifact_installed(filename, artifact_name, ba_artifacts)
 
   return loc
 end
