@@ -33,7 +33,7 @@ for probs_symbol ∈ ba_groups
   problems = eval(probs_symbol)
   group = string(probs_symbol)
   for problem ∈ problems
-    global k = k+1
+    global k = k + 1
     url = "$ba_url/$group/$problem"
     @info "Problem $problem of the group $group -- $url"
     try
@@ -41,7 +41,7 @@ for probs_symbol ∈ ba_groups
       # If the name was not bound, or the hash it was bound to does not exist, create it!
       if problem_hash === nothing || !artifact_exists(problem_hash)
         # download the artifact in a temporary folder and compute its sha256
-        isdir("tmp_pb$k") && rm("tmp_pb$k", recursive=true, force=true)
+        isdir("tmp_pb$k") && rm("tmp_pb$k", recursive = true, force = true)
         mkdir("tmp_pb$k")
         path_folder_artifact = joinpath(@__DIR__, "tmp_pb$k")
         path_artifact = joinpath(path_folder_artifact, problem)
@@ -51,7 +51,7 @@ for probs_symbol ∈ ba_groups
         # Extract the archive *.bz2 such that we can compute the git-tree-sha1
         run(`bzip2 -d $(path_artifact)`)
         problem_hash = ba_sha1(path_folder_artifact)
-        rm("tmp_pb$k", recursive=true, force=true)
+        rm("tmp_pb$k", recursive = true, force = true)
 
         # Now bind that hash within our `Artifacts.toml`.
         # `force = true` means that if it already exists, just overwrite with the new content-hash.
