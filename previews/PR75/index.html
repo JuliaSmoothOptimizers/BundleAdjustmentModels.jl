@@ -43,72 +43,72 @@
     jac_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       jprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0      jtprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
    hess_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       jhess_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0       hprod_residual: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
 </code></pre><p>You can then evaluate the residual and jacobian (or their in-place version) from NLPModels:</p><pre><code class="language-julia hljs">using NLPModels</code></pre><pre><code class="language-julia hljs">residual(model, model.meta.x0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">63686-element Vector{Float64}:
- -9.020226301243213
- 11.263958304987227
- -1.8332297149469525
-  5.304698960898122
- -4.332321480806684
-  7.117305031392988
- -0.5632751791501462
- -1.062178017695885
- -3.9692059546843836
- -2.2850712830954194
-  ⋮
- -0.43775747920221164
- -0.024461522651677114
- -0.1961281328666189
-  0.008375315306523134
-  0.23044496991071384
-  0.04927878647407624
-  0.47289578243411867
- -0.01443314653496941
- -0.4486499211288866</code></pre><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
+  332.6499999997587
+ -262.08999999980693
+  199.759999999918
+ -166.69999999993001
+  253.05999999988057
+ -202.26999999990284
+  -58.13000000000665
+ -271.8900000000313
+ -238.22000000002816
+ -237.37000000002828
+    ⋮
+   19.23998999999935
+  379.0699999997969
+  -43.83001999997662
+ -111.21999999999963
+  -36.46996999999988
+  281.63999999991705
+  -24.150019999992747
+ -202.19999999999803
+  -26.349979999999746</code></pre><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
 Fx = similar(model.meta.x0, meta_nls.nequ)
 residual!(model, model.meta.x0, Fx)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">63686-element Vector{Float64}:
- -9.020226301243213
- 11.263958304987227
- -1.8332297149469525
-  5.304698960898122
- -4.332321480806684
-  7.117305031392988
- -0.5632751791501462
- -1.062178017695885
- -3.9692059546843836
- -2.2850712830954194
-  ⋮
- -0.43775747920221164
- -0.024461522651677114
- -0.1961281328666189
-  0.008375315306523134
-  0.23044496991071384
-  0.04927878647407624
-  0.47289578243411867
- -0.01443314653496941
- -0.4486499211288866</code></pre><p>You need to call <code>jac_structure_residual!</code> at least once before calling <code>jac_op_residual!</code>.</p><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
+  332.6499999997587
+ -262.08999999980693
+  199.759999999918
+ -166.69999999993001
+  253.05999999988057
+ -202.26999999990284
+  -58.13000000000665
+ -271.8900000000313
+ -238.22000000002816
+ -237.37000000002828
+    ⋮
+   19.23998999999935
+  379.0699999997969
+  -43.83001999997662
+ -111.21999999999963
+  -36.46996999999988
+  281.63999999991705
+  -24.150019999992747
+ -202.19999999999803
+  -26.349979999999746</code></pre><p>You need to call <code>jac_structure_residual!</code> at least once before calling <code>jac_op_residual!</code>.</p><pre><code class="language-julia hljs">meta_nls = nls_meta(model)
 rows = Vector{Int}(undef, meta_nls.nnzj)
 cols = Vector{Int}(undef, meta_nls.nnzj)
 jac_structure_residual!(model, rows, cols)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([1, 1, 1, 1, 1, 1, 1, 1, 1, 1  …  63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686, 63686], [1, 2, 3, 23329, 23330, 23331, 23332, 23333, 23334, 23335  …  23328, 23761, 23762, 23763, 23764, 23765, 23766, 23767, 23768, 23769])</code></pre><p>You need to call <code>jac_coord_residual!</code> everytime before calling <code>jac_op_residual!</code>.</p><pre><code class="language-julia hljs">vals = similar(model.meta.x0, meta_nls.nnzj)
 jac_coord_residual!(model, model.meta.x0, vals)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">764232-element Vector{Float64}:
-   545.1179297695714
-    -5.058282392703829
-  -478.0666614182794
-  -283.5120110272222
- -1296.3388697208218
-  -320.60334752077165
-   551.1773498438256
-     0.00020469082949125088
-  -471.09490058346296
-  -409.36200783910084
-     ⋮
-  1246.0491342213195
-   -96.64898276178089
-   622.4628407807937
-     2.852854717671426e-7
-   305.00859581263086
-    19.561762292226746
-     6.5984133899730155
-     1.680958440896614
-     0.06413511779846102</code></pre><pre><code class="language-julia hljs">Jv = similar(model.meta.x0, meta_nls.nequ)
+  8.518413331982776e-10
+ -3.9092363053433497e-10
+ -1.0015997648064811e-9
+ -1.2978518096352338e-9
+ -2.181461711333818e-9
+ -2.732794216648834e-10
+  8.629276559090283e-10
+ -3.789683472039958e-10
+ -9.966924717285587e-10
+ -6.023460204030549e-13
+  ⋮
+  1.2440981702971967e-11
+ -4.2515116698719585e-12
+  6.176844071113596e-12
+  7.395811310180752e-13
+  3.0572174355775086e-12
+  5.663375609968155e-13
+  6.169318993032598e-16
+  1.5716458219608994e-16
+  6.662548507594127</code></pre><pre><code class="language-julia hljs">Jv = similar(model.meta.x0, meta_nls.nequ)
 Jtv = similar(model.meta.x0, meta_nls.nvar)
 Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Linear operator
   nrow: 63686
@@ -193,4 +193,4 @@ Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)</code></pre><pre class="
 <span class="sgr36"><span class="sgr1">[ Info: </span></span>The artifact venice/problem-1288-866452-pre.txt.bz2 was not found
 <span class="sgr36"><span class="sgr1">[ Info: </span></span>The artifact venice/problem-1350-894716-pre.txt.bz2 was not found
 <span class="sgr36"><span class="sgr1">[ Info: </span></span>The artifact venice/problem-1408-912229-pre.txt.bz2 was not found
-<span class="sgr36"><span class="sgr1">[ Info: </span></span>The artifact venice/problem-1778-993923-pre.txt.bz2 was not found</code></pre><p>Licensed under the MPL-2.0 <a href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/LICENSE.md">License</a> </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Monday 2 December 2024 05:48">Monday 2 December 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<span class="sgr36"><span class="sgr1">[ Info: </span></span>The artifact venice/problem-1778-993923-pre.txt.bz2 was not found</code></pre><p>Licensed under the MPL-2.0 <a href="https://github.com/JuliaSmoothOptimizers/BundleAdjustmentModels.jl/blob/main/LICENSE.md">License</a> </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Monday 2 December 2024 06:04">Monday 2 December 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
