@@ -4,7 +4,6 @@
 using Pkg.Artifacts
 using Pkg.PlatformEngines
 using SHA
-import Pkg.GitTools.tree_hash
 import Base.SHA1
 
 include("../src/BundleAdjustmentProblemsList.jl")
@@ -21,37 +20,30 @@ function sha256sum(path)
   end
 end
 
-function ba_sha1(path)
-  return SHA1(tree_hash(path))
-end
-
 lazybool = true
 forcebool = true
-global k = 0
 
 for probs_symbol ∈ ba_groups
   problems = eval(probs_symbol)
   group = string(probs_symbol)
   for problem ∈ problems
-    global k = k + 1
     url = "$ba_url/$group/$problem"
-    @info "Problem $problem of the group $group -- $url"
+    println(problem)
+    println(url)
     try
       problem_hash = artifact_hash("$group/$problem", artifact_toml)
       # If the name was not bound, or the hash it was bound to does not exist, create it!
       if problem_hash === nothing || !artifact_exists(problem_hash)
-        # download the artifact in a temporary folder and compute its sha256
-        isdir("tmp_pb$k") && rm("tmp_pb$k", recursive = true, force = true)
-        mkdir("tmp_pb$k")
-        path_folder_artifact = joinpath(@__DIR__, "tmp_pb$k")
-        path_artifact = joinpath(path_folder_artifact, problem)
-        download(url, path_artifact)
-        hash_artifact = sha256sum(path_artifact)
+        # create_artifact() returns the content-hash of the artifact directory once we're finished creating it
+        problem_hash = create_artifact() do artifact_dir
+          # We create the artifact by simply downloading a few files into the new artifact directory
+          println(joinpath(artifact_dir, "$problem"))
+          download("$url", joinpath(artifact_dir, "$problem"))
+        end
 
-        # Extract the archive *.bz2 such that we can compute the git-tree-sha1
-        run(`bzip2 -d $(path_artifact)`)
-        problem_hash = ba_sha1(path_folder_artifact)
-        rm("tmp_pb$k", recursive = true, force = true)
+        path_artifact = artifact_path(problem_hash)
+        hash_artifact = sha256sum("$path_artifact/$problem")
+        remove_artifact(problem_hash)
 
         # Now bind that hash within our `Artifacts.toml`.
         # `force = true` means that if it already exists, just overwrite with the new content-hash.
