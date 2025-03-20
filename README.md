@@ -43,6 +43,17 @@ df = problems_df()
 # Show first few rows
 first(df, 5)
 ```
+```julia
+5×5 DataFrame
+ Row │ name               group      nequ     nvar    nnzj     
+     │ String             String     Int64    Int64   Int64    
+─────┼─────────────────────────────────────────────────────────
+   1 │ problem-16-22106   dubrovnik   167436   66462   2009232
+   2 │ problem-88-64298   dubrovnik   767874  193686   9214488
+   3 │ problem-135-90642  dubrovnik  1106672  273141  13280064
+   4 │ problem-142-93602  dubrovnik  1131216  282084  13574592
+   5 │ problem-150-95821  dubrovnik  1136238  288813  13634856
+```
 
 The DataFrame has the following columns:
 
@@ -52,16 +63,16 @@ The DataFrame has the following columns:
 - **nvar**: Number of variables (columns).
 - **nnzj**: Number of non-zero elements in the Jacobian.
 
-### Filtering Problems
+### Filtering problems
 
 You can filter problems based on specific criteria. For instance:
 
 ```julia
-# Select problems with ≥ 50,000 equations and ≤ 34,000 variables
-filter_df = filter(:nequ .≥ 50_000 .& :nvar .≤ 34_000, df)
+# Select problems with more than 50000 equations and less than 34000 variables
+filter_df = filter(pb -> pb.nequ >= 50_000 && pb.nvar <= 34_000, df)
 ```
 
-### Accessing Problem Names
+### Accessing problem names
 
 Extract the name of the first problem in the filtered DataFrame:
 
@@ -69,7 +80,7 @@ Extract the name of the first problem in the filtered DataFrame:
 name = filter_df[1, :name]
 ```
 
-### Fetching Artifacts
+### Fetching artifacts
 
 Download the problem artifact for the given name:
 
@@ -77,7 +88,7 @@ Download the problem artifact for the given name:
 path = fetch_ba_name(name)
 ```
 
-### Nonlinear Least-Squares Models
+### Nonlinear least-squares models
 
 Create a nonlinear least-squares model:
 
@@ -89,13 +100,14 @@ model = BundleAdjustmentModel(name)
 You can evaluate residuals and Jacobians using functions from `NLPModels`.
 
 ```julia
-residuals = residual(model, model.meta.x0)  # Compute residuals
+residuals = residual(model, model.meta.x0)
 ```
 
 Compute the Jacobian structure:
 
 ```julia
-rows, cols = Vector{Int}(), Vector{Int}()
+rows = Vector{Int}(undef, model.nls_meta.nnzj)
+cols = Vector{Int}(undef, model.nls_meta.nnzj)
 jac_structure_residual!(model, rows, cols)
 ```
 
@@ -106,7 +118,7 @@ vals = Vector{Float64}(undef, length(rows))
 jac_coord_residual!(model, model.meta.x0, vals)
 ```
 
-### Cleaning Up Artifacts
+### Cleaning up artifacts
 
 Delete specific or all downloaded artifacts:
 
@@ -114,6 +126,8 @@ Delete specific or all downloaded artifacts:
 delete_ba_artifact!(name)  # Delete one artifact
 delete_all_ba_artifacts!() # Delete all artifacts
 ```
+
+Special thanks to Célestine Angla for her initial work on this project during her internship.
 
 ## License
 
