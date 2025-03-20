@@ -78,19 +78,19 @@ end
   name = filter_df[1, :name]
   model = BundleAdjustmentModel(name)
 
-  @test_broken 4.18565951824972266331e+06 ≈ obj(model, model.meta.x0)
+  @test 1.141912791870941e10 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-21-11315"), :]
   name = filter_df[1, :name]
   model = BundleAdjustmentModel(name)
 
-  @test_broken 4.41323931443221028894e+06 ≈ obj(model, model.meta.x0)
+  @test 1.363312418976321e10 ≈ obj(model, model.meta.x0)
 
   filter_df = df[(df.name .== "problem-49-7776"), :]
   name = filter_df[1, :name]
   model = BundleAdjustmentModel(name)
 
-  @test_broken 8.50912460680839605629e+05 ≈ obj(model, model.meta.x0)
+  @test 1.135497480452983e9 ≈ obj(model, model.meta.x0)
 end
 
 @testset "test jacobian" begin
@@ -110,7 +110,7 @@ end
   jac_coord_residual!(model, model.meta.x0, vals)
   Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
 
-  @test_broken 1.70677551536496222019e+08 ≈ norm(Jx' * Fx)
+  @test 1.380397776971645e9 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-21-11315"), :]
   name = filter_df[1, :name]
@@ -127,7 +127,7 @@ end
   jac_coord_residual!(model, model.meta.x0, vals)
   Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
 
-  @test_broken 1.64335338754470020533e+08 ≈ norm(Jx' * Fx)
+  @test 1.2605813336766036e9 ≈ norm(Jx' * Fx)
 
   filter_df = df[(df.name .== "problem-49-7776"), :]
   name = filter_df[1, :name]
@@ -144,7 +144,7 @@ end
   jac_coord_residual!(model, model.meta.x0, vals)
   Jx = jac_op_residual!(model, rows, cols, vals, Jv, Jtv)
 
-  @test_broken 2.39615629098822921515e+07 ≈ norm(Jx' * Fx)
+  @test 3.125752634024366e8 ≈ norm(Jx' * Fx)
 end
 
 @testset "test delete_ba_artifact!()" begin
