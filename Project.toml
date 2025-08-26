@@ -1,6 +1,6 @@
 name = "BundleAdjustmentModels"
 uuid = "0bf3e898-7c79-4b38-9ca6-2d9cc6573905"
-version = "0.4.0"
+version = "0.4.1"
 
 [deps]
 CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
@@ -16,6 +16,7 @@ CodecBzip2 = "0.8"
 DataFrames = "1.7"
 JLD2 = "0.6"
 NLPModels = "0.21.5"
+SHA = "0.7.0"
 julia = "1.10"
 
 [extras]
